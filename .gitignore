@@ -1,6 +1,7 @@
 logs
-project/project
+project/project/target
 project/target
+app/assets/ts-definitions
 target
 tmp
 .history
