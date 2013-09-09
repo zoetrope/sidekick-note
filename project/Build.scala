@@ -10,6 +10,7 @@ object ApplicationBuild extends Build {
   val appVersion      = "1.0-SNAPSHOT"
 
   val appDependencies = Seq(
+    jdbc,
     "com.github.seratch" %% "scalikejdbc" % "[1.6,)",
     "com.github.seratch" %% "scalikejdbc-interpolation" % "[1.6,)",
     "com.github.seratch" %% "scalikejdbc-play-plugin" % "[1.6,)",
@@ -18,7 +19,8 @@ object ApplicationBuild extends Build {
     "org.webjars" %% "webjars-play" % "2.1.0-3",
     "org.webjars" % "bootstrap" % "3.0.0",
     "org.webjars" % "jquery" % "1.9.1",
-    "org.webjars" % "angularjs" % "1.0.7"
+    "org.webjars" % "angularjs" % "1.0.7",
+    "com.github.tototoshi" %% "play-json4s-native" % "0.1.0"
   )
 
   object Tasks {
