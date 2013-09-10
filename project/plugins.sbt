@@ -6,3 +6,7 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 
 // Use the Play sbt plugin for Play projects
 addSbtPlugin("play" % "sbt-plugin" % "2.1.3")
+
+libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.26"
+
+addSbtPlugin("com.github.seratch" %% "scalikejdbc-mapper-generator" % "[1.6,)")

@@ -14,13 +14,15 @@ object ApplicationBuild extends Build {
     "com.github.seratch" %% "scalikejdbc" % "[1.6,)",
     "com.github.seratch" %% "scalikejdbc-interpolation" % "[1.6,)",
     "com.github.seratch" %% "scalikejdbc-play-plugin" % "[1.6,)",
+    "com.github.seratch" %% "scalikejdbc-config" % "[1.6,)",
     "mysql" % "mysql-connector-java" % "5.1.26",
     "com.typesafe" %% "play-plugins-redis" % "2.1-09092012-2",
     "org.webjars" %% "webjars-play" % "2.1.0-3",
     "org.webjars" % "bootstrap" % "3.0.0",
     "org.webjars" % "jquery" % "1.9.1",
     "org.webjars" % "angularjs" % "1.0.7",
-    "com.github.tototoshi" %% "play-json4s-native" % "0.1.0"
+    "com.github.tototoshi" %% "play-json4s-native" % "0.1.0",
+    "com.github.tototoshi" %% "play-flyway" % "0.2.0"
   )
 
   object Tasks {
