@@ -1,7 +1,18 @@
-@(message: String)
+@(itemForm: Form[models.Item])
 
-@main("Welcome to Play 2.1") {
-    
-    @play20.welcome(message)
-    
+@import helper._
+
+@main("Item list") {
+    <h2>Item List</h2>
+    <div ng-controller="SidekickNote.ItemController">
+        <ul>
+            <li ng-repeat="item in items">
+                {{item.content}}
+            </li>
+        </ul>
+        <form ng-submit="newItem()">
+            <input type="text" ng-model="content" size="50" placeholder="add new item here">
+            <input type="submit" value="add">
+        </form>
+    </div>
 }
