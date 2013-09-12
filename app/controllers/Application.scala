@@ -28,7 +28,7 @@ object Application extends Controller with Json4s {
   )
 
   def index = Action { implicit request =>
-    Ok(views.html.index(this.itemForm))
+    Ok(views.html.index())
   }
 
   def items = Action { implicit request =>

@@ -5,8 +5,9 @@
 # Home page
 GET        /                         controllers.Application.index
 
-GET        /items                    controllers.Application.items
-POST       /items                    controllers.Application.newItem
+GET        /item                     controllers.Application.index
+GET        /items.json               controllers.Application.items
+POST       /items.json               controllers.Application.newItem
 
 #
 GET        /javascript-routes        controllers.Application.javascriptRoutes
