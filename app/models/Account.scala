@@ -3,10 +3,13 @@ package models
 import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 import org.joda.time.{DateTime}
+import org.mindrot.jbcrypt.BCrypt
 
 case class Account(
   id: Long, 
   name: String, 
+  password: String, 
+  permission: Permission,
   created: DateTime, 
   deleted: Option[DateTime] = None) {
 
@@ -21,11 +24,14 @@ object Account extends SQLSyntaxSupport[Account] {
 
   override val tableName = "accounts"
 
-  override val columns = Seq("id", "name", "created", "deleted")
+  override val columns = Seq("id", "name", "password", "permission", "created", "deleted")
 
+  def apply(a: SyntaxProvider[Account])(rs: WrappedResultSet): Account = apply(a.resultName)(rs)
   def apply(a: ResultName[Account])(rs: WrappedResultSet): Account = new Account(
     id = rs.long(a.id),
     name = rs.string(a.name),
+    password = rs.string(a.password),
+    permission = Permission.valueOf(rs.string(a.permission)),
     created = rs.timestamp(a.created).toDateTime,
     deleted = rs.timestampOpt(a.deleted).map(_.toDateTime)
   )
@@ -34,7 +40,17 @@ object Account extends SQLSyntaxSupport[Account] {
 
   val autoSession = AutoSession
 
-  def find(id: Long)(implicit session: DBSession = autoSession): Option[Account] = {
+  def authenticate(name: String, password: String)(implicit s: DBSession = autoSession): Option[Account] = {
+    val res = findByName(name).filter { account => BCrypt.checkpw(password, account.password) }
+    play.Logger.debug("authenticate is " + res)
+    return res
+  }
+
+  def findByName(name: String)(implicit s: DBSession = autoSession): Option[Account] = withSQL {
+    select.from(Account as a).where.eq(a.name, name)
+  }.map(Account(a)).single.apply()
+
+  def findById(id: Long)(implicit session: DBSession = autoSession): Option[Account] = {
     withSQL { 
       select.from(Account as a).where.eq(a.id, id)
     }.map(Account(a.resultName)).single.apply()
@@ -62,15 +78,22 @@ object Account extends SQLSyntaxSupport[Account] {
       
   def create(
     name: String,
+    password: String,
+    permission: String,
     created: DateTime,
     deleted: Option[DateTime] = None)(implicit session: DBSession = autoSession): Account = {
     val generatedKey = withSQL {
+      val hashedPass = BCrypt.hashpw(password, BCrypt.gensalt())
       insert.into(Account).columns(
         column.name,
+        column.password,
+        column.permission,
         column.created,
         column.deleted
       ).values(
         name,
+        hashedPass,
+        permission,
         created,
         deleted
       )
@@ -79,6 +102,8 @@ object Account extends SQLSyntaxSupport[Account] {
     Account(
       id = generatedKey, 
       name = name,
+      password = password,
+      permission = Permission.valueOf(permission),
       created = created,
       deleted = deleted)
   }
@@ -88,6 +113,8 @@ object Account extends SQLSyntaxSupport[Account] {
       update(Account as a).set(
         a.id -> entity.id,
         a.name -> entity.name,
+        a.password -> entity.password,
+        a.permission -> entity.permission,
         a.created -> entity.created,
         a.deleted -> entity.deleted
       ).where.eq(a.id, entity.id)

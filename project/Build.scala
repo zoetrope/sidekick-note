@@ -22,7 +22,9 @@ object ApplicationBuild extends Build {
     "org.webjars" % "jquery" % "1.9.1",
     "org.webjars" % "angularjs" % "1.0.7",
     "com.github.tototoshi" %% "play-json4s-native" % "0.1.0",
-    "com.github.tototoshi" %% "play-flyway" % "0.2.0"
+    "com.github.tototoshi" %% "play-flyway" % "0.2.0",
+    "jp.t2v" %% "play2.auth" % "0.10.1",
+    "org.mindrot" % "jbcrypt" % "0.3m"
   )
 
   object Tasks {

@@ -5,16 +5,15 @@ module services {
 
     declare var jsRouter :any
 
-    export class ItemService {
+    export class UserService {
         constructor(public $http: ng.IHttpService) {
         }
 
-        get():ng.IHttpPromise<any> {
-            return this.$http.get(jsRouter.controllers.ItemController.items().url);
-        }
-
         post(data : any):ng.IHttpPromise<any> {
-            return this.$http.post(jsRouter.controllers.ItemController.items().url, data);
+            return this.$http.post(jsRouter.controllers.UserController.signup().url, data);
+        }
+        login(data : any):ng.IHttpPromise<any> {
+            return this.$http.post(jsRouter.controllers.UserController.authenticate().url, data);
         }
     }
 }

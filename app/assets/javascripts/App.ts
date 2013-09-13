@@ -1,7 +1,9 @@
 ///<reference path='../ts-definitions/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='models/Item.ts' />
 ///<reference path='services/ItemService.ts' />
+///<reference path='services/UserService.ts' />
 ///<reference path='controllers/ItemController.ts' />
+///<reference path='controllers/UserController.ts' />
 
 console.log("ignite!");
 
@@ -17,8 +19,10 @@ module App {
             console.log("rootProvider!");
             $routeProvider
                 .when("/item", {
-                    templateUrl: "/assets/views/item.html",
-                    controller: controllers.ItemController
+                    templateUrl: "/assets/views/item.html"
+                })
+                .when("/login", {
+                    templateUrl: "/assets/views/login.html"
                 })
                 .otherwise({redirectTo: '/item'});
             $locationProvider.html5Mode(true);
@@ -31,12 +35,21 @@ module App {
         ()=> {}
     ).factory("itemService", ($http:ng.IHttpService):services.ItemService=> {
         return new services.ItemService($http);
+    }).factory("userService", ($http:ng.IHttpService):services.UserService=> {
+        return new services.UserService($http);
     });
 
     angular.module(
         appName + ".controller",
         [appName + ".service"],
         ()=> {}
-    ).controller("ItemController",controllers.ItemController);
+    ).controller("ItemController", ["$scope", "itemService",
+            ($scope:controllers.Scope, itemService:services.ItemService) : controllers.ItemController => {
+                return new controllers.ItemController($scope, itemService)
+            }])
+     .controller("UserController", ["$scope", "userService",
+            ($scope:controllers.UserScope, userService:services.UserService) : controllers.UserController => {
+                return new controllers.UserController($scope, userService)
+            }])
 
 }

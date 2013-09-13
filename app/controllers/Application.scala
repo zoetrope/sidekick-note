@@ -15,44 +15,20 @@ import org.joda.time.DateTime
 
 object Application extends Controller with Json4s {
 
-  implicit val formats = DefaultFormats
-
-  val itemForm = Form(
-    mapping(
-      "id" -> ignored(0L),
-      "content"  -> nonEmptyText,
-      "created" -> ignored(DateTime.now()),
-      "modified" -> ignored(DateTime.now()),
-      "deleted" -> ignored(Option.empty[DateTime])
-    )(Item.apply)(Item.unapply)
-  )
-
   def index = Action { implicit request =>
     Ok(views.html.index())
-  }
-
-  def items = Action { implicit request =>
-    val items = Item.findAll()
-    Ok(Extraction.decompose(items)).as("application/json")
-  }
-
-  def newItem = Action { implicit request =>
-
-    val item = itemForm.bindFromRequest.value map { item =>
-      Item.create(item.content, item.created, item.modified)
-    }
-
-    Ok(Extraction.decompose(item)).as("application/json")
   }
 
   def javascriptRoutes() = Action { implicit request =>
     import play.api.Routes
     Ok(
       Routes.javascriptRouter("jsRouter")(
-        routes.javascript.Application.items,
-        routes.javascript.Application.newItem
+        routes.javascript.ItemController.items,
+        routes.javascript.ItemController.newItem,
+        routes.javascript.UserController.signup,
+        routes.javascript.UserController.authenticate,
+        routes.javascript.UserController.logout
       )
     ).as("text/javascript")
   }
-  
 }

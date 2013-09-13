@@ -30,7 +30,7 @@ class AccountSpec extends Specification {
       count should be_>(0L)
     }
     "create new record" in new AutoRollback {
-      val created = Account.create(name = "MyString", created = DateTime.now)
+      val created = Account.create(name = "MyString", password = "MyString", permission = "MyString", created = DateTime.now)
       created should not beNull
     }
     "save a record" in new AutoRollback {
