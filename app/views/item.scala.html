@@ -1,14 +1,14 @@
 @()
 
-    <h2>Item List</h2>
-    <div ng-controller="ItemController">
-        <form ng-submit="newItem()">
-            <input type="text" ng-model="content" size="50" placeholder="add new item here">
-            <input type="submit" value="add">
-        </form>
-        <ul>
-            <li ng-repeat="item in items">
-                {{item.content}}
-            </li>
-        </ul>
-    </div>
+<h2>Item List</h2>
+<div ng-controller="ItemController">
+    <form ng-submit="newItem()">
+        <input type="text" ng-model="content" size="50" placeholder="add new item here">
+        <input type="submit" value="add">
+    </form>
+    <ul>
+        <li ng-repeat="item in items">
+            {{item.content}}
+        </li>
+    </ul>
+</div>

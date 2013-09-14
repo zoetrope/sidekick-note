@@ -1,4 +1,4 @@
-@(title: String, moreScripts: Html = Html(""))(content: Html)
+@(title: String)(content: Html)
 
 <!DOCTYPE html>
 <html ng-app="sidekick-note">
@@ -18,7 +18,14 @@
 
         <script type="text/javascript" src="@routes.Assets.at("javascripts/App.js")"></script>
 
-        @moreScripts
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/controllers/ItemController.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/services/ItemService.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/models/Item.js")"></script>
+
+
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/controllers/UserController.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/services/UserService.js")"></script>
+
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top">

@@ -18,12 +18,8 @@ module App {
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
-                .when("/item", {
-                    templateUrl: "/views/item"
-                })
-                .when("/login", {
-                    templateUrl: "/views/login"
-                })
+                .when("/item", {templateUrl: "/views/item"})
+                .when("/login", {templateUrl: "/views/login"})
                 .otherwise({redirectTo: '/item'});
             $locationProvider.html5Mode(true);
         }

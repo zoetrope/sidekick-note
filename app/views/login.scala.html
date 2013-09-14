@@ -1,14 +1,14 @@
 @()
 
-    <div class="container" ng-controller="UserController">
-        <form class="form-signin" ng-submit="login()">
-            <h2 class="form-signin-heading">Please log in</h2>
-            <input type="text" ng-model="name" class="form-control" placeholder="Your name" autofocus>
-            <input type="password" ng-model="password" class="form-control" placeholder="Password">
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        </form>
+<div class="container" ng-controller="UserController">
+    <form class="form-signin" ng-submit="login()">
+        <h2 class="form-signin-heading">Please log in</h2>
+        <input type="text" ng-model="name" class="form-control" placeholder="Your name" autofocus>
+        <input type="password" ng-model="password" class="form-control" placeholder="Password">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
 
-        <p>{{name}}</p>
-        <p>{{password}}</p>
-        <p>{{result}}</p>
-    </div>
+    <p>{{name}}</p>
+    <p>{{password}}</p>
+    <p>{{result}}</p>
+</div>
