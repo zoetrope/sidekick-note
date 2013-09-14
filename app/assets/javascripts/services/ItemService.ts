@@ -3,6 +3,21 @@
 module services {
     'use strict';
 
+    /*
+    interface ItemController{
+        items();
+    }
+    interface UserController{
+
+    }
+    interface Controllers{
+        ItemController : ItemController;
+        UserController : UserController;
+    }
+    interface JavascriptRouter{
+        controllers : Controllers
+    }
+    */
     declare var jsRouter :any
 
     export class ItemService {
