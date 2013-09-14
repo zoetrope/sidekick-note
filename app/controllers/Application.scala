@@ -25,7 +25,6 @@ object Application extends Controller with Json4s {
       Routes.javascriptRouter("jsRouter")(
         routes.javascript.ItemController.items,
         routes.javascript.ItemController.newItem,
-        routes.javascript.UserController.signup,
         routes.javascript.UserController.authenticate,
         routes.javascript.UserController.logout
       )

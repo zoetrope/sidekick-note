@@ -1,4 +1,5 @@
 ///<reference path='../ts-definitions/DefinitelyTyped/angularjs/angular.d.ts' />
+///<reference path='../ts-definitions/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='models/Item.ts' />
 ///<reference path='services/ItemService.ts' />
 ///<reference path='services/UserService.ts' />
@@ -26,26 +27,16 @@ module App {
     ).run(($rootScope:ng.IRootScopeService, $routeParams:ng.IRouteParamsService)=> {});
 
     angular.module(
-        appName + ".service",
-        [],
-        ()=> {}
-    ).factory("itemService", ($http:ng.IHttpService):services.ItemService=> {
-        return new services.ItemService($http);
-    }).factory("userService", ($http:ng.IHttpService):services.UserService=> {
-        return new services.UserService($http);
-    });
-
-    angular.module(
         appName + ".controller",
-        [appName + ".service"],
+        ["ngResource"],
         ()=> {}
-    ).controller("ItemController", ["$scope", "itemService",
-            ($scope:controllers.Scope, itemService:services.ItemService) : controllers.ItemController => {
-                return new controllers.ItemController($scope, itemService)
+    ).controller("ItemController", ["$scope", "$resource",
+            ($scope:controllers.Scope, $resource:ng.resource.IResourceService) : controllers.ItemController => {
+                return new controllers.ItemController($scope, $resource)
             }])
-     .controller("UserController", ["$scope", "userService",
-            ($scope:controllers.UserScope, userService:services.UserService) : controllers.UserController => {
-                return new controllers.UserController($scope, userService)
+     .controller("UserController", ["$scope", "$resource",
+            ($scope:controllers.UserScope, $resource:ng.resource.IResourceService) : controllers.UserController => {
+                return new controllers.UserController($scope, $resource)
             }])
 
 }

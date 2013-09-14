@@ -17,16 +17,6 @@ object UserController extends Controller with LoginLogout with AuthConfigImpl wi
     Ok(views.html.login())
   }
 
-  def signup = Action(json) { implicit request =>
-
-
-    play.Logger.error("request body = " + org.json4s.native.JsonMethods.compact(org.json4s.native.JsonMethods.render(request.body)))
-
-    val login : Login = request.body.extract[Login]
-
-    Ok(Extraction.decompose(login)).as("application/json")
-  }
-
   def logout = Action { implicit request =>
     gotoLogoutSucceeded
   }

@@ -32,7 +32,7 @@ object ApplicationBuild extends Build {
     val tsdTaskKey = TaskKey[Unit]("tsd", "install .d.ts file")
 
     val tsdTask = tsdTaskKey := {
-      scala.sys.process.Process("tsd install jquery angular") run
+      scala.sys.process.Process("tsd install jquery angular angular-resource") run
     }
   }
 

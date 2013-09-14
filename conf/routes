@@ -9,7 +9,6 @@ GET         /views/item               controllers.ItemController.index
 GET         /items.json               controllers.ItemController.items
 POST        /items.json               controllers.ItemController.newItem
 
-POST        /signup.json              controllers.UserController.signup
 GET         /views/login              controllers.UserController.index
 POST        /login.json               controllers.UserController.authenticate
 POST        /logout.json              controllers.UserController.logout

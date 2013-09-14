@@ -1,5 +1,5 @@
 ///<reference path='../../ts-definitions/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='../services/UserService.ts' />
+///<reference path='../../ts-definitions/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='../models/Item.ts' />
 
 module controllers {
@@ -11,30 +11,23 @@ module controllers {
 
         result: string
 
-        signup(): void
         login(): void
     }
 
+    declare var jsRouter:any
     export class UserController {
 
-        constructor(public $scope:UserScope, public userService: services.UserService) {
-            $scope.signup = () => {
+        constructor(public $scope:UserScope, public $resource:ng.resource.IResourceService) {
 
-                var input = {name: $scope.name, password: $scope.password}
-                this.userService.post(input).success(function(data) {
-                    $scope.result = data
-                }).error(function() {
-                    alert("error:newItem");
-                });
-            };
+            var User = $resource(jsRouter.controllers.UserController.authenticate().url)
 
             $scope.login = () => {
                 var input = {name: $scope.name, password: $scope.password}
-                this.userService.login(input).success(function(data) {
+                User.save(null, input, (data)=> {
+                    console.log(data);
                     $scope.result = data
-                    alert(data)
-                }).error(function() {
-                    alert("error:newItem");
+                }, (reason)=> {
+                    alert("failed login." + reason)
                 });
             };
         }
