@@ -20,9 +20,9 @@ trait AuthConfigImpl extends AuthConfig {
 
   def resolveUser(id: Id) = Account.findById(id)
 
-  def loginSucceeded(request: RequestHeader) = Redirect(routes.Application.index)
+  def loginSucceeded(request: RequestHeader) = Redirect(routes.Application.main(""))
 
-  def logoutSucceeded(request: RequestHeader) = Redirect(routes.Application.index)
+  def logoutSucceeded(request: RequestHeader) = Redirect(routes.Application.main(""))
 
   def authenticationFailed(request: RequestHeader) = Unauthorized("unauthorized")
 

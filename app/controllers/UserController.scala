@@ -41,7 +41,7 @@ object UserController extends Controller with LoginLogout with AuthConfigImpl wi
         play.Logger.error("authenticate succeeded = " + account)
         gotoLoginSucceeded(account.id)
       }
-      case None => BadRequest(views.html.index())
+      case None => BadRequest(views.html.main(""))
     }
   }
 }

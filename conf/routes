@@ -3,19 +3,15 @@
 # ~~~~
 
 # Home page
-GET         /                         controllers.Application.index
+GET         /                         controllers.Application.main(title="")
 
-GET         /item                     controllers.Application.index
 GET         /views/item               controllers.ItemController.index
 GET         /items.json               controllers.ItemController.items
 POST        /items.json               controllers.ItemController.newItem
 
-GET         /signup                   controllers.UserController.index
 POST        /signup.json              controllers.UserController.signup
-GET         /login                    controllers.Application.index
 GET         /views/login              controllers.UserController.index
 POST        /login.json               controllers.UserController.authenticate
-GET         /logout                   controllers.UserController.index
 POST        /logout.json              controllers.UserController.logout
 #
 GET         /javascript-routes        controllers.Application.javascriptRoutes
@@ -23,3 +19,4 @@ GET         /javascript-routes        controllers.Application.javascriptRoutes
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file             controllers.Assets.at(path="/public", file)
 GET         /webjars/*file            controllers.WebJarAssets.at(file)
+GET         /*any                     controllers.Application.main(any)

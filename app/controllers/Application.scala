@@ -15,8 +15,8 @@ import org.joda.time.DateTime
 
 object Application extends Controller with Json4s {
 
-  def index = Action { implicit request =>
-    Ok(views.html.index())
+  def main(title : String) = Action { implicit request =>
+    Ok(views.html.main(title))
   }
 
   def javascriptRoutes() = Action { implicit request =>
