@@ -2,7 +2,18 @@
 
 @import helper._
 
-@main("Item list") {
+@moreScripts = {
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/controllers/ItemController.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/services/ItemService.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/models/Item.js")"></script>
+
+
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/controllers/UserController.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/services/UserService.js")"></script>
+
+}
+
+@main("Item list", moreScripts) {
     <h2>index.html</h2>
     <div ng-view></div>
 }

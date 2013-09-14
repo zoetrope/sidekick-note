@@ -19,10 +19,10 @@ module App {
             console.log("rootProvider!");
             $routeProvider
                 .when("/item", {
-                    templateUrl: "/assets/views/item.html"
+                    templateUrl: "/views/item"
                 })
                 .when("/login", {
-                    templateUrl: "/assets/views/login.html"
+                    templateUrl: "/views/login"
                 })
                 .otherwise({redirectTo: '/item'});
             $locationProvider.html5Mode(true);

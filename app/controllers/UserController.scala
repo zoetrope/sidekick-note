@@ -13,6 +13,10 @@ object UserController extends Controller with LoginLogout with AuthConfigImpl wi
 
   implicit val formats = DefaultFormats
 
+  def index = Action { implicit request =>
+    Ok(views.html.login())
+  }
+
   def signup = Action(json) { implicit request =>
 
 

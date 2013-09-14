@@ -6,14 +6,16 @@
 GET         /                         controllers.Application.index
 
 GET         /item                     controllers.Application.index
+GET         /views/item               controllers.ItemController.index
 GET         /items.json               controllers.ItemController.items
 POST        /items.json               controllers.ItemController.newItem
 
-GET         /signup                   controllers.Application.index
+GET         /signup                   controllers.UserController.index
 POST        /signup.json              controllers.UserController.signup
 GET         /login                    controllers.Application.index
+GET         /views/login              controllers.UserController.index
 POST        /login.json               controllers.UserController.authenticate
-GET         /logout                   controllers.Application.index
+GET         /logout                   controllers.UserController.index
 POST        /logout.json              controllers.UserController.logout
 #
 GET         /javascript-routes        controllers.Application.javascriptRoutes

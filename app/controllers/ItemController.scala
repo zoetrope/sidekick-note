@@ -20,6 +20,10 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
 
   implicit val formats = DefaultFormats
 
+  def index = Action { implicit request =>
+    Ok(views.html.item())
+  }
+
   //def items = StackAction(json, AuthorityKey -> NormalUser) { implicit request =>
   def items = Action { implicit request =>
     play.Logger.info("items")
