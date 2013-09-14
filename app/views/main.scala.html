@@ -3,6 +3,9 @@
 <!DOCTYPE html>
 <html ng-app="sidekick-note">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <title>@title</title>
         <link rel="stylesheet" media="screen" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))">
         <link rel="stylesheet" media="screen" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap-theme.min.css"))">
@@ -24,6 +27,27 @@
 
     </head>
     <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Sidekick Note</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/item">Item</a></li>
+                        <li><a href="/login">login</a></li>
+                        <li><a href="/logout">logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="jumbotron">
         @content
+        </div>
     </body>
 </html>
