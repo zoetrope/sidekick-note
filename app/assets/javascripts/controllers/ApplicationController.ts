@@ -17,18 +17,22 @@ module controllers {
     declare var jsRouter:any
     export class ApplicationController {
 
-        constructor(public $scope:AppScope, public $resource:ng.resource.IResourceService) {
+        constructor(public $scope:AppScope, public $location:ng.ILocationService, public $resource:ng.resource.IResourceService) {
 
-            var User = $resource(jsRouter.controllers.Application.authenticate().url)
+            var Auth = $resource(jsRouter.controllers.Application.authenticate().url)
             var LoggedIn = $resource(jsRouter.controllers.Application.loggedin().url)
 
             LoggedIn.get(x=>$scope.loggedin = x.name, reason => alert(reason))
 
             $scope.login = () => {
                 var input = {name: $scope.input_name, password: $scope.input_password}
-                User.save(null, input, (data)=> {
-                    console.log(data);
-                    $scope.loggedin = $scope.input_name
+                Auth.save(null, input, (data)=> {
+                    console.log(data.url);
+                    //alert(data);
+                    //$scope.loggedin = $scope.input_name
+                    $scope.loggedin = data.url
+                    window.location.href = data.url;
+
                 }, (reason)=> {
                     alert("failed login." + reason)
                 });

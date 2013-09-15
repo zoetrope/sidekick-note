@@ -5,9 +5,13 @@ import play.api.mvc._
 import play.api.mvc.Results._
 import jp.t2v.lab.play2.auth._
 import reflect.classTag
+import org.json4s._
+import org.json4s.JsonDSL._
+import com.github.tototoshi.play2.json4s.native.Json4s
 
-trait AuthConfigImpl extends AuthConfig {
+case class AccessUrl(url: String)
 
+trait AuthConfigImpl extends AuthConfig with Json4s{
   type Id = Long
 
   type User = Account
@@ -21,8 +25,11 @@ trait AuthConfigImpl extends AuthConfig {
   def resolveUser(id: Id) = Account.findById(id)
 
   def loginSucceeded(request: RequestHeader) = {
+    implicit val formats = DefaultFormats
+
     play.Logger.debug("loginSucceeded")
-    Redirect(routes.Application.main(""))
+    val uri = request.session.get("access_uri").getOrElse("/item")
+    Ok(Extraction.decompose(AccessUrl(url = uri))).as("application/json").withSession(request.session - "access_uri")
   }
 
   def logoutSucceeded(request: RequestHeader) = {
@@ -32,7 +39,8 @@ trait AuthConfigImpl extends AuthConfig {
 
   def authenticationFailed(request: RequestHeader) = {
     play.Logger.debug("Authentication failed")
-    Unauthorized("Authentication failed")
+    val uri = request.headers.get("REFERER").getOrElse(request.uri)
+    Unauthorized("Authentication failed").withSession("access_uri" -> uri)
   }
 
   def authorizationFailed(request: RequestHeader) = {

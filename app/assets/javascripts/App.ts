@@ -28,7 +28,6 @@ module App {
                 return promise => {
                     return promise.then(response => response,
                         response => {
-                            alert("auth error!!!!!" + response.status)
                             if (response.status == 401) {
                                 $location.url('/login');
                             }
@@ -44,9 +43,9 @@ module App {
         appName + ".controller",
         ["ngResource"],
         ()=> {}
-    ).controller("ApplicationController", ["$scope", "$resource",
-            ($scope:controllers.AppScope, $resource:ng.resource.IResourceService) : controllers.ApplicationController => {
-                return new controllers.ApplicationController($scope, $resource)
+    ).controller("ApplicationController", ["$scope", "$location", "$resource",
+            ($scope:controllers.AppScope, $location:ng.ILocationService, $resource:ng.resource.IResourceService) : controllers.ApplicationController => {
+                return new controllers.ApplicationController($scope, $location, $resource)
             }])
      .controller("ItemController", ["$scope", "$resource",
             ($scope:controllers.ItemScope, $resource:ng.resource.IResourceService) : controllers.ItemController => {
