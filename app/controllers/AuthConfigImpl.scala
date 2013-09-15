@@ -20,13 +20,25 @@ trait AuthConfigImpl extends AuthConfig {
 
   def resolveUser(id: Id) = Account.findById(id)
 
-  def loginSucceeded(request: RequestHeader) = Redirect(routes.Application.main(""))
+  def loginSucceeded(request: RequestHeader) = {
+    play.Logger.debug("loginSucceeded")
+    Redirect(routes.Application.main(""))
+  }
 
-  def logoutSucceeded(request: RequestHeader) = Redirect(routes.Application.main(""))
+  def logoutSucceeded(request: RequestHeader) = {
+    play.Logger.debug("logoutSucceeded")
+    Redirect(routes.Application.main(""))
+  }
 
-  def authenticationFailed(request: RequestHeader) = Redirect(routes.Application.login())
+  def authenticationFailed(request: RequestHeader) = {
+    play.Logger.debug("Authentication failed")
+    Unauthorized("Authentication failed")
+  }
 
-  def authorizationFailed(request: RequestHeader) = Forbidden("no permission")
+  def authorizationFailed(request: RequestHeader) = {
+    play.Logger.debug("authorizationFailed")
+    Forbidden("no permission")
+  }
 
   def authorize(user: User, authority: Authority) = (user.permission, authority) match {
     case (Administrator, _) => true

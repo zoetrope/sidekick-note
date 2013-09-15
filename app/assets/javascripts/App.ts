@@ -19,11 +19,26 @@ module App {
             console.log("rootProvider!");
             $routeProvider
                 .when("/item", {templateUrl: "/views/item"})
-                .when("/login", {templateUrl: "/views/login"})
-                .otherwise({redirectTo: '/item'});
+                .when("/login", {templateUrl: "/views/login"});
+                //.otherwise({redirectTo: '/item'});
             $locationProvider.html5Mode(true);
         }
-    ).run(($rootScope:ng.IRootScopeService, $routeParams:ng.IRouteParamsService)=> {});
+    ).config($httpProvider => {
+            var interceptor = ["$q", "$location", ($q, $location) => {
+                return promise => {
+                    return promise.then(response => response,
+                        response => {
+                            alert("auth error!!!!!" + response.status)
+                            if (response.status == 401) {
+                                $location.url('/login');
+                            }
+                            return $q.reject(response);
+                        });
+                }
+            }];
+            $httpProvider.responseInterceptors.push(interceptor)
+        })
+        .run(($rootScope:ng.IRootScopeService, $routeParams:ng.IRouteParamsService)=> {});
 
     angular.module(
         appName + ".controller",

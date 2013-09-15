@@ -29,6 +29,7 @@ object Application extends Controller with OptionalAuthElement with LoginLogout 
   }
 
   def logout = Action { implicit request =>
+    play.Logger.info("logout")
     gotoLogoutSucceeded
   }
 
@@ -39,10 +40,13 @@ object Application extends Controller with OptionalAuthElement with LoginLogout 
 
     Account.authenticate(login.name, login.password) match {
       case Some(account) => {
-        play.Logger.error("authenticate succeeded = " + account)
+        play.Logger.info("authenticate succeeded = " + account)
         gotoLoginSucceeded(account.id)
       }
-      case None => BadRequest(views.html.main(""))
+      case None => {
+        play.Logger.info("authenticate failed")
+        BadRequest(views.html.main(""))
+      }
     }
   }
 

@@ -7,7 +7,7 @@ GET         /                         controllers.Application.main(title="")
 
 GET         /views/login              controllers.Application.login
 POST        /api/login.json           controllers.Application.authenticate
-POST        /api/logout.json          controllers.Application.logout
+GET         /api/logout.json          controllers.Application.logout
 GET         /api/loggedin.json        controllers.Application.loggedin
 
 GET         /views/item               controllers.ItemController.view
