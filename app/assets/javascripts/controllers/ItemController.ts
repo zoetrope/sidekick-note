@@ -5,28 +5,22 @@
 module controllers {
     'use strict';
 
-    export interface Scope extends ng.IScope {
+    export interface ItemScope extends ng.IScope {
         items: models.Item[];
-        //items: ng.IPromise<Model.Item[]>;
-        content: string;
-        newItem() : void;
-    }
-
-
-    interface ItemResource extends ng.resource.IResource {
-        content:string;
+        input_content: string;
+        add_item() : void;
     }
 
     declare var jsRouter:any
     export class ItemController {
 
-        constructor(public $scope:Scope, public $resource:ng.resource.IResourceService) {
+        constructor(public $scope:ItemScope, public $resource:ng.resource.IResourceService) {
 
             var Items = $resource(jsRouter.controllers.ItemController.items().url)
 
-            $scope.newItem = () => {
+            $scope.add_item = () => {
 
-                Items.save(null, {content: this.$scope.content},
+                Items.save(null, {content: this.$scope.input_content},
                     (data)=> {
                         $scope.items.push(data)
                     },

@@ -1,10 +1,9 @@
 ///<reference path='../ts-definitions/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../ts-definitions/DefinitelyTyped/angularjs/angular-resource.d.ts' />
-///<reference path='models/Item.ts' />
-///<reference path='services/ItemService.ts' />
-///<reference path='services/UserService.ts' />
+///<reference path='controllers/ApplicationController.ts' />
 ///<reference path='controllers/ItemController.ts' />
 ///<reference path='controllers/UserController.ts' />
+///<reference path='models/Item.ts' />
 
 console.log("ignite!");
 
@@ -30,8 +29,12 @@ module App {
         appName + ".controller",
         ["ngResource"],
         ()=> {}
-    ).controller("ItemController", ["$scope", "$resource",
-            ($scope:controllers.Scope, $resource:ng.resource.IResourceService) : controllers.ItemController => {
+    ).controller("ApplicationController", ["$scope", "$resource",
+            ($scope:controllers.AppScope, $resource:ng.resource.IResourceService) : controllers.ApplicationController => {
+                return new controllers.ApplicationController($scope, $resource)
+            }])
+     .controller("ItemController", ["$scope", "$resource",
+            ($scope:controllers.ItemScope, $resource:ng.resource.IResourceService) : controllers.ItemController => {
                 return new controllers.ItemController($scope, $resource)
             }])
      .controller("UserController", ["$scope", "$resource",

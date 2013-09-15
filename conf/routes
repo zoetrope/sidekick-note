@@ -5,14 +5,15 @@
 # Home page
 GET         /                         controllers.Application.main(title="")
 
-GET         /views/item               controllers.ItemController.index
-GET         /items.json               controllers.ItemController.items
-POST        /items.json               controllers.ItemController.newItem
+GET         /views/login              controllers.Application.login
+POST        /api/login.json           controllers.Application.authenticate
+POST        /api/logout.json          controllers.Application.logout
+GET         /api/loggedin.json        controllers.Application.loggedin
 
-GET         /views/login              controllers.UserController.index
-POST        /login.json               controllers.UserController.authenticate
-POST        /logout.json              controllers.UserController.logout
-#
+GET         /views/item               controllers.ItemController.view
+GET         /api/items.json           controllers.ItemController.items
+POST        /api/items.json           controllers.ItemController.newItem
+
 GET         /javascript-routes        controllers.Application.javascriptRoutes
 
 # Map static resources from the /public folder to the /assets URL path

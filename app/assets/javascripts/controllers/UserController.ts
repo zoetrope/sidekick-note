@@ -9,9 +9,6 @@ module controllers {
         name: string;
         password: string;
 
-        result: string
-
-        login(): void
     }
 
     declare var jsRouter:any
@@ -19,17 +16,6 @@ module controllers {
 
         constructor(public $scope:UserScope, public $resource:ng.resource.IResourceService) {
 
-            var User = $resource(jsRouter.controllers.UserController.authenticate().url)
-
-            $scope.login = () => {
-                var input = {name: $scope.name, password: $scope.password}
-                User.save(null, input, (data)=> {
-                    console.log(data);
-                    $scope.result = data
-                }, (reason)=> {
-                    alert("failed login." + reason)
-                });
-            };
         }
 
     }

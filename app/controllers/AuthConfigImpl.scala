@@ -24,7 +24,7 @@ trait AuthConfigImpl extends AuthConfig {
 
   def logoutSucceeded(request: RequestHeader) = Redirect(routes.Application.main(""))
 
-  def authenticationFailed(request: RequestHeader) = Unauthorized("unauthorized")
+  def authenticationFailed(request: RequestHeader) = Redirect(routes.Application.login())
 
   def authorizationFailed(request: RequestHeader) = Forbidden("no permission")
 
