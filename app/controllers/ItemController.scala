@@ -34,7 +34,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
     play.Logger.info("items")
     val items = Item.findAll()
     play.Logger.info("items length = " + items.length)
-    play.Logger.info("items[0].created = " + items.head.created)
+    //play.Logger.info("items[0].created = " + items.head.created)
     play.Logger.info(Serialization.write(items))
     Ok(Extraction.decompose(items)).as("application/json")
   }
