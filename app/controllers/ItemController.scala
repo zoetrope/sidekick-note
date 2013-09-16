@@ -8,6 +8,10 @@ import jp.t2v.lab.play2.auth.AuthElement
 import org.json4s.native.Serialization
 import org.joda.time._
 import org.json4s.ext.JodaTimeSerializers
+import net.java.sen.SenFactory
+import net.java.sen.StringTagger
+import net.java.sen.dictionary.Token
+import scala.collection.JavaConversions._
 
 case class ItemForm(content: String)
 
@@ -34,6 +38,14 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       play.Logger.info("newitem")
       val user = loggedIn
       val form: ItemForm = request.body.extract[ItemForm]
+
+      val tagger = SenFactory.getStringTagger(null)
+      val tokens = new java.util.ArrayList[Token]()
+      tagger.analyze(form.content, tokens)
+
+      val words = tokens.map(x=>x.getSurface).mkString(" ")
+      play.Logger.info(words)
+
       val item = Item.create(form.content, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.id)
       Ok(Extraction.decompose(item)).as("application/json")
   }
