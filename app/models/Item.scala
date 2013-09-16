@@ -9,7 +9,8 @@ case class Item(
   content: String, 
   created: DateTime, 
   modified: DateTime, 
-  deleted: Option[DateTime] = None) {
+  deleted: Option[DateTime] = None, 
+  accountId: Long) {
 
   def save()(implicit session: DBSession = Item.autoSession): Item = Item.save(this)(session)
 
@@ -22,14 +23,15 @@ object Item extends SQLSyntaxSupport[Item] {
 
   override val tableName = "items"
 
-  override val columns = Seq("id", "content", "created", "modified", "deleted")
+  override val columns = Seq("id", "content", "created", "modified", "deleted", "account_id")
 
   def apply(i: ResultName[Item])(rs: WrappedResultSet): Item = new Item(
     id = rs.long(i.id),
     content = rs.string(i.content),
     created = rs.timestamp(i.created).toDateTime,
     modified = rs.timestamp(i.modified).toDateTime,
-    deleted = rs.timestampOpt(i.deleted).map(_.toDateTime)
+    deleted = rs.timestampOpt(i.deleted).map(_.toDateTime),
+    accountId = rs.long(i.accountId)
   )
       
   val i = Item.syntax("i")
@@ -45,7 +47,16 @@ object Item extends SQLSyntaxSupport[Item] {
   def findAll()(implicit session: DBSession = autoSession): List[Item] = {
     withSQL(select.from(Item as i)).map(Item(i.resultName)).list.apply()
   }
-          
+
+  def findByAccountId(account_id:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Item] = {
+    withSQL(
+      select.from(Item as i)
+        .where.eq(i.accountId, account_id)
+        .orderBy(i.created).desc
+        .limit(limit).offset(offset)
+    ).map(Item(i.resultName)).list.apply()
+  }
+
   def countAll()(implicit session: DBSession = autoSession): Long = {
     withSQL(select(sqls"count(1)").from(Item as i)).map(rs => rs.long(1)).single.apply().get
   }
@@ -66,18 +77,21 @@ object Item extends SQLSyntaxSupport[Item] {
     content: String,
     created: DateTime,
     modified: DateTime,
-    deleted: Option[DateTime] = None)(implicit session: DBSession = autoSession): Item = {
+    deleted: Option[DateTime] = None,
+    accountId: Long)(implicit session: DBSession = autoSession): Item = {
     val generatedKey = withSQL {
       insert.into(Item).columns(
         column.content,
         column.created,
         column.modified,
-        column.deleted
+        column.deleted,
+        column.accountId
       ).values(
         content,
         created,
         modified,
-        deleted
+        deleted,
+        accountId
       )
     }.updateAndReturnGeneratedKey.apply()
 
@@ -86,7 +100,8 @@ object Item extends SQLSyntaxSupport[Item] {
       content = content,
       created = created,
       modified = modified,
-      deleted = deleted)
+      deleted = deleted,
+      accountId = accountId)
   }
 
   def save(entity: Item)(implicit session: DBSession = autoSession): Item = {
@@ -96,7 +111,8 @@ object Item extends SQLSyntaxSupport[Item] {
         i.content -> entity.content,
         i.created -> entity.created,
         i.modified -> entity.modified,
-        i.deleted -> entity.deleted
+        i.deleted -> entity.deleted,
+        i.accountId -> entity.accountId
       ).where.eq(i.id, entity.id)
     }.update.apply()
     entity 

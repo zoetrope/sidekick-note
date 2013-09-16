@@ -22,7 +22,10 @@ module controllers {
 
                 Items.save(null, {content: this.$scope.input_content},
                     (data)=> {
-                        $scope.items.push(data)
+                        $scope.items.unshift(data)
+                        if($scope.items.length > 5){
+                            $scope.items.pop()
+                        }
                     },
                     (reason)=> {
                         alert("error new item")

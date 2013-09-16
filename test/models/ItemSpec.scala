@@ -30,7 +30,7 @@ class ItemSpec extends Specification {
       count should be_>(0L)
     }
     "create new record" in new AutoRollback {
-      val created = Item.create(content = "MyString", created = DateTime.now, modified = DateTime.now)
+      val created = Item.create(content = "MyString", created = DateTime.now, modified = DateTime.now, accountId = 1L)
       created should not beNull
     }
     "save a record" in new AutoRollback {

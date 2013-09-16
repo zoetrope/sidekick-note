@@ -50,9 +50,8 @@ object Application extends Controller with OptionalAuthElement with LoginLogout 
     }
   }
 
-  def loggedin = StackAction {
-    implicit req =>
-      val maybeUser: Option[User] = loggedIn(req)
+  def loggedin = StackAction { implicit request =>
+      val maybeUser: Option[User] = loggedIn
       maybeUser match {
         case Some(user) =>{
           play.Logger.info("loggedin OK!")

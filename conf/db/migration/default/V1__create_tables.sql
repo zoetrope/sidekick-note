@@ -16,5 +16,8 @@ CREATE TABLE items (
   created DATETIME NOT NULL,
   modified DATETIME NOT NULL,
   deleted DATETIME,
-  PRIMARY KEY(id)
+  account_id BIGINT NOT Null,
+  PRIMARY KEY(id),
+  FOREIGN KEY (account_id) REFERENCES accounts(id),
+  INDEX(account_id, created)
 );
