@@ -11,7 +11,7 @@ GET         /api/logout.json          controllers.Application.logout
 GET         /api/loggedin.json        controllers.Application.loggedin
 
 GET         /views/item               controllers.ItemController.view
-GET         /api/items.json           controllers.ItemController.items
+GET         /api/items.json           controllers.ItemController.items(page:Int ?=1)
 POST        /api/items.json           controllers.ItemController.newItem
 
 GET         /javascript-routes        controllers.Application.javascriptRoutes
