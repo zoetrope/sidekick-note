@@ -3,7 +3,9 @@
 <h2>Item List</h2>
 <div ng-controller="ItemController">
     <form ng-submit="add_item()" role="form" class="form">
-        <textarea rows="3" ng-model="input_content" class="form-control" placeholder="add new item here" ng-disabled="sending" />
+        <textarea rows="3" ng-model="input_content" class="form-control"
+        placeholder="add new item here" ng-disabled="sending"
+        ui-keypress="{'ctrl-10':'keypressCallback($event)'}"/>
         <input type="submit" value="add" class="btn btn-default" ng-disabled="sending"/>
     </form>
     <div class="list-group">

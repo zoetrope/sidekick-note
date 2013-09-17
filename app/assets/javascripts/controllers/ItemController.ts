@@ -11,6 +11,7 @@ module controllers {
         input_content: string;
         add_item() : void;
         sending : Boolean;
+        keypressCallback($event : ng.IAngularEvent) : void;
     }
 
     declare var jsRouter:any
@@ -61,6 +62,11 @@ module controllers {
                 (reason)=> {
                     alert("error get items")
                 });
+
+            $scope.keypressCallback = ($event : ng.IAngularEvent) => {
+                alert('Voila!');
+                $event.preventDefault();
+            };
 
         }
 

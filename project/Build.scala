@@ -21,6 +21,7 @@ object ApplicationBuild extends Build {
     "org.webjars" % "bootstrap" % "3.0.0",
     "org.webjars" % "jquery" % "1.9.1",
     "org.webjars" % "angularjs" % "1.0.7",
+    "org.webjars" % "angular-ui-utils" % "47ff7ef35c",
     "org.webjars" % "marked" % "0.2.9",
     "org.webjars" % "highlightjs" % "7.3-1",
     "com.github.tototoshi" %% "play-json4s-native" % "0.1.0",
