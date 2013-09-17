@@ -1,4 +1,5 @@
 ///<reference path='../../ts-definitions/DefinitelyTyped/angularjs/angular.d.ts' />
+///<reference path="../../ts-definitions/DefinitelyTyped/marked/marked.d.ts" />
 
 module models {
     'use strict';
@@ -11,7 +12,7 @@ module models {
             if (angular.isString(data)) {
                 data = angular.fromJson(data);
             }
-            this.content = data.content;
+            this.content = "marked: " + marked(data.content);
             this.created = data.created;
         }
     }
