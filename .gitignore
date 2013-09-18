@@ -2,6 +2,7 @@ logs
 project/project/target
 project/target
 app/assets/ts-definitions
+test/assets/ts-definitions
 target
 tmp
 .history

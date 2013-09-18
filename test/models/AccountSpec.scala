@@ -10,7 +10,7 @@ class AccountSpec extends Specification {
 
   "Account" should {
     "find by primary keys" in new AutoRollback {
-      val maybeFound = Account.find(1L)
+      val maybeFound = Account.findById(1L)
       maybeFound.isDefined should beTrue
     }
     "find all records" in new AutoRollback {
@@ -41,7 +41,7 @@ class AccountSpec extends Specification {
     "destroy a record" in new AutoRollback {
       val entity = Account.findAll().head
       Account.destroy(entity)
-      val shouldBeNone = Account.find(1L)
+      val shouldBeNone = Account.findById(1L)
       shouldBeNone.isDefined should beFalse
     }
   }

@@ -15,6 +15,8 @@ object ApplicationBuild extends Build {
     "com.github.seratch" %% "scalikejdbc-interpolation" % "[1.6,)",
     "com.github.seratch" %% "scalikejdbc-play-plugin" % "[1.6,)",
     "com.github.seratch" %% "scalikejdbc-config" % "[1.6,)",
+    "com.github.seratch" %% "scalikejdbc-test" % "[1.6,)"  % "test",
+    "com.github.seratch" %% "scalikejdbc-play-fixture-plugin" % "[1.6,)",
     "mysql" % "mysql-connector-java" % "5.1.26",
     "com.typesafe" %% "play-plugins-redis" % "2.1-09092012-2",
     "org.webjars" %% "webjars-play" % "2.1.0-3",
@@ -36,7 +38,12 @@ object ApplicationBuild extends Build {
     val tsdTaskKey = TaskKey[Unit]("tsd", "install .d.ts file")
 
     val tsdTask = tsdTaskKey := {
-      scala.sys.process.Process("tsd install jquery angular angular-resource marked") run
+      scala.sys.process.Process("tsd install jquery angular angular-resource marked", new File("app/assets")) run
+    }
+    val tsdTestTaskKey = TaskKey[Unit]("tsd-test", "install .d.ts file for test")
+
+    val tsdTestTask = tsdTestTaskKey := {
+      scala.sys.process.Process("tsd install jasmine angular-mocks", new File("test/assets")) run
     }
   }
 
@@ -44,7 +51,8 @@ object ApplicationBuild extends Build {
     // Add your own project settings here
     tsOptions ++= Seq("--sourcemap"),
     resolvers += "org.sedis" at "http://pk11-scratch.googlecode.com/svn/trunk",
-    Tasks.tsdTask
+    Tasks.tsdTask,
+    Tasks.tsdTestTask
   )
 
 }
