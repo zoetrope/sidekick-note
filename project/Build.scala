@@ -3,6 +3,7 @@ import Keys._
 import play.Project._
 import com.github.mumoshu.play2.typescript.TypeScriptPlugin._
 import scala.sys.process._
+import com.gu.SbtJasminePlugin._
 
 object ApplicationBuild extends Build {
 
@@ -47,10 +48,17 @@ object ApplicationBuild extends Build {
     }
   }
 
-  val main = play.Project(appName, appVersion, appDependencies).settings(
+  val main = play.Project(appName, appVersion, appDependencies)
+    .settings(jasmineSettings : _*)
+    .settings(
     // Add your own project settings here
     tsOptions ++= Seq("--sourcemap"),
     resolvers += "org.sedis" at "http://pk11-scratch.googlecode.com/svn/trunk",
+    appJsDir <+= baseDirectory / "app/assets/typescripts",
+    appJsLibDir <+= baseDirectory / "public/javascripts/lib",
+    jasmineTestDir <+= baseDirectory / "test/assets/",
+    jasmineConfFile <+= baseDirectory / "test/assets/test.dependencies.js",
+    (test in Test) <<= (test in Test) dependsOn (jasmine),
     Tasks.tsdTask,
     Tasks.tsdTestTask
   )

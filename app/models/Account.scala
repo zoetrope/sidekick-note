@@ -42,7 +42,6 @@ object Account extends SQLSyntaxSupport[Account] {
 
   def authenticate(name: String, password: String)(implicit s: DBSession = autoSession): Option[Account] = {
     val res = findByName(name).filter { account => BCrypt.checkpw(password, account.password) }
-    play.Logger.debug("authenticate is " + res)
     return res
   }
 
