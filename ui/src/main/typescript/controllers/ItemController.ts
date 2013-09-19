@@ -1,4 +1,4 @@
-///<reference path='../../ts-definitions/DefinitelyTyped/angularjs/angular.d.ts' />
+///<reference path='../../../../../app/assets/ts-definitions/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../ts-definitions/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path="../../ts-definitions/DefinitelyTyped/marked/marked.d.ts" />
 ///<reference path='../models/Item.ts' />

@@ -3,6 +3,10 @@ project/project/target
 project/target
 app/assets/ts-definitions
 test/assets/ts-definitions
+ui/node_modules
+ui/bower_components
+ui/d.ts
+ui/bower-task
 target
 tmp
 .history
