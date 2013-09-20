@@ -14,7 +14,7 @@ module App {
 
     angular.module(
         appName,
-        [appName + ".controller", "ui.keypress"],
+        [appName + ".controller", appName + ".directive", "ui.keypress"],
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
@@ -38,6 +38,22 @@ module App {
             $httpProvider.responseInterceptors.push(interceptor)
         })
         .run(($rootScope:ng.IRootScopeService, $routeParams:ng.IRouteParamsService)=> {});
+
+    angular.module(
+        appName + ".directive",
+        [],
+        ()=> {
+        }
+    ).directive('kickFocus', [ () => {
+            return (scope, element, attrs) => {
+                scope.$watch(attrs.kickFocus, autofocus => {
+                    if (autofocus)
+                        setTimeout(function () {
+                            element[0].focus()
+                        }, 0)
+                })
+            }
+        }]);
 
     angular.module(
         appName + ".controller",

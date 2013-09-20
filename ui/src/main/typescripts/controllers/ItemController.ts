@@ -12,6 +12,7 @@ module controllers {
         add_item() : void;
         sending : Boolean;
         keypressCallback($event : ng.IAngularEvent) : void;
+        hasFocus : Boolean;
     }
 
     declare var jsRouter:any
@@ -19,6 +20,8 @@ module controllers {
     export class ItemController {
 
         constructor(public $scope:ItemScope, public $resource:ng.resource.IResourceService) {
+
+            $scope.hasFocus = true;
 
             marked.setOptions({
                 gfm: true,
@@ -38,6 +41,7 @@ module controllers {
 
             $scope.add_item = () => {
                 $scope.sending = true
+                $scope.hasFocus = false
 
                 Items.save(null, {content: this.$scope.input_content},
                     (data)=> {
@@ -48,10 +52,12 @@ module controllers {
                         }
                         $scope.input_content = ""
                         $scope.sending = false
+                        $scope.hasFocus = true;
                     },
                     (reason)=> {
                         alert("error new item")
                         $scope.sending = false
+                        $scope.hasFocus = true;
                     })
             };
 

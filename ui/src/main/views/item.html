@@ -3,6 +3,7 @@
     <form ng-submit="add_item()" role="form" class="form">
         <textarea rows="3" ng-model="input_content" class="form-control"
         placeholder="add new item here" ng-disabled="sending"
+        kick-focus="hasFocus"
         ui-keypress="{'ctrl-10':'keypressCallback($event)'}"/>
         <input type="submit" value="add" class="btn btn-default" ng-disabled="sending"/>
     </form>
