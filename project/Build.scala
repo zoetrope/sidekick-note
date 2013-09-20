@@ -41,7 +41,7 @@ object ApplicationBuild extends Build {
 
     playOnStarted <+= uiDirectory { base =>
       (address: InetSocketAddress) => {
-        Grunt.process = Some(Process("grunt default", base).run)
+        Grunt.process = Some(Process("grunt run", base).run)
       }: Unit
     },
 

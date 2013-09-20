@@ -44,6 +44,16 @@ module.exports = function (grunt) {
                 }
             }
         },
+        watch: {
+            "typescript-main": {
+                files: ['<%= conf.app.typescripts %>/**/*.ts'],
+                tasks: ['typescript:main', 'uglify:dev']
+            },
+            views: {
+                files: ['<%= conf.app.views %>/**/*.html'],
+                tasks: ['copy:static']
+            }
+        },
         bower: {
             install: {
                 options: {
@@ -167,6 +177,11 @@ module.exports = function (grunt) {
         'default',
         "compile",
         ['clean:public', 'copy:bower', 'copy:static', 'typescript:main', 'uglify:dev']);
+
+    grunt.registerTask(
+        'run',
+        "compile and watch",
+        ['clean:public', 'copy:bower', 'copy:static', 'typescript:main', 'uglify:dev', 'watch']);
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 };
