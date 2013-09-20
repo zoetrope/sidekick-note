@@ -1,7 +1,8 @@
+import java.net.InetSocketAddress
 import sbt._
 import Keys._
 import play.Project._
-import scala.sys.process._
+import java.net._
 
 object ApplicationBuild extends Build {
 
@@ -25,11 +26,34 @@ object ApplicationBuild extends Build {
     "org.mindrot" % "jbcrypt" % "0.3m"
   )
 
+  object Keys {
+    val uiDirectory = SettingKey[File]("ui-directory")
+  }
+
+  import Keys._
 
   val main = play.Project(appName, appVersion, appDependencies)
     .settings(
     // Add your own project settings here
-    resolvers += "org.sedis" at "http://pk11-scratch.googlecode.com/svn/trunk"
+    resolvers += "org.sedis" at "http://pk11-scratch.googlecode.com/svn/trunk",
+
+    uiDirectory <<= (baseDirectory in Compile) { _ / "ui" },
+
+    playOnStarted <+= uiDirectory { base =>
+      (address: InetSocketAddress) => {
+        Grunt.process = Some(Process("grunt default", base).run)
+      }: Unit
+    },
+
+    playOnStopped += {
+      () => {
+        Grunt.process.map(p => p.destroy())
+        Grunt.process = None
+      }: Unit
+    }
   )
 
+  object Grunt {
+    var process: Option[Process] = None
+  }
 }

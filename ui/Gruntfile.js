@@ -11,7 +11,8 @@ module.exports = function (grunt) {
             typescripts: 'src/main/typescripts',
             libs: 'src/main/libs',
             views: 'src/main/views',
-            tsd: 'src/main/typescripts/libs/DefinitelyTyped'
+            tsd: 'src/main/typescripts/libs/DefinitelyTyped',
+            images: 'src/main/images'
         },
         test: {
             typescripts: 'src/test/typescripts',
@@ -56,15 +57,17 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            view: {
+            static: {
                 files: [
                     {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.views %>/*.html'], dest: '<%= conf.dist.views %>'},
+                    {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.images %>/*.*'], dest: '<%= conf.dist.images %>'}
                 ]
             },
             bower: {
                 files: [
                     {expand: true, flatten: true, cwd: 'bower-task/', src: ['main-js/**/*.js'], dest: '<%= conf.dist.libs %>'},
                     {expand: true, flatten: true, cwd: 'bower-task/', src: ['main-css/**/*.css'], dest: '<%= conf.dist.stylesheets %>'},
+                    {expand: true, flatten: true, cwd: 'bower-task/', src: ['main-fonts/**/*.*'], dest: '<%= conf.dist.fonts %>'},
 
                     {expand: true, flatten: true, cwd: 'bower-task/', src: ['test-js/**/*.js'], dest: '<%= conf.test.libs %>'},
                     {expand: true, flatten: true, cwd: 'bower-task/', src: ['test-css/**/*.css'], dest: '<%= conf.test.stylesheets %>'}
@@ -116,11 +119,34 @@ module.exports = function (grunt) {
                         '<%= conf.dist.libs %>/bootstrap.js',
                         '<%= conf.dist.libs %>/highlight.pack.js',
                         '<%= conf.dist.libs %>/marked.js',
-                        '<%= conf.dist.scripts %>/controllers/*.js',
                         '<%= conf.dist.scripts %>/models/*.js',
-                        '<%= conf.dist.scripts %>/*.js'
+                        '<%= conf.dist.scripts %>/controllers/*.js',
+                        '<%= conf.dist.scripts %>/App.js'
                     ]
                 }
+            }
+        },
+        clean: {
+            public: {
+                src: [
+                    '../public/*'
+                ],
+                options: {
+                    force: true
+                }
+            },
+            tsd: {
+                src: [
+                    '<%= conf.app.tsd %>',
+                    '<%= conf.test.tsd %>',
+                    'd.ts'
+                ]
+            },
+            bower: {
+                src: [
+                    'bower_components',
+                    'bower-task'
+                ]
             }
         },
         exec: {
@@ -135,12 +161,12 @@ module.exports = function (grunt) {
     grunt.registerTask(
         'setup',
         "Setup project",
-        ['bower', 'exec:tsd']);
+        ['clean', 'bower', 'exec:tsd', 'copy:tsd']);
 
     grunt.registerTask(
         'default',
         "compile",
-        ['typescript:main']);
+        ['clean:public', 'copy:bower', 'copy:static', 'typescript:main', 'uglify:dev']);
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 };
