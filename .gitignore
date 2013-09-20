@@ -10,8 +10,10 @@ ui/bower-task
 ui/src/main/typescripts/libs
 public/
 ui/src/test/typescripts/libs
+ui/src/test/scripts
 ui/src/test/libs
 ui/src/test/stylesheets
+ui/src/d.ts
 target
 tmp
 .history

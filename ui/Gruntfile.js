@@ -7,17 +7,17 @@ module.exports = function (grunt) {
         stylesheets: 'stylesheets',
         images: 'assets/images',
         fonts: 'assets/fonts',
+        tsd: 'src/d.ts',
         app: {
             typescripts: 'src/main/typescripts',
             libs: 'src/main/libs',
             views: 'src/main/views',
-            tsd: 'src/main/typescripts/libs/DefinitelyTyped',
             images: 'src/main/images'
         },
         test: {
             typescripts: 'src/test/typescripts',
+            scripts: 'src/test/scripts',
             libs: 'src/test/libs',
-            tsd: 'src/test/typescripts/libs/DefinitelyTyped',
             stylesheets: 'src/test/stylesheets'
         },
         dist: {
@@ -40,7 +40,16 @@ module.exports = function (grunt) {
                     target: 'es5',
                     base_path: '<%= conf.app.typescripts %>',
                     sourcemap: false,
-                    declaration_file: false
+                    declaration: false
+                }
+            },
+            test: {
+                src: ['<%= conf.test.typescripts %>/AppSpec.ts'],
+                dest: '<%= conf.test.scripts %>/AppSpec.js',
+                options: {
+                    target: 'es5',
+                    sourcemap: false,
+                    declaration: false
                 }
             }
         },
@@ -48,6 +57,10 @@ module.exports = function (grunt) {
             "typescript-main": {
                 files: ['<%= conf.app.typescripts %>/**/*.ts'],
                 tasks: ['typescript:main', 'uglify:dev']
+            },
+            "typescript-test": {
+                files: [ '<%= conf.test.typescripts %>/**/*.ts'],
+                tasks: ['typescript']
             },
             views: {
                 files: ['<%= conf.app.views %>/**/*.html'],
@@ -89,21 +102,9 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: 'd.ts/DefinitelyTyped/',
                         src: [
-                            'angularjs/angular.d.ts',
-                            'angularjs/angular-resource.d.ts',
-                            'jquery/*.d.ts',
-                            'marked/*.d.ts'
+                            '*/*.d.ts'
                         ],
-                        dest: '<%= conf.app.tsd %>'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'd.ts/DefinitelyTyped/',
-                        src: [
-                            'angularjs/angular-mocks.d.ts',
-                            'jasmine/*.d.ts'
-                        ],
-                        dest: '<%= conf.test.tsd %>'
+                        dest: '<%= conf.tsd %>'
                     }
                 ]
             }
@@ -147,8 +148,7 @@ module.exports = function (grunt) {
             },
             tsd: {
                 src: [
-                    '<%= conf.app.tsd %>',
-                    '<%= conf.test.tsd %>',
+                    '<%= conf.tsd %>',
                     'd.ts'
                 ]
             },
@@ -157,6 +157,18 @@ module.exports = function (grunt) {
                     'bower_components',
                     'bower-task'
                 ]
+            }
+        },
+        karma: {
+            unit: {
+                options: {
+                    configFile: 'karma.conf.js',
+                    autoWatch: false,
+                    browsers: ['Chrome'],
+                    reporters: ['progress', 'junit'],
+                    singleRun: true,
+                    keepalive: true
+                }
             }
         },
         exec: {

@@ -1,5 +1,5 @@
-///<reference path='libs/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='libs/DefinitelyTyped/angularjs/angular-resource.d.ts' />
+///<reference path='../../d.ts/angularjs/angular.d.ts' />
+///<reference path='../../d.ts/angularjs/angular-resource.d.ts' />
 ///<reference path='controllers/ApplicationController.ts' />
 ///<reference path='controllers/ItemController.ts' />
 ///<reference path='controllers/UserController.ts' />

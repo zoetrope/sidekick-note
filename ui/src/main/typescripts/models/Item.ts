@@ -1,5 +1,5 @@
-///<reference path='../libs/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path="../libs/DefinitelyTyped/marked/marked.d.ts" />
+///<reference path='../../../d.ts/angularjs/angular.d.ts' />
+///<reference path="../../../d.ts/marked/marked.d.ts" />
 
 module models {
     'use strict';
