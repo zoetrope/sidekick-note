@@ -11,12 +11,13 @@ module controllers {
         input_content: string;
         add_item() : void;
         sending : Boolean;
-        keypressCallback($event : ng.IAngularEvent) : void;
+        keypress($event : ng.IAngularEvent) : void;
         hasFocus : Boolean;
     }
 
     declare var jsRouter:any
     declare var hljs:any
+
     export class ItemController {
 
         constructor(public $scope:ItemScope, public $resource:ng.resource.IResourceService) {
@@ -69,8 +70,8 @@ module controllers {
                     alert("error get items")
                 });
 
-            $scope.keypressCallback = ($event : ng.IAngularEvent) => {
-                alert('Voila!');
+            $scope.keypress = ($event : ng.IAngularEvent) => {
+                $scope.add_item()
                 $event.preventDefault();
             };
 

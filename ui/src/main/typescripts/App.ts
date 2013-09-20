@@ -47,10 +47,11 @@ module App {
     ).directive('kickFocus', [ () => {
             return (scope, element, attrs) => {
                 scope.$watch(attrs.kickFocus, autofocus => {
-                    if (autofocus)
+                    if (autofocus) {
                         setTimeout(function () {
                             element[0].focus()
                         }, 0)
+                    }
                 })
             }
         }]);
