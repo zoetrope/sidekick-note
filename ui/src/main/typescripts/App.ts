@@ -1,5 +1,5 @@
-///<reference path='../../../../app/assets/ts-definitions/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='../ts-definitions/DefinitelyTyped/angularjs/angular-resource.d.ts' />
+///<reference path='libs/DefinitelyTyped/angularjs/angular.d.ts' />
+///<reference path='libs/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='controllers/ApplicationController.ts' />
 ///<reference path='controllers/ItemController.ts' />
 ///<reference path='controllers/UserController.ts' />
@@ -18,8 +18,8 @@ module App {
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
-                .when("/item", {templateUrl: "/views/item"})
-                .when("/login", {templateUrl: "/views/login"});
+                .when("/item", {templateUrl: "/assets/views/item.html"})
+                .when("/login", {templateUrl: "/assets/views/login.html"});
                 //.otherwise({redirectTo: '/item'});
             $locationProvider.html5Mode(true);
         }

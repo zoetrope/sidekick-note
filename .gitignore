@@ -7,6 +7,11 @@ ui/node_modules
 ui/bower_components
 ui/d.ts
 ui/bower-task
+ui/src/main/typescripts/libs
+public/
+ui/src/test/typescripts/libs
+ui/src/test/libs
+ui/src/test/stylesheets
 target
 tmp
 .history

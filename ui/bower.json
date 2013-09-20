@@ -19,12 +19,54 @@
     "jquery": "~2.0.3",
     "bootstrap": "~3.0.0",
     "angular": "~1.0.8",
+    "angular-resource": "~1.0.8",
     "angular-ui": "~0.4.0",
     "marked": "~0.2.9",
-    "highlightjs": "~7.3.0"
+    "highlightjs": "~7.3.0",
+    "angular-ui-utils": "~0.0.4"
   },
   "devDependencies": {
     "jasmine": "~1.3.1",
     "angular-mocks": "~1.0.8"
+  },
+  "exportsOverride": {
+    "angular": {
+      "main-js": "**/angular.js"
+    },
+    "angular-resource": {
+      "main-js": "**/angular-resource.js"
+    },
+    "angular-ui": {
+      "main-js": "build/angular-ui.js",
+      "main-css": "build/angular-ui.css"
+    },
+    "angular-ui-utils": {
+      "main-js": "modules/keypress/keypress.js"
+    },
+    "bootstrap": {
+      "main-js": "dist/js/bootstrap.js",
+      "main-css": [
+        "dist/css/bootstrap.css",
+        "dist/css/bootstrap-theme.css"
+      ],
+      "main-fonts": "dist/fonts/*.*"
+    },
+    "highlightjs": {
+      "main-js": "highlight.pack.js",
+      "main-css": "styles/default.css"
+    },
+    "jquery": {
+      "main-js": "**/jquery.js"
+    },
+    "marked": {
+      "main-js": "lib/marked.js"
+    },
+    "angular-mocks": {
+      "test-js": "**/*.js"
+    },
+    "jasmine": {
+      "test-js": "lib/jasmine-core/jasmine*.js",
+      "test-css": "lib/jasmine-core/*.css"
+    }
   }
 }

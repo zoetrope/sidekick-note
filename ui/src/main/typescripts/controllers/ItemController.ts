@@ -1,6 +1,6 @@
-///<reference path='../../../../../app/assets/ts-definitions/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='../../ts-definitions/DefinitelyTyped/angularjs/angular-resource.d.ts' />
-///<reference path="../../ts-definitions/DefinitelyTyped/marked/marked.d.ts" />
+///<reference path='../libs/DefinitelyTyped/angularjs/angular.d.ts' />
+///<reference path='../libs/DefinitelyTyped/angularjs/angular-resource.d.ts' />
+///<reference path="../libs/DefinitelyTyped/marked/marked.d.ts" />
 ///<reference path='../models/Item.ts' />
 
 module controllers {

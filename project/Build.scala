@@ -1,9 +1,7 @@
 import sbt._
 import Keys._
 import play.Project._
-import com.github.mumoshu.play2.typescript.TypeScriptPlugin._
 import scala.sys.process._
-import com.gu.SbtJasminePlugin._
 
 object ApplicationBuild extends Build {
 
@@ -31,7 +29,7 @@ object ApplicationBuild extends Build {
   val main = play.Project(appName, appVersion, appDependencies)
     .settings(
     // Add your own project settings here
-    resolvers += "org.sedis" at "http://pk11-scratch.googlecode.com/svn/trunk",
+    resolvers += "org.sedis" at "http://pk11-scratch.googlecode.com/svn/trunk"
   )
 
 }

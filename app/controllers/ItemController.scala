@@ -20,10 +20,6 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
   //implicit val formats = DefaultFormats
 
-  def view = StackAction(AuthorityKey -> NormalUser) { implicit request =>
-    Ok(views.html.item())
-  }
-
   def items(page: Int) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
 

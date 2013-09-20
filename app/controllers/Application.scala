@@ -1,11 +1,9 @@
 package controllers
 
-import play.api._
 import play.api.mvc._
 import com.github.tototoshi.play2.json4s.native._
 import play.api.data.Form
 import org.json4s.{Extraction, DefaultFormats}
-import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Form
@@ -22,10 +20,6 @@ object Application extends Controller with OptionalAuthElement with LoginLogout 
 
   def main(title : String) = Action { implicit request =>
     Ok(views.html.main(title))
-  }
-
-  def login = Action { implicit request =>
-    Ok(views.html.login())
   }
 
   def logout = Action { implicit request =>
