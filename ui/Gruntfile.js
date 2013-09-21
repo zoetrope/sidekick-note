@@ -116,13 +116,20 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            public: {
+            dist: {
                 src: [
                     '../public/*'
                 ],
                 options: {
                     force: true
                 }
+            },
+            test: {
+                src: [
+                    '<%= conf.test.scripts %>/*',
+                    '<%= conf.test.libs %>/*',
+                    '<%= conf.test.stylesheets %>/*'
+                ]
             },
             tsd: {
                 src: [
@@ -164,12 +171,17 @@ module.exports = function (grunt) {
     grunt.registerTask(
         'default',
         "compile",
-        ['clean:public', 'bower', 'copy:static', 'typescript:main', 'uglify:dev']);
+        ['clean:dist', 'bower', 'copy:static', 'typescript:main', 'uglify:dev']);
 
     grunt.registerTask(
         'run',
         "compile and watch",
-        ['clean:public', 'bower', 'copy:static', 'typescript:main', 'uglify:dev', 'watch']);
+        ['clean:dist', 'bower', 'copy:static', 'typescript:main', 'uglify:dev', 'watch']);
+
+    grunt.registerTask(
+        'test',
+        "test by karma",
+        ['clean:dist', 'clean:test', 'bower', 'typescript', 'karma']);
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 };
