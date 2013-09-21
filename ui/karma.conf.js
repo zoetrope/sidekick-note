@@ -14,13 +14,14 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            '../public/scripts/libs/jquery.js',
-            '../public/scripts/libs/angular.js',
-            '../public/scripts/libs/angular-*.js',
-            '../public/scripts/libs/keypress.js',
-            '../public/scripts/libs/bootstrap.js',
-            '../public/scripts/libs/highlight.pack.js',
-            '../public/scripts/libs/marked.js',
+            '../public/scripts/libs/jquery/jquery.js',
+            '../public/scripts/libs/angular/angular.js',
+            '../public/scripts/libs/angular-resource/angular-resource.js',
+            '../public/scripts/libs/angular-ui/angular-ui.js',
+            '../public/scripts/libs/angular-ui-utils/keypress.js',
+            '../public/scripts/libs/bootstrap/bootstrap.js',
+            '../public/scripts/libs/highlightjs/highlight.pack.js',
+            '../public/scripts/libs/marked/marked.js',
             '../public/scripts/models/*.js',
             '../public/scripts/controllers/*.js',
             '../public/scripts/App.js',
@@ -32,7 +33,7 @@ module.exports = function (config) {
         // list of files to exclude
         exclude: [
             '../public/scripts/main.min.js',
-            'src/test/libs/jasmine*.js'
+            'src/test/libs/jasmine/jasmine*.js'
         ],
 
 

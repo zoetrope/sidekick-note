@@ -5,12 +5,12 @@
 # Home page
 GET         /                         controllers.Application.main(title="")
 
-POST        /api/login.json           controllers.Application.authenticate
-GET         /api/logout.json          controllers.Application.logout
-GET         /api/loggedin.json        controllers.Application.loggedin
+POST        /login                    controllers.Application.authenticate
+GET         /logout                   controllers.Application.logout
+GET         /loggedin                 controllers.Application.loggedin
 
-GET         /api/items.json           controllers.ItemController.items(page:Int ?=1)
-POST        /api/items.json           controllers.ItemController.newItem
+GET         /items                    controllers.ItemController.items(page:Int ?=1)
+POST        /items                    controllers.ItemController.newItem
 
 GET         /javascript-routes        controllers.Application.javascriptRoutes
 

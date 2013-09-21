@@ -31,42 +31,42 @@
   },
   "exportsOverride": {
     "angular": {
-      "main-js": "**/angular.js"
+      "public/scripts/libs": "**/angular.js"
     },
     "angular-resource": {
-      "main-js": "**/angular-resource.js"
+      "public/scripts/libs": "**/angular-resource.js"
     },
     "angular-ui": {
-      "main-js": "build/angular-ui.js",
-      "main-css": "build/angular-ui.css"
+      "public/scripts/libs": "build/angular-ui.js",
+      "public/stylesheets": "build/angular-ui.css"
     },
     "angular-ui-utils": {
-      "main-js": "modules/keypress/keypress.js"
+      "public/scripts/libs": "modules/keypress/keypress.js"
     },
     "bootstrap": {
-      "main-js": "dist/js/bootstrap.js",
-      "main-css": [
+      "public/scripts/libs": "dist/js/bootstrap.js",
+      "public/stylesheets": [
         "dist/css/bootstrap.css",
         "dist/css/bootstrap-theme.css"
       ],
-      "main-fonts": "dist/fonts/*.*"
+      "public/fonts": "dist/fonts/*.*"
     },
     "highlightjs": {
-      "main-js": "highlight.pack.js",
-      "main-css": "styles/default.css"
+      "public/scripts/libs": "highlight.pack.js",
+      "public/stylesheets": "styles/default.css"
     },
     "jquery": {
-      "main-js": "**/jquery.js"
+      "public/scripts/libs": "**/jquery.js"
     },
     "marked": {
-      "main-js": "lib/marked.js"
+      "public/scripts/libs": "lib/marked.js"
     },
     "angular-mocks": {
-      "test-js": "**/*.js"
+      "ui/src/test/libs": "**/*.js"
     },
     "jasmine": {
-      "test-js": "lib/jasmine-core/jasmine*.js",
-      "test-css": "lib/jasmine-core/*.css"
+      "ui/src/test/libs": "lib/jasmine-core/jasmine*.js",
+      "ui/src/test/stylesheets": "lib/jasmine-core/*.css"
     }
   }
 }
