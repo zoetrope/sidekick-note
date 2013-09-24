@@ -13,6 +13,7 @@ module controllers {
         sending : Boolean;
         keypress($event : ng.IAngularEvent) : void;
         hasFocus : Boolean;
+        toMarkdown(input: string) : string;
     }
 
     declare var jsRouter:any
@@ -31,9 +32,11 @@ module controllers {
                 pedantic: false,
                 sanitize: true,
                 highlight: function (code, lang) {
-                    var hoge = hljs.highlight(lang, code).value;
-                    console.log(hoge);
-                   return hoge;
+                    try{
+                        return hljs.highlight(lang, code).value;
+                    } catch(err) {
+                        return hljs.highlightAuto(code).value;
+                    }
                 }
             });
 
@@ -47,6 +50,7 @@ module controllers {
                 Items.save(null, {content: this.$scope.input_content},
                     (data)=> {
                         data.content = marked(data.content)
+                        alert(typeof($scope.items))
                         $scope.items.unshift(data)
                         if($scope.items.length > 5){
                             $scope.items.pop()
@@ -61,6 +65,14 @@ module controllers {
                         $scope.hasFocus = true;
                     })
             };
+
+            $scope.toMarkdown = (input) =>{
+                if(input) {
+                    return marked(input)
+                } else {
+                    return ""
+                }
+            }
 
             Items.query(
                 (data)=> {

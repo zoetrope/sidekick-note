@@ -41,7 +41,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
 
   def newItem = StackAction(json, AuthorityKey -> NormalUser) {
     implicit request =>
-      play.Logger.info("newitem")
+      play.Logger.info("newitem entry")
       val user = loggedIn
       val form: ItemForm = request.body.extract[ItemForm]
 
@@ -53,6 +53,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       play.Logger.info(words)
 
       val item = Item.create(form.content, words, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.id)
+      play.Logger.info("newitem exit")
       Ok(Extraction.decompose(item)).as("application/json")
   }
 

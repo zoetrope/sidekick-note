@@ -7,6 +7,7 @@
             ui-keypress="{'ctrl-10':'keypress($event)'}"/>
         <input type="submit" value="add" class="btn btn-default" ng-disabled="sending"/>
     </form>
+    <div ng-bind-html-unsafe="toMarkdown(input_content)" />
     <div class="list-group">
         <div ng-repeat="item in items" class="list-group-item">
             <p class="list-group-item-text">
