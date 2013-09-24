@@ -2,6 +2,7 @@
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='controllers/ApplicationController.ts' />
 ///<reference path='controllers/ItemController.ts' />
+///<reference path='controllers/SearchController.ts' />
 ///<reference path='controllers/UserController.ts' />
 ///<reference path='models/Item.ts' />
 
@@ -18,9 +19,11 @@ module App {
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
+                .when("/home", {templateUrl: "/assets/views/home.html"})
                 .when("/item", {templateUrl: "/assets/views/item.html"})
-                .when("/login", {templateUrl: "/assets/views/login.html"});
-                //.otherwise({redirectTo: '/item'});
+                .when("/search", {templateUrl: "/assets/views/search.html"})
+                .when("/login", {templateUrl: "/assets/views/login.html"})
+                .otherwise({redirectTo: '/home'});
             $locationProvider.html5Mode(true);
         }
     ).config($httpProvider => {
@@ -67,6 +70,10 @@ module App {
      .controller("ItemController", ["$scope", "$resource",
             ($scope:controllers.ItemScope, $resource:ng.resource.IResourceService) : controllers.ItemController => {
                 return new controllers.ItemController($scope, $resource)
+            }])
+     .controller("SearchController", ["$scope", "$resource",
+            ($scope:controllers.SearchScope, $resource:ng.resource.IResourceService) : controllers.SearchController => {
+                return new controllers.SearchController($scope, $resource)
             }])
      .controller("UserController", ["$scope", "$resource",
             ($scope:controllers.UserScope, $resource:ng.resource.IResourceService) : controllers.UserController => {

@@ -12,6 +12,8 @@ GET         /loggedin                 controllers.Application.loggedin
 GET         /items                    controllers.ItemController.items(page:Int ?=1)
 POST        /items                    controllers.ItemController.newItem
 
+GET         /items/search             controllers.ItemController.search(words:String)
+
 GET         /javascript-routes        controllers.Application.javascriptRoutes
 
 # Map static resources from the /public folder to the /assets URL path

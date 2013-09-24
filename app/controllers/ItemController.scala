@@ -52,8 +52,27 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       val words = tokens.map(x=>x.getSurface).mkString(" ")
       play.Logger.info(words)
 
-      val item = Item.create(form.content, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.id)
+      val item = Item.create(form.content, words, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.id)
       Ok(Extraction.decompose(item)).as("application/json")
   }
 
+  def search(words : String) = StackAction(AuthorityKey -> NormalUser) {
+    implicit request => {
+      play.Logger.info("search words = " + words)
+      val limit = 10
+      val offset = 0
+
+      val tagger = SenFactory.getStringTagger(null)
+      val tokens = new java.util.ArrayList[Token]()
+      tagger.analyze(words, tokens)
+
+      val keywords = tokens.map(x=> "+" + x.getSurface).mkString(" ")
+
+      val user = loggedIn
+      val items = Item.findByKeywords(keywords, user.id, offset, limit)
+      play.Logger.info("search result length = " + items.length)
+      play.Logger.info(Serialization.write(items))
+      Ok(Extraction.decompose(items)).as("application/json")
+    }
+  }
 }

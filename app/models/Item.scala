@@ -6,7 +6,8 @@ import org.joda.time.{DateTime}
 
 case class Item(
   id: Long, 
-  content: String, 
+  content: String,
+  words: String,
   created: DateTime, 
   modified: DateTime, 
   deleted: Option[DateTime] = None, 
@@ -23,11 +24,12 @@ object Item extends SQLSyntaxSupport[Item] {
 
   override val tableName = "items"
 
-  override val columns = Seq("id", "content", "created", "modified", "deleted", "account_id")
+  override val columns = Seq("id", "content", "words", "created", "modified", "deleted", "account_id")
 
   def apply(i: ResultName[Item])(rs: WrappedResultSet): Item = new Item(
     id = rs.long(i.id),
     content = rs.string(i.content),
+    words = rs.string(i.words),
     created = rs.timestamp(i.created).toDateTime,
     modified = rs.timestamp(i.modified).toDateTime,
     deleted = rs.timestampOpt(i.deleted).map(_.toDateTime),
@@ -57,6 +59,10 @@ object Item extends SQLSyntaxSupport[Item] {
     ).map(Item(i.resultName)).list.apply()
   }
 
+  def findByKeywords(keywords:String, account_id:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Item] = {
+    sql"select ${i.result.*} from ${Item.as(i)} where match words against (${keywords})".map(Item(i.resultName)).list.apply()
+  }
+
   def countAll()(implicit session: DBSession = autoSession): Long = {
     withSQL(select(sqls"count(1)").from(Item as i)).map(rs => rs.long(1)).single.apply().get
   }
@@ -75,6 +81,7 @@ object Item extends SQLSyntaxSupport[Item] {
       
   def create(
     content: String,
+    words: String,
     created: DateTime,
     modified: DateTime,
     deleted: Option[DateTime] = None,
@@ -82,12 +89,14 @@ object Item extends SQLSyntaxSupport[Item] {
     val generatedKey = withSQL {
       insert.into(Item).columns(
         column.content,
+        column.words,
         column.created,
         column.modified,
         column.deleted,
         column.accountId
       ).values(
         content,
+        words,
         created,
         modified,
         deleted,
@@ -98,6 +107,7 @@ object Item extends SQLSyntaxSupport[Item] {
     Item(
       id = generatedKey, 
       content = content,
+      words = words,
       created = created,
       modified = modified,
       deleted = deleted,
@@ -109,6 +119,7 @@ object Item extends SQLSyntaxSupport[Item] {
       update(Item as i).set(
         i.id -> entity.id,
         i.content -> entity.content,
+        i.words -> entity.words,
         i.created -> entity.created,
         i.modified -> entity.modified,
         i.deleted -> entity.deleted,

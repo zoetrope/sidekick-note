@@ -1,0 +1,22 @@
+<h2>Search</h2>
+<div ng-controller="SearchController">
+    <form ng-submit="search()" role="form" class="form">
+        <input type="text" ng-model="input_words" class="form-control"
+                  placeholder="search keywords" ng-disabled="searching"
+                  kick-focus="hasFocus"
+                  ui-keypress="{'enter':'keypress($event)'}"/>
+        <input type="submit" value="search" class="btn btn-default" ng-disabled="searching"/>
+    </form>
+    <div class="list-group">
+        <div ng-repeat="item in items" class="list-group-item">
+            <p class="list-group-item-text">
+            <div ng-bind-html-unsafe="item.content" />
+            </p>
+            <p class="list-group-item-text text-muted text-right">
+                <small>
+                    {{item.created}}
+                </small>
+            </p>
+        </div>
+    </div>
+</div>

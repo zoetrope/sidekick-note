@@ -64,6 +64,7 @@ object Application extends Controller with OptionalAuthElement with LoginLogout 
       Routes.javascriptRouter("jsRouter")(
         routes.javascript.ItemController.items,
         routes.javascript.ItemController.newItem,
+        routes.javascript.ItemController.search,
         routes.javascript.Application.authenticate,
         routes.javascript.Application.logout,
         routes.javascript.Application.loggedin
