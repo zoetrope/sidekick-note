@@ -23,3 +23,20 @@ CREATE TABLE items (
   INDEX (account_id, created),
   FULLTEXT (words)
 ) ENGINE=MyISAM DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS tags;
+CREATE TABLE tags (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  name VARCHAR (20) NOT NULL,
+  ref_count INT NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS items_tags;
+CREATE TABLE items_tags (
+  item_id BIGINT NOT NULL,
+  tag_id BIGINT NOT NULL,
+  PRIMARY KEY (item_id, tag_id),
+  FOREIGN KEY (item_id) REFERENCES items(id),
+  FOREIGN KEY (tag_id) REFERENCES tags(id)
+) ENGINE=MyISAM DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
