@@ -18,7 +18,7 @@
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
+            <div class="container" ng-controller="ApplicationController">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
@@ -33,11 +33,19 @@
                         <li class="active"><a href="/item">Item</a></li>
                         <li class="active"><a href="/search">Search</a></li>
                     </ul>
-                    <ul class="nav navbar-nav navbar-right" ng-controller="ApplicationController">
-                        <li><p class="navbar-text" ng-show="loggedin">{{loggedin}}</p></li>
-                        <li ng-show="loggedin"><a href="/logout">logout</a></li>
-                        <li ng-show="!loggedin"><a href="/login">login</a></li>
-                        <li ng-show="!loggedin"><a href="/register">register</a></li>
+                    <ul class="nav navbar-nav navbar-right" ng-hide="loggedin">
+                        <li><a href="/login">login</a></li>
+                        <li><a href="/register">register</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right" ng-show="loggedin">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                {{loggedin}} <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/logout">logout</a></li>
+                            </ul>
+                        </li>
                     </ul>
 
                 </div>
