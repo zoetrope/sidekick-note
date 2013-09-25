@@ -7,7 +7,7 @@ CREATE TABLE accounts (
   created DATETIME NOT NULL,
   deleted DATETIME,
   PRIMARY KEY(id)
-) ENGINE=MyISAM DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
 DROP TABLE IF EXISTS items;
 CREATE TABLE items (
@@ -22,15 +22,31 @@ CREATE TABLE items (
   FOREIGN KEY (account_id) REFERENCES accounts(id),
   INDEX (account_id, created),
   FULLTEXT (words)
-) ENGINE=MyISAM DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS tasks;
+CREATE TABLE tasks (
+  id BIGINT,
+  status VARCHAR(32) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES items(id)
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS notes;
+CREATE TABLE notes (
+  id BIGINT,
+  title TEXT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES items(id)
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
 DROP TABLE IF EXISTS tags;
 CREATE TABLE tags (
   id BIGINT NOT NULL AUTO_INCREMENT,
-  name VARCHAR (20) NOT NULL,
+  name VARCHAR (32) NOT NULL,
   ref_count INT NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=MyISAM DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
 DROP TABLE IF EXISTS items_tags;
 CREATE TABLE items_tags (
@@ -39,4 +55,4 @@ CREATE TABLE items_tags (
   PRIMARY KEY (item_id, tag_id),
   FOREIGN KEY (item_id) REFERENCES items(id),
   FOREIGN KEY (tag_id) REFERENCES tags(id)
-) ENGINE=MyISAM DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
