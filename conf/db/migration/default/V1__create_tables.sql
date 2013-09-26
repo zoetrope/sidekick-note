@@ -1,58 +1,70 @@
 DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS memos;
+DROP TABLE IF EXISTS tasks;
+DROP TABLE IF EXISTS notes;
+DROP TABLE IF EXISTS items_tags;
+DROP TABLE IF EXISTS tags;
+DROP TABLE IF EXISTS items;
+
 CREATE TABLE accounts (
-  id BIGINT NOT NULL AUTO_INCREMENT,
+  account_id BIGINT NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   permission VARCHAR(128) NOT NULL,
+  language VARCHAR(128) NOT NULL,
+  timezone VARCHAR(128) NOT NULL,
   created DATETIME NOT NULL,
+  modified DATETIME NOT NULL,
   deleted DATETIME,
-  PRIMARY KEY(id)
+  PRIMARY KEY(account_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
-DROP TABLE IF EXISTS items;
 CREATE TABLE items (
-  id BIGINT NOT NULL AUTO_INCREMENT,
+  item_id BIGINT NOT NULL AUTO_INCREMENT,
   content TEXT NOT NULL,
   words TEXT NOT NULL,
+  rating INT NOT NULL,
   created DATETIME NOT NULL,
   modified DATETIME NOT NULL,
   deleted DATETIME,
   account_id BIGINT NOT Null,
-  PRIMARY KEY(id),
-  FOREIGN KEY (account_id) REFERENCES accounts(id),
+  PRIMARY KEY(item_id),
+  FOREIGN KEY (account_id) REFERENCES accounts(item_id),
   INDEX (account_id, created),
   FULLTEXT (words)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
-DROP TABLE IF EXISTS tasks;
+CREATE TABLE memos(
+  item_id BIGINT,
+  PRIMARY KEY (item_id),
+  FOREIGN KEY (item_id) REFERENCES items(item_id)
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+
 CREATE TABLE tasks (
-  id BIGINT,
+  item_id BIGINT,
   status VARCHAR(32) NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (id) REFERENCES items(id)
+  PRIMARY KEY (item_id),
+  FOREIGN KEY (item_id) REFERENCES items(item_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
-DROP TABLE IF EXISTS notes;
 CREATE TABLE notes (
-  id BIGINT,
+  item_id BIGINT,
   title TEXT NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (id) REFERENCES items(id)
+  PRIMARY KEY (item_id),
+  FOREIGN KEY (item_id) REFERENCES items(item_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
-DROP TABLE IF EXISTS tags;
 CREATE TABLE tags (
-  id BIGINT NOT NULL AUTO_INCREMENT,
+  tag_id BIGINT NOT NULL AUTO_INCREMENT,
   name VARCHAR (32) NOT NULL,
   ref_count INT NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (tag_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
-DROP TABLE IF EXISTS items_tags;
 CREATE TABLE items_tags (
   item_id BIGINT NOT NULL,
   tag_id BIGINT NOT NULL,
   PRIMARY KEY (item_id, tag_id),
-  FOREIGN KEY (item_id) REFERENCES items(id),
-  FOREIGN KEY (tag_id) REFERENCES tags(id)
+  FOREIGN KEY (item_id) REFERENCES items(item_id),
+  FOREIGN KEY (tag_id) REFERENCES tags(tag_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
