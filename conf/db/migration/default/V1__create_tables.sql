@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS accounts;
-DROP TABLE IF EXISTS memos;
+DROP TABLE IF EXISTS quicknotes;
 DROP TABLE IF EXISTS tasks;
-DROP TABLE IF EXISTS notes;
+DROP TABLE IF EXISTS articles;
 DROP TABLE IF EXISTS items_tags;
 DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS items;
@@ -29,12 +29,12 @@ CREATE TABLE items (
   deleted DATETIME,
   account_id BIGINT NOT Null,
   PRIMARY KEY(item_id),
-  FOREIGN KEY (account_id) REFERENCES accounts(item_id),
+  FOREIGN KEY (account_id) REFERENCES accounts(account_id),
   INDEX (account_id, created),
   FULLTEXT (words)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
-CREATE TABLE memos(
+CREATE TABLE quicknotes(
   item_id BIGINT,
   PRIMARY KEY (item_id),
   FOREIGN KEY (item_id) REFERENCES items(item_id)
@@ -47,7 +47,7 @@ CREATE TABLE tasks (
   FOREIGN KEY (item_id) REFERENCES items(item_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
-CREATE TABLE notes (
+CREATE TABLE articles (
   item_id BIGINT,
   title TEXT NOT NULL,
   PRIMARY KEY (item_id),
