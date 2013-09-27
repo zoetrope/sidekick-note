@@ -10,13 +10,11 @@ case object Administrator extends Permission
 case object NormalUser extends Permission
 
 object Permission {
-
   def valueOf(value: String): Permission = value match {
     case "Administrator" => Administrator
     case "NormalUser"    => NormalUser
     case _ => throw new IllegalArgumentException()
   }
-
 }
 
 case class Account(
@@ -31,11 +29,8 @@ case class Account(
   deleted: Option[DateTime] = None) {
 
   def save()(implicit session: DBSession = Account.autoSession): Account = Account.save(this)(session)
-
   def destroy()(implicit session: DBSession = Account.autoSession): Unit = Account.destroy(this)(session)
-
 }
-      
 
 object Account extends SQLSyntaxSupport[Account] {
 
@@ -44,6 +39,7 @@ object Account extends SQLSyntaxSupport[Account] {
   override val columns = Seq("account_id", "name", "password", "permission", "language", "timezone", "created", "modified", "deleted")
 
   def apply(a: SyntaxProvider[Account])(rs: WrappedResultSet): Account = apply(a.resultName)(rs)
+
   def apply(a: ResultName[Account])(rs: WrappedResultSet): Account = new Account(
     accountId = rs.long(a.accountId),
     name = rs.string(a.name),
@@ -74,27 +70,11 @@ object Account extends SQLSyntaxSupport[Account] {
       select.from(Account as a).where.eq(a.accountId, accountId)
     }.map(Account(a.resultName)).single.apply()
   }
-          
-  def findAll()(implicit session: DBSession = autoSession): List[Account] = {
-    withSQL(select.from(Account as a)).map(Account(a.resultName)).list.apply()
-  }
-          
+
   def countAll()(implicit session: DBSession = autoSession): Long = {
     withSQL(select(sqls"count(1)").from(Account as a)).map(rs => rs.long(1)).single.apply().get
   }
-          
-  def findAllBy(where: SQLSyntax)(implicit session: DBSession = autoSession): List[Account] = {
-    withSQL { 
-      select.from(Account as a).where.append(sqls"${where}")
-    }.map(Account(a.resultName)).list.apply()
-  }
-      
-  def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = {
-    withSQL { 
-      select(sqls"count(1)").from(Account as a).where.append(sqls"${where}")
-    }.map(_.long(1)).single.apply().get
-  }
-      
+
   def create(
     name: String,
     password: String,

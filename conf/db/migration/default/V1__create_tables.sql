@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS accounts;
-DROP TABLE IF EXISTS quicknotes;
+DROP TABLE IF EXISTS quick_notes;
 DROP TABLE IF EXISTS tasks;
 DROP TABLE IF EXISTS articles;
 DROP TABLE IF EXISTS items_tags;

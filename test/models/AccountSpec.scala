@@ -1,48 +1,50 @@
 package models
 
 import scalikejdbc.specs2.mutable.AutoRollback
-import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
+import scalikejdbc.DBSession
+import org.specs2.mutable.Specification
 
 class AccountSpec extends Specification with TestDB{
-  val a = Account.syntax("a")
 
+  trait AutoRollbackWithFixture extends AutoRollback {
+    override def fixture(implicit session: DBSession) {
+      applyUpdate {QueryDSL.delete.from(Account)}
+
+      Account.create(
+        name = "user",
+        password = "pass",
+        permission = "NormalUser",
+        language = "ja",
+        timezone = "Asia/Tokyo",
+        created = DateTime.now,
+        modified = DateTime.now)
+    }
+  }
   "Account" should {
-    "find by primary keys" in new AutoRollback {
-      val maybeFound = Account.findById(1L)
+    "find by name" in new AutoRollbackWithFixture {
+      val maybeFound = Account.findByName("user")
       maybeFound.isDefined should beTrue
     }
-    "find all records" in new AutoRollback {
-      val allResults = Account.findAll()
-      allResults.size should be_>(0)
-    }
-    "count all records" in new AutoRollback {
-      val count = Account.countAll()
-      count should be_>(0L)
-    }
-    "find by where clauses" in new AutoRollback {
-      val results = Account.findAllBy(sqls.eq(a.accountId, 1L))
-      results.size should be_>(0)
-    }
-    "count by where clauses" in new AutoRollback {
-      val count = Account.countBy(sqls.eq(a.accountId, 1L))
-      count should be_>(0L)
-    }
     "create new record" in new AutoRollback {
-      val created = Account.create(name = "MyString", password = "MyString", permission = "MyString", language = "MyString", timezone = "MyString", created = DateTime.now, modified = DateTime.now)
+      val created = Account.create(
+        name = "newUser",
+        password = "password",
+        permission = "NormalUser",
+        language = "ja",
+        timezone = "Asia/Tokyo",
+        created = DateTime.now,
+        modified = DateTime.now)
       created should not beNull
     }
-    "save a record" in new AutoRollback {
-      val entity = Account.findAll().head
-      val updated = Account.save(entity)
-      updated should not equalTo(entity)
+    "authenticate by correct password" in new AutoRollbackWithFixture {
+      val maybeFound = Account.authenticate("user","pass")
+      maybeFound.isDefined should beTrue
     }
-    "destroy a record" in new AutoRollback {
-      val entity = Account.findAll().head
-      Account.destroy(entity)
-      val shouldBeNone = Account.findById(1L)
-      shouldBeNone.isDefined should beFalse
+    "authenticate by invalid password" in new AutoRollbackWithFixture {
+      val maybeFound = Account.authenticate("user","hoge")
+      maybeFound.isDefined should beFalse
     }
   }
 
