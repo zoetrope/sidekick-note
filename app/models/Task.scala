@@ -1,0 +1,90 @@
+package models
+
+import scalikejdbc._
+import scalikejdbc.SQLInterpolation._
+
+case class Task(
+  itemId: Long, 
+  status: String) {
+
+  def save()(implicit session: DBSession = Task.autoSession): Task = Task.save(this)(session)
+
+  def destroy()(implicit session: DBSession = Task.autoSession): Unit = Task.destroy(this)(session)
+
+}
+      
+
+object Task extends SQLSyntaxSupport[Task] {
+
+  override val tableName = "tasks"
+
+  override val columns = Seq("item_id", "status")
+
+  def apply(t: ResultName[Task])(rs: WrappedResultSet): Task = new Task(
+    itemId = rs.long(t.itemId),
+    status = rs.string(t.status)
+  )
+      
+  val t = Task.syntax("t")
+
+  val autoSession = AutoSession
+
+  def find(itemId: Long)(implicit session: DBSession = autoSession): Option[Task] = {
+    withSQL { 
+      select.from(Task as t).where.eq(t.itemId, itemId)
+    }.map(Task(t.resultName)).single.apply()
+  }
+          
+  def findAll()(implicit session: DBSession = autoSession): List[Task] = {
+    withSQL(select.from(Task as t)).map(Task(t.resultName)).list.apply()
+  }
+          
+  def countAll()(implicit session: DBSession = autoSession): Long = {
+    withSQL(select(sqls"count(1)").from(Task as t)).map(rs => rs.long(1)).single.apply().get
+  }
+          
+  def findAllBy(where: SQLSyntax)(implicit session: DBSession = autoSession): List[Task] = {
+    withSQL { 
+      select.from(Task as t).where.append(sqls"${where}")
+    }.map(Task(t.resultName)).list.apply()
+  }
+      
+  def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = {
+    withSQL { 
+      select(sqls"count(1)").from(Task as t).where.append(sqls"${where}")
+    }.map(_.long(1)).single.apply().get
+  }
+      
+  def create(
+    itemId: Long,
+    status: String)(implicit session: DBSession = autoSession): Task = {
+    withSQL {
+      insert.into(Task).columns(
+        column.itemId,
+        column.status
+      ).values(
+        itemId,
+        status
+      )
+    }.update.apply()
+
+    Task(
+      itemId = itemId,
+      status = status)
+  }
+
+  def save(entity: Task)(implicit session: DBSession = autoSession): Task = {
+    withSQL { 
+      update(Task as t).set(
+        t.itemId -> entity.itemId,
+        t.status -> entity.status
+      ).where.eq(t.itemId, entity.itemId)
+    }.update.apply()
+    entity 
+  }
+        
+  def destroy(entity: Task)(implicit session: DBSession = autoSession): Unit = {
+    withSQL { delete.from(Task).where.eq(column.itemId, entity.itemId) }.update.apply()
+  }
+        
+}

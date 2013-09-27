@@ -22,11 +22,11 @@ class TagSpec extends Specification {
       count should be_>(0L)
     }
     "find by where clauses" in new AutoRollback {
-      val results = Tag.findAllBy(sqls.eq(t.id, 1L))
+      val results = Tag.findAllBy(sqls.eq(t.tagId, 1L))
       results.size should be_>(0)
     }
     "count by where clauses" in new AutoRollback {
-      val count = Tag.countBy(sqls.eq(t.id, 1L))
+      val count = Tag.countBy(sqls.eq(t.tagId, 1L))
       count should be_>(0L)
     }
     "create new record" in new AutoRollback {

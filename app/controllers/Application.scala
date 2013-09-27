@@ -30,12 +30,12 @@ object Application extends Controller with OptionalAuthElement with LoginLogout 
   def authenticate = Action(json) { implicit request =>
     val login : LoginForm = request.body.extract[LoginForm]
 
-    play.Logger.error("login! = " + org.json4s.native.JsonMethods.compact(org.json4s.native.JsonMethods.render(request.body)))
+    play.Logger.info("login! = " + org.json4s.native.JsonMethods.compact(org.json4s.native.JsonMethods.render(request.body)))
 
     Account.authenticate(login.name, login.password) match {
       case Some(account) => {
         play.Logger.info("authenticate succeeded = " + account)
-        gotoLoginSucceeded(account.id)
+        gotoLoginSucceeded(account.accountId)
       }
       case None => {
         play.Logger.info("authenticate failed")

@@ -32,7 +32,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
 
         play.Logger.info("items")
         val user = loggedIn
-        val items = Item.findByAccountId(user.id, offset, limit)
+        val items = Item.findByAccountId(user.accountId, offset, limit)
         play.Logger.info("items length = " + items.length)
         play.Logger.info(Serialization.write(items))
         Ok(Extraction.decompose(items)).as("application/json")
@@ -52,7 +52,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       val words = tokens.map(x=>x.getSurface).mkString(" ")
       play.Logger.info(words)
 
-      val item = Item.create(form.content, words, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.id)
+      val item = Item.create(form.content, words, 0, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.accountId)
       play.Logger.info("newitem exit")
       Ok(Extraction.decompose(item)).as("application/json")
   }
@@ -70,7 +70,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       val keywords = tokens.map(x=> "+" + x.getSurface).mkString(" ")
 
       val user = loggedIn
-      val items = Item.findByKeywords(keywords, user.id, offset, limit)
+      val items = Item.findByKeywords(keywords, user.accountId, offset, limit)
       play.Logger.info("search result length = " + items.length)
       play.Logger.info(Serialization.write(items))
       Ok(Extraction.decompose(items)).as("application/json")

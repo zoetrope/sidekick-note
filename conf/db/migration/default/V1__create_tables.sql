@@ -34,7 +34,7 @@ CREATE TABLE items (
   FULLTEXT (words)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
-CREATE TABLE quicknotes(
+CREATE TABLE quick_notes(
   item_id BIGINT,
   PRIMARY KEY (item_id),
   FOREIGN KEY (item_id) REFERENCES items(item_id)

@@ -10,7 +10,7 @@ class AccountSpec extends Specification {
 
   "Account" should {
     "find by primary keys" in new AutoRollback {
-      val maybeFound = Account.findById(1L)
+      val maybeFound = Account.find(1L)
       maybeFound.isDefined should beTrue
     }
     "find all records" in new AutoRollback {
@@ -22,15 +22,15 @@ class AccountSpec extends Specification {
       count should be_>(0L)
     }
     "find by where clauses" in new AutoRollback {
-      val results = Account.findAllBy(sqls.eq(a.id, 1L))
+      val results = Account.findAllBy(sqls.eq(a.accountId, 1L))
       results.size should be_>(0)
     }
     "count by where clauses" in new AutoRollback {
-      val count = Account.countBy(sqls.eq(a.id, 1L))
+      val count = Account.countBy(sqls.eq(a.accountId, 1L))
       count should be_>(0L)
     }
     "create new record" in new AutoRollback {
-      val created = Account.create(name = "MyString", password = "MyString", permission = "MyString", created = DateTime.now)
+      val created = Account.create(name = "MyString", password = "MyString", permission = "MyString", language = "MyString", timezone = "MyString", created = DateTime.now, modified = DateTime.now)
       created should not beNull
     }
     "save a record" in new AutoRollback {
@@ -41,7 +41,7 @@ class AccountSpec extends Specification {
     "destroy a record" in new AutoRollback {
       val entity = Account.findAll().head
       Account.destroy(entity)
-      val shouldBeNone = Account.findById(1L)
+      val shouldBeNone = Account.find(1L)
       shouldBeNone.isDefined should beFalse
     }
   }

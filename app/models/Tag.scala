@@ -4,7 +4,7 @@ import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 
 case class Tag(
-  id: Long, 
+  tagId: Long, 
   name: String, 
   refCount: Int) {
 
@@ -19,10 +19,10 @@ object Tag extends SQLSyntaxSupport[Tag] {
 
   override val tableName = "tags"
 
-  override val columns = Seq("id", "name", "ref_count")
+  override val columns = Seq("tag_id", "name", "ref_count")
 
   def apply(t: ResultName[Tag])(rs: WrappedResultSet): Tag = new Tag(
-    id = rs.long(t.id),
+    tagId = rs.long(t.tagId),
     name = rs.string(t.name),
     refCount = rs.int(t.refCount)
   )
@@ -31,9 +31,9 @@ object Tag extends SQLSyntaxSupport[Tag] {
 
   val autoSession = AutoSession
 
-  def find(id: Long)(implicit session: DBSession = autoSession): Option[Tag] = {
+  def find(tagId: Long)(implicit session: DBSession = autoSession): Option[Tag] = {
     withSQL { 
-      select.from(Tag as t).where.eq(t.id, id)
+      select.from(Tag as t).where.eq(t.tagId, tagId)
     }.map(Tag(t.resultName)).single.apply()
   }
           
@@ -71,7 +71,7 @@ object Tag extends SQLSyntaxSupport[Tag] {
     }.updateAndReturnGeneratedKey.apply()
 
     Tag(
-      id = generatedKey, 
+      tagId = generatedKey, 
       name = name,
       refCount = refCount)
   }
@@ -79,16 +79,16 @@ object Tag extends SQLSyntaxSupport[Tag] {
   def save(entity: Tag)(implicit session: DBSession = autoSession): Tag = {
     withSQL { 
       update(Tag as t).set(
-        t.id -> entity.id,
+        t.tagId -> entity.tagId,
         t.name -> entity.name,
         t.refCount -> entity.refCount
-      ).where.eq(t.id, entity.id)
+      ).where.eq(t.tagId, entity.tagId)
     }.update.apply()
     entity 
   }
         
   def destroy(entity: Tag)(implicit session: DBSession = autoSession): Unit = {
-    withSQL { delete.from(Tag).where.eq(column.id, entity.id) }.update.apply()
+    withSQL { delete.from(Tag).where.eq(column.tagId, entity.tagId) }.update.apply()
   }
         
 }

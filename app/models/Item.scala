@@ -5,9 +5,10 @@ import scalikejdbc.SQLInterpolation._
 import org.joda.time.{DateTime}
 
 case class Item(
-  id: Long, 
-  content: String,
-  words: String,
+  itemId: Long, 
+  content: String, 
+  words: String, 
+  rating: Int, 
   created: DateTime, 
   modified: DateTime, 
   deleted: Option[DateTime] = None, 
@@ -24,12 +25,13 @@ object Item extends SQLSyntaxSupport[Item] {
 
   override val tableName = "items"
 
-  override val columns = Seq("id", "content", "words", "created", "modified", "deleted", "account_id")
+  override val columns = Seq("item_id", "content", "words", "rating", "created", "modified", "deleted", "account_id")
 
   def apply(i: ResultName[Item])(rs: WrappedResultSet): Item = new Item(
-    id = rs.long(i.id),
+    itemId = rs.long(i.itemId),
     content = rs.string(i.content),
     words = rs.string(i.words),
+    rating = rs.int(i.rating),
     created = rs.timestamp(i.created).toDateTime,
     modified = rs.timestamp(i.modified).toDateTime,
     deleted = rs.timestampOpt(i.deleted).map(_.toDateTime),
@@ -40,20 +42,20 @@ object Item extends SQLSyntaxSupport[Item] {
 
   val autoSession = AutoSession
 
-  def find(id: Long)(implicit session: DBSession = autoSession): Option[Item] = {
+  def find(itemId: Long)(implicit session: DBSession = autoSession): Option[Item] = {
     withSQL { 
-      select.from(Item as i).where.eq(i.id, id)
+      select.from(Item as i).where.eq(i.itemId, itemId)
     }.map(Item(i.resultName)).single.apply()
   }
           
   def findAll()(implicit session: DBSession = autoSession): List[Item] = {
     withSQL(select.from(Item as i)).map(Item(i.resultName)).list.apply()
   }
-
-  def findByAccountId(account_id:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Item] = {
+          
+  def findByAccountId(accountId:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Item] = {
     withSQL(
       select.from(Item as i)
-        .where.eq(i.accountId, account_id)
+        .where.eq(i.accountId, accountId)
         .orderBy(i.created).desc
         .limit(limit).offset(offset)
     ).map(Item(i.resultName)).list.apply()
@@ -82,6 +84,7 @@ object Item extends SQLSyntaxSupport[Item] {
   def create(
     content: String,
     words: String,
+    rating: Int,
     created: DateTime,
     modified: DateTime,
     deleted: Option[DateTime] = None,
@@ -90,6 +93,7 @@ object Item extends SQLSyntaxSupport[Item] {
       insert.into(Item).columns(
         column.content,
         column.words,
+        column.rating,
         column.created,
         column.modified,
         column.deleted,
@@ -97,6 +101,7 @@ object Item extends SQLSyntaxSupport[Item] {
       ).values(
         content,
         words,
+        rating,
         created,
         modified,
         deleted,
@@ -105,9 +110,10 @@ object Item extends SQLSyntaxSupport[Item] {
     }.updateAndReturnGeneratedKey.apply()
 
     Item(
-      id = generatedKey, 
+      itemId = generatedKey, 
       content = content,
       words = words,
+      rating = rating,
       created = created,
       modified = modified,
       deleted = deleted,
@@ -117,20 +123,21 @@ object Item extends SQLSyntaxSupport[Item] {
   def save(entity: Item)(implicit session: DBSession = autoSession): Item = {
     withSQL { 
       update(Item as i).set(
-        i.id -> entity.id,
+        i.itemId -> entity.itemId,
         i.content -> entity.content,
         i.words -> entity.words,
+        i.rating -> entity.rating,
         i.created -> entity.created,
         i.modified -> entity.modified,
         i.deleted -> entity.deleted,
         i.accountId -> entity.accountId
-      ).where.eq(i.id, entity.id)
+      ).where.eq(i.itemId, entity.itemId)
     }.update.apply()
     entity 
   }
         
   def destroy(entity: Item)(implicit session: DBSession = autoSession): Unit = {
-    withSQL { delete.from(Item).where.eq(column.id, entity.id) }.update.apply()
+    withSQL { delete.from(Item).where.eq(column.itemId, entity.itemId) }.update.apply()
   }
         
 }
