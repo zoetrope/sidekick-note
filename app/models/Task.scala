@@ -3,9 +3,23 @@ package models
 import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 
+sealed trait TaskStatus
+case object Completed extends TaskStatus
+case object New extends TaskStatus
+
+object TaskStatus {
+
+  def valueOf(value: String): TaskStatus = value match {
+    case "Completed" => Completed
+    case "New"    => New
+    case _ => throw new IllegalArgumentException()
+  }
+
+}
+
 case class Task(
   itemId: Long, 
-  status: String) {
+  status: TaskStatus) {
 
   def save()(implicit session: DBSession = Task.autoSession): Task = Task.save(this)(session)
 
@@ -22,7 +36,7 @@ object Task extends SQLSyntaxSupport[Task] {
 
   def apply(t: ResultName[Task])(rs: WrappedResultSet): Task = new Task(
     itemId = rs.long(t.itemId),
-    status = rs.string(t.status)
+    status = TaskStatus.valueOf(rs.string(t.status))
   )
       
   val t = Task.syntax("t")
@@ -70,7 +84,7 @@ object Task extends SQLSyntaxSupport[Task] {
 
     Task(
       itemId = itemId,
-      status = status)
+      status = TaskStatus.valueOf(status))
   }
 
   def save(entity: Task)(implicit session: DBSession = autoSession): Task = {
