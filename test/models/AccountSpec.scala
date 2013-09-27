@@ -46,6 +46,10 @@ class AccountSpec extends Specification with TestDB{
       val maybeFound = Account.authenticate("user","hoge")
       maybeFound.isDefined should beFalse
     }
+    "authenticate by invalid user" in new AutoRollbackWithFixture {
+      val maybeFound = Account.authenticate("fuga","pass")
+      maybeFound.isDefined should beFalse
+    }
   }
 
 }
