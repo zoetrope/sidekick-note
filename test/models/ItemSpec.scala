@@ -5,7 +5,7 @@ import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
 
-class ItemSpec extends Specification {
+class ItemSpec extends Specification with TestDB {
   val i = Item.syntax("i")
 
   "Item" should {

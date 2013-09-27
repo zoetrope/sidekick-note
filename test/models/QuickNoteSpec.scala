@@ -5,7 +5,7 @@ import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
 
-class QuickNoteSpec extends Specification {
+class QuickNoteSpec extends Specification with TestDB {
   val qn = QuickNote.syntax("qn")
 
   "QuickNote" should {

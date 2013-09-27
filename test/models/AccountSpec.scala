@@ -5,7 +5,7 @@ import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
 
-class AccountSpec extends Specification {
+class AccountSpec extends Specification with TestDB{
   val a = Account.syntax("a")
 
   "Account" should {

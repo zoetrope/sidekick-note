@@ -5,8 +5,8 @@ import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
 
-class TaskSpec extends Specification {
-  val t = Task.syntax("t")
+class TaskSpec extends Specification with TestDB {
+  val task = Task.syntax("t")
 
   "Task" should {
     "find by primary keys" in new AutoRollback {
@@ -22,11 +22,11 @@ class TaskSpec extends Specification {
       count should be_>(0L)
     }
     "find by where clauses" in new AutoRollback {
-      val results = Task.findAllBy(sqls.eq(t.itemId, 1L))
+      val results = Task.findAllBy(sqls.eq(task.itemId, 1L))
       results.size should be_>(0)
     }
     "count by where clauses" in new AutoRollback {
-      val count = Task.countBy(sqls.eq(t.itemId, 1L))
+      val count = Task.countBy(sqls.eq(task.itemId, 1L))
       count should be_>(0L)
     }
     "create new record" in new AutoRollback {
