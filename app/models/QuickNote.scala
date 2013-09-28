@@ -11,7 +11,19 @@ case class QuickNote(
   def destroy()(implicit session: DBSession = QuickNote.autoSession): Unit = QuickNote.destroy(this)(session)
 
 }
-      
+case class Member(id: Long, teamId: Long)
+case class Team(id: Long, name: String)
+
+object Member extends SQLSyntaxSupport[Member] {
+  def apply(m: ResultName[Member])(implicit rs: WrappedResultSet): Member = {
+    new Member(id = rs.long(m.id), teamId = rs.long(m.teamId))
+  }
+}
+object Team extends SQLSyntaxSupport[Team] {
+  def apply(m: ResultName[Team])(implicit rs: WrappedResultSet): Team = {
+    new Team(id = rs.long(m.id), name = rs.string(m.name))
+  }
+}
 
 object QuickNote extends SQLSyntaxSupport[QuickNote] {
 
@@ -19,22 +31,29 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
 
   override val columns = Seq("item_id")
 
-  def apply(qn: ResultName[QuickNote])(rs: WrappedResultSet): QuickNote = new QuickNote(
+  def apply(qn: SyntaxProvider[QuickNote])(implicit rs: WrappedResultSet): QuickNote = apply(qn.resultName)(rs)
+  def apply(qn: ResultName[QuickNote])(implicit rs: WrappedResultSet): QuickNote = new QuickNote(
     itemId = rs.long(qn.itemId)
   )
       
   val qn = QuickNote.syntax("qn")
+  val i = Item.i
 
   val autoSession = AutoSession
 
   def find(itemId: Long)(implicit session: DBSession = autoSession): Option[QuickNote] = {
     withSQL { 
       select.from(QuickNote as qn).where.eq(qn.itemId, itemId)
-    }.map(QuickNote(qn.resultName)).single.apply()
+    }.map(implicit rs => QuickNote(qn.resultName)).single.apply()
   }
-          
-  def findAll()(implicit session: DBSession = autoSession): List[QuickNote] = {
-    withSQL(select.from(QuickNote as qn)).map(QuickNote(qn.resultName)).list.apply()
+
+  def findAll()(implicit session: DBSession = autoSession): List[(Item, QuickNote)] = {
+    withSQL{
+      select.from(Item as i)
+        .join(QuickNote as qn).on(qn.itemId, i.itemId)
+    }
+      .map(implicit rs => (Item(i), QuickNote(qn)))
+      .list.apply()
   }
           
   def countAll()(implicit session: DBSession = autoSession): Long = {
@@ -44,7 +63,7 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
   def findAllBy(where: SQLSyntax)(implicit session: DBSession = autoSession): List[QuickNote] = {
     withSQL { 
       select.from(QuickNote as qn).where.append(sqls"${where}")
-    }.map(QuickNote(qn.resultName)).list.apply()
+    }.map(implicit rs => QuickNote(qn.resultName)).list.apply()
   }
       
   def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = {
@@ -53,8 +72,7 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
     }.map(_.long(1)).single.apply().get
   }
       
-  def create(
-    itemId: Long)(implicit session: DBSession = autoSession): QuickNote = {
+  def create(itemId: Long)(implicit session: DBSession = autoSession): QuickNote = {
     withSQL {
       insert.into(QuickNote).columns(
         column.itemId

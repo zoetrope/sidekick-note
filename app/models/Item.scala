@@ -41,8 +41,8 @@ object Item extends SQLSyntaxSupport[Item] {
 
   override val columns = Seq("item_id", "content", "words", "rating", "created", "modified", "deleted", "account_id")
 
-  def apply(i: SyntaxProvider[Item])(rs: WrappedResultSet): Item = apply(i.resultName)(rs)
-  def apply(i: ResultName[Item])(rs: WrappedResultSet): Item = new Item(
+  def apply(i: SyntaxProvider[Item])(implicit rs: WrappedResultSet): Item = apply(i.resultName)(rs)
+  def apply(i: ResultName[Item])(implicit rs: WrappedResultSet): Item = new Item(
     itemId = rs.long(i.itemId),
     content = rs.string(i.content),
     words = rs.string(i.words),
@@ -53,7 +53,7 @@ object Item extends SQLSyntaxSupport[Item] {
     accountId = rs.long(i.accountId)
   )
 
-  private val i = Item.syntax("i")
+  val i = Item.syntax("i")
   val autoSession = AutoSession
 
   private val (t, it) = (Tag.t, ItemTag.it)
@@ -64,7 +64,7 @@ object Item extends SQLSyntaxSupport[Item] {
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
         .leftJoin(Tag as t).on(it.tagId, t.tagId)
         .where.eq(i.itemId, itemId)
-    }.one(Item(i))
+    }.one(implicit rs => Item(i))
       .toMany(Tag.opt(t))
       .map{ (item, tags) => item.copy(tags = tags) }.single.apply()
   }
@@ -74,7 +74,7 @@ object Item extends SQLSyntaxSupport[Item] {
       select.from(Item as i)
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
         .leftJoin(Tag as t).on(it.tagId, t.tagId)
-    }.one(Item(i))
+    }.one(implicit rs => Item(i))
       .toMany(Tag.opt(t))
       .map{ (item, tags) => item.copy(tags = tags) }.list.apply()
   }
@@ -85,11 +85,11 @@ object Item extends SQLSyntaxSupport[Item] {
         .where.eq(i.accountId, accountId)
         .orderBy(i.created).desc
         .limit(limit).offset(offset)
-    ).map(Item(i.resultName)).list.apply()
+    ).map(implicit rs => Item(i.resultName)).list.apply()
   }
 
   def findByKeywords(keywords:String, account_id:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Item] = {
-    sql"select ${i.result.*} from ${Item.as(i)} where match words against (${keywords})".map(Item(i.resultName)).list.apply()
+    sql"select ${i.result.*} from ${Item.as(i)} where match words against (${keywords})".map(implicit rs => Item(i.resultName)).list.apply()
   }
 
   def countAll()(implicit session: DBSession = autoSession): Long = {
@@ -99,7 +99,7 @@ object Item extends SQLSyntaxSupport[Item] {
   def findAllBy(where: SQLSyntax)(implicit session: DBSession = autoSession): List[Item] = {
     withSQL {
       select.from(Item as i).where.append(sqls"${where}")
-    }.map(Item(i.resultName)).list.apply()
+    }.map(implicit rs => Item(i.resultName)).list.apply()
   }
 
   def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = {

@@ -2,8 +2,6 @@ package models
 
 import scalikejdbc._
 import com.googlecode.flyway.core.Flyway
-import org.slf4j.LoggerFactory
-
 
 trait TestDB {
   TestDB.initialize()

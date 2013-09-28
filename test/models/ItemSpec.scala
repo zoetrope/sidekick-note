@@ -5,13 +5,13 @@ import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
 import scalikejdbc.DBSession
-import play.api.test.{FakeApplication, WithApplication}
-import play.api.test.Helpers._
 
 class ItemSpec extends Specification with TestDB {
 
   trait AutoRollbackWithFixture extends AutoRollback {
     override def fixture(implicit session: DBSession) {
+      applyUpdate {QueryDSL.delete.from(ItemTag)}
+      applyUpdate {QueryDSL.delete.from(Tag)}
       applyUpdate {QueryDSL.delete.from(Item)}
       applyUpdate {QueryDSL.delete.from(Account)}
 
@@ -24,54 +24,26 @@ class ItemSpec extends Specification with TestDB {
         created = DateTime.now,
         modified = DateTime.now)
 
-      Item.create(
+      val item = Item.create(
         content = "MyString",
         words = "MyString",
         created = DateTime.now,
         modified = DateTime.now,
         accountId = account.accountId)
+
+      val tag = Tag.create("tag1", 0)
+      item.addTag(tag)
     }
   }
 
   "Item" should {
-    "find by primary keys" in new AutoRollbackWithFixture {
-      val maybeFound = Item.find(1L)
-      maybeFound.isDefined should beTrue
-    }
 
     "find all records" in new AutoRollbackWithFixture {
       val allResults = Item.findAll()
       allResults.size should be_>(0)
+      allResults.head.tags.size should be_>(0)
+      allResults.head.tags.head.name must equalTo("tag1")
     }
-    /*
-    "count all records" in new AutoRollback {
-      val count = Item.countAll()
-      count should be_>(0L)
-    }
-    "find by where clauses" in new AutoRollback {
-      val results = Item.findAllBy(sqls.eq(i.itemId, 1L))
-      results.size should be_>(0)
-    }
-    "count by where clauses" in new AutoRollback {
-      val count = Item.countBy(sqls.eq(i.itemId, 1L))
-      count should be_>(0L)
-    }
-    "create new record" in new AutoRollback {
-      val created = Item.create(content = "MyString", words = "MyString", rating = 123, created = DateTime.now, modified = DateTime.now, accountId = 1L)
-      created should not beNull
-    }
-    "save a record" in new AutoRollback {
-      val entity = Item.findAll().head
-      val updated = Item.save(entity)
-      updated should not equalTo(entity)
-    }
-    "destroy a record" in new AutoRollback {
-      val entity = Item.findAll().head
-      Item.destroy(entity)
-      val shouldBeNone = Item.find(1L)
-      shouldBeNone.isDefined should beFalse
-    }
-    */
   }
 
 }
