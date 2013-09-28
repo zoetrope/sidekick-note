@@ -1,7 +1,7 @@
 package models
 
 import scalikejdbc.SQLInterpolation._
-import scalikejdbc.DBSession
+import scalikejdbc.{AutoSession, DBSession}
 
 case class ItemTag(itemId: Long, tagId: Long)
 
@@ -10,7 +10,9 @@ object ItemTag extends SQLSyntaxSupport[ItemTag] {
   override val columns = Seq("item_id", "tag_id")
   val it = ItemTag.syntax("it")
 
-  def addTag(itemId: Long, tag: Tag)(implicit session: DBSession = Item.autoSession): Unit = withSQL {
+  val autoSession = AutoSession
+
+  def addTag(itemId: Long, tag: Tag)(implicit session: DBSession = autoSession): Unit = withSQL {
     tag.copy(refCount = tag.refCount + 1)
     tag.save()
 
@@ -23,7 +25,7 @@ object ItemTag extends SQLSyntaxSupport[ItemTag] {
     )
   }.update.apply()
 
-  def deleteTag(itemId: Long, tag: Tag)(implicit session: DBSession = Item.autoSession): Unit = withSQL {
+  def deleteTag(itemId: Long, tag: Tag)(implicit session: DBSession = autoSession): Unit = withSQL {
     tag.copy(refCount = tag.refCount - 1)
     tag.save()
 
