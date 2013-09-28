@@ -14,17 +14,6 @@ case class QuickNote(
 case class Member(id: Long, teamId: Long)
 case class Team(id: Long, name: String)
 
-object Member extends SQLSyntaxSupport[Member] {
-  def apply(m: ResultName[Member])(implicit rs: WrappedResultSet): Member = {
-    new Member(id = rs.long(m.id), teamId = rs.long(m.teamId))
-  }
-}
-object Team extends SQLSyntaxSupport[Team] {
-  def apply(m: ResultName[Team])(implicit rs: WrappedResultSet): Team = {
-    new Team(id = rs.long(m.id), name = rs.string(m.name))
-  }
-}
-
 object QuickNote extends SQLSyntaxSupport[QuickNote] {
 
   override val tableName = "quick_notes"
