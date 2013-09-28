@@ -9,7 +9,7 @@
 ///<reference path='models/QuickNote.ts' />
 ///<reference path='services/ItemRenderService.ts' />
 
-console.log("ignite!");
+console.log("initialize sidekick-note");
 
 module App {
     'use strict';
@@ -69,10 +69,9 @@ module App {
         [],
         ()=> {
         }
-    ).factory("itemRenderService", ($http:ng.IHttpService):services.ItemRenderService=> {
-            return new services.ItemRenderService($http);
-        })
-    ;
+    ).factory("itemRenderService", ():services.ItemRenderService=> {
+            return new services.ItemRenderService();
+        });
 
     angular.module(
         appName + ".controller",
@@ -82,17 +81,17 @@ module App {
             ($scope:controllers.AppScope, $location:ng.ILocationService, $resource:ng.resource.IResourceService) : controllers.ApplicationController => {
                 return new controllers.ApplicationController($scope, $location, $resource)
             }])
-     .controller("QuickNoteController", ["$scope", "$resource",
-            ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService) : controllers.QuickNoteController => {
-                return new controllers.QuickNoteController($scope, $resource)
+     .controller("QuickNoteController", ["$scope", "$resource", "itemRenderService",
+            ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.QuickNoteController => {
+                return new controllers.QuickNoteController($scope, $resource, itemRenderService)
             }])
-     .controller("TaskController", ["$scope", "$resource",
-            ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService) : controllers.TaskController => {
-                return new controllers.TaskController($scope, $resource)
+     .controller("TaskController", ["$scope", "$resource", "itemRenderService",
+            ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
+                return new controllers.TaskController($scope, $resource, itemRenderService)
             }])
-     .controller("ArticleController", ["$scope", "$resource",
-            ($scope:controllers.ArticleScope, $resource:ng.resource.IResourceService) : controllers.ArticleController => {
-                return new controllers.ArticleController($scope, $resource)
+     .controller("ArticleController", ["$scope", "$resource", "itemRenderService",
+            ($scope:controllers.ArticleScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.ArticleController => {
+                return new controllers.ArticleController($scope, $resource, itemRenderService)
             }])
      .controller("SearchController", ["$scope", "$resource",
             ($scope:controllers.SearchScope, $resource:ng.resource.IResourceService) : controllers.SearchController => {

@@ -1,7 +1,7 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
-///<reference path="../../../d.ts/DefinitelyTyped/marked/marked.d.ts" />
 ///<reference path='../models/QuickNote.ts' />
+///<reference path='../services/ItemRenderService.ts' />
 
 module controllers {
     'use strict';
@@ -17,31 +17,18 @@ module controllers {
     }
 
     declare var jsRouter:any
-    declare var hljs:any
 
     export class QuickNoteController {
 
-        constructor(public $scope:QuickNoteScope, public $resource:ng.resource.IResourceService) {
-
+        constructor(public $scope:QuickNoteScope, public $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) {
             $scope.hasFocus = true;
-
-            marked.setOptions({
-                gfm: true,
-                tables: true,
-                breaks: true,
-                pedantic: false,
-                sanitize: true,
-                highlight: function (code, lang) {
-                    try{
-                        return hljs.highlight(lang, code).value;
-                    } catch(err) {
-                        return hljs.highlightAuto(code).value;
-                    }
-                }
-            });
 
             var Items = $resource(jsRouter.controllers.ItemController.items().url)
             $scope.sending = false
+
+            $scope.toMarkdown = input => {
+                return itemRenderService.render(input)
+            }
 
             $scope.add_item = () => {
                 $scope.sending = true
@@ -49,7 +36,7 @@ module controllers {
 
                 Items.save(null, {content: this.$scope.input_content},
                     (data)=> {
-                        data.content = marked(data.content)
+                        data.content = itemRenderService.render(data.content)
                         alert(typeof($scope.items))
                         $scope.items.unshift(data)
                         if($scope.items.length > 5){
@@ -66,17 +53,9 @@ module controllers {
                     })
             };
 
-            $scope.toMarkdown = (input) =>{
-                if(input) {
-                    return marked(input)
-                } else {
-                    return ""
-                }
-            }
-
             Items.query(
                 (data)=> {
-                    $scope.items = data.map(x=>{x.content = marked(x.content); return x})
+                    $scope.items = data.map(x=>{x.content = itemRenderService.render(x.content); return x})
                 },
                 (reason)=> {
                     alert("error get items")

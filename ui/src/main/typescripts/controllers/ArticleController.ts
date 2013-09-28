@@ -2,6 +2,7 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 
 ///<reference path='../models/Article.ts' />
+///<reference path='../services/ItemRenderService.ts' />
 
 module controllers {
     'use strict';
@@ -11,7 +12,7 @@ module controllers {
 
     export class ArticleController {
 
-        constructor(public $scope:ArticleScope, public $resource:ng.resource.IResourceService) {
+        constructor(public $scope:ArticleScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
 
         }
 

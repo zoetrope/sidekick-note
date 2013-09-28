@@ -109,6 +109,7 @@ module.exports = function (grunt) {
                         '<%= conf.dist.libs %>/highlightjs/highlight.pack.js',
                         '<%= conf.dist.libs %>/marked/marked.js',
                         '<%= conf.dist.scripts %>/models/*.js',
+                        '<%= conf.dist.scripts %>/services/*.js',
                         '<%= conf.dist.scripts %>/controllers/*.js',
                         '<%= conf.dist.scripts %>/App.js'
                     ]
