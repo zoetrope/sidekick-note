@@ -24,7 +24,7 @@ class QuickNoteSpec extends Specification with TestDB {
         created = DateTime.now,
         modified = DateTime.now)
 
-      val item = Item.create(
+      val item = QuickNote.create(
         content = "MyString",
         words = "MyString",
         created = DateTime.now,
@@ -34,7 +34,6 @@ class QuickNoteSpec extends Specification with TestDB {
       val tag = Tag.create("tag1", 0)
       item.addTag(tag)
 
-      QuickNote.create(item.itemId)
     }
   }
 

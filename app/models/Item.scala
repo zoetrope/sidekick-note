@@ -23,12 +23,18 @@ case class Item(
   private val column = ItemTag.column
 
   def addTag(tag: Tag)(implicit session: DBSession = Item.autoSession): Unit = withSQL {
+    tag.copy(refCount = tag.refCount + 1)
+    tag.save()
+
     insert.into(ItemTag).namedValues(
       column.itemId -> itemId,
       column.tagId -> tag.tagId)
   }.update.apply()
 
   def deleteTag(tag: Tag)(implicit session: DBSession = Item.autoSession): Unit = withSQL {
+    tag.copy(refCount = tag.refCount - 1)
+    tag.save()
+
     QueryDSL.delete.from(ItemTag)
       .where.eq(column.itemId, itemId).and.eq(column.tagId, tag.tagId)
   }.update.apply()
@@ -81,15 +87,21 @@ object Item extends SQLSyntaxSupport[Item] {
 
   def findByAccountId(accountId:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Item] = {
     withSQL(
-      select.from(Item as i)
+      select
+        .from(Item as i)
         .where.eq(i.accountId, accountId)
         .orderBy(i.created).desc
         .limit(limit).offset(offset)
-    ).map(implicit rs => Item(i.resultName)).list.apply()
+    ).map(implicit rs => Item(i)).list.apply()
   }
 
   def findByKeywords(keywords:String, account_id:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Item] = {
-    sql"select ${i.result.*} from ${Item.as(i)} where match words against (${keywords})".map(implicit rs => Item(i.resultName)).list.apply()
+    sql"""
+      select ${i.result.*}
+        from ${Item.as(i)}
+        where match words against (${keywords})
+    """
+      .map(implicit rs => Item(i)).list.apply()
   }
 
   def countAll()(implicit session: DBSession = autoSession): Long = {
@@ -108,8 +120,7 @@ object Item extends SQLSyntaxSupport[Item] {
     }.map(_.long(1)).single.apply().get
   }
 
-  def create(
-              content: String,
+  def create(content: String,
               words: String,
               rating: Int = 0,
               created: DateTime,
