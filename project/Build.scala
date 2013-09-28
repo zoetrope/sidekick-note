@@ -21,7 +21,8 @@ object ApplicationBuild extends Build {
     "org.json4s" % "json4s-ext_2.10" % "3.1.0",
     "com.github.tototoshi" %% "play-flyway" % "0.2.0",
     "jp.t2v" %% "play2.auth" % "0.10.1",
-    "org.mindrot" % "jbcrypt" % "0.3m"
+    "org.mindrot" % "jbcrypt" % "0.3m",
+    "org.slf4j" % "slf4j-simple" % "1.7.5" % "provided"
   )
 
   object Keys {

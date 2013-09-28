@@ -15,6 +15,12 @@ object TestDB {
   def initialize(): Unit = this.synchronized {
     if (isInitialized) return
 
+    GlobalSettings.loggingSQLAndTime = new LoggingSQLAndTimeSettings(
+      enabled = true,
+      singleLineMode = true,
+      logLevel = 'DEBUG
+    )
+
     val dbUrl = "jdbc:mysql://localhost/sidekicknote_test"
     val dbUser = "root"
     val dbPassword = "mysql"
