@@ -29,6 +29,8 @@ object Tag extends SQLSyntaxSupport[Tag] {
       
   val t = Tag.syntax("t")
 
+  def opt(s: SyntaxProvider[Tag])(rs: WrappedResultSet): Option[Tag] = rs.longOpt(t.resultName.tagId).map(_ => apply(t.resultName)(rs))
+
   val autoSession = AutoSession
 
   def find(tagId: Long)(implicit session: DBSession = autoSession): Option[Tag] = {
