@@ -4,9 +4,9 @@
 module models {
     'use strict';
 
-    export class Item {
+    export class Task {
         content:string;
+        title:string
         created: string;
-
     }
 }

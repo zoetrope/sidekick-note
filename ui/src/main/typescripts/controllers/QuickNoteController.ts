@@ -1,13 +1,13 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path="../../../d.ts/DefinitelyTyped/marked/marked.d.ts" />
-///<reference path='../models/Item.ts' />
+///<reference path='../models/QuickNote.ts' />
 
 module controllers {
     'use strict';
 
-    export interface ItemScope extends ng.IScope {
-        items: models.Item[];
+    export interface QuickNoteScope extends ng.IScope {
+        items: models.QuickNote[];
         input_content: string;
         add_item() : void;
         sending : Boolean;
@@ -19,9 +19,9 @@ module controllers {
     declare var jsRouter:any
     declare var hljs:any
 
-    export class ItemController {
+    export class QuickNoteController {
 
-        constructor(public $scope:ItemScope, public $resource:ng.resource.IResourceService) {
+        constructor(public $scope:QuickNoteScope, public $resource:ng.resource.IResourceService) {
 
             $scope.hasFocus = true;
 

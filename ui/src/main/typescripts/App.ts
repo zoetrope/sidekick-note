@@ -1,10 +1,13 @@
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='controllers/ApplicationController.ts' />
-///<reference path='controllers/ItemController.ts' />
+///<reference path='controllers/QuickNoteController.ts' />
+///<reference path='controllers/TaskController.ts' />
+///<reference path='controllers/ArticleController.ts' />
 ///<reference path='controllers/SearchController.ts' />
 ///<reference path='controllers/UserController.ts' />
-///<reference path='models/Item.ts' />
+///<reference path='models/QuickNote.ts' />
+///<reference path='services/ItemRenderService.ts' />
 
 console.log("ignite!");
 
@@ -15,12 +18,14 @@ module App {
 
     angular.module(
         appName,
-        [appName + ".controller", appName + ".directive", "ui.keypress"],
+        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress"],
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
                 .when("/home", {templateUrl: "/assets/views/home.html"})
-                .when("/item", {templateUrl: "/assets/views/item.html"})
+                .when("/quick_note", {templateUrl: "/assets/views/quick_note.html"})
+                .when("/task", {templateUrl: "/assets/views/task.html"})
+                .when("/article", {templateUrl: "/assets/views/article.html"})
                 .when("/search", {templateUrl: "/assets/views/search.html"})
                 .when("/login", {templateUrl: "/assets/views/login.html"})
                 .otherwise({redirectTo: '/home'});
@@ -60,16 +65,34 @@ module App {
         }]);
 
     angular.module(
+        appName + ".service",
+        [],
+        ()=> {
+        }
+    ).factory("itemRenderService", ($http:ng.IHttpService):services.ItemRenderService=> {
+            return new services.ItemRenderService($http);
+        })
+    ;
+
+    angular.module(
         appName + ".controller",
-        ["ngResource"],
+        [appName + ".service", "ngResource"],
         ()=> {}
     ).controller("ApplicationController", ["$scope", "$location", "$resource",
             ($scope:controllers.AppScope, $location:ng.ILocationService, $resource:ng.resource.IResourceService) : controllers.ApplicationController => {
                 return new controllers.ApplicationController($scope, $location, $resource)
             }])
-     .controller("ItemController", ["$scope", "$resource",
-            ($scope:controllers.ItemScope, $resource:ng.resource.IResourceService) : controllers.ItemController => {
-                return new controllers.ItemController($scope, $resource)
+     .controller("QuickNoteController", ["$scope", "$resource",
+            ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService) : controllers.QuickNoteController => {
+                return new controllers.QuickNoteController($scope, $resource)
+            }])
+     .controller("TaskController", ["$scope", "$resource",
+            ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService) : controllers.TaskController => {
+                return new controllers.TaskController($scope, $resource)
+            }])
+     .controller("ArticleController", ["$scope", "$resource",
+            ($scope:controllers.ArticleScope, $resource:ng.resource.IResourceService) : controllers.ArticleController => {
+                return new controllers.ArticleController($scope, $resource)
             }])
      .controller("SearchController", ["$scope", "$resource",
             ($scope:controllers.SearchScope, $resource:ng.resource.IResourceService) : controllers.SearchController => {
