@@ -7,12 +7,8 @@ case class QuickNote(
   itemId: Long) {
 
   def save()(implicit session: DBSession = QuickNote.autoSession): QuickNote = QuickNote.save(this)(session)
-
   def destroy()(implicit session: DBSession = QuickNote.autoSession): Unit = QuickNote.destroy(this)(session)
-
 }
-case class Member(id: Long, teamId: Long)
-case class Team(id: Long, name: String)
 
 object QuickNote extends SQLSyntaxSupport[QuickNote] {
 
