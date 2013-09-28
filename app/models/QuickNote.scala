@@ -22,25 +22,6 @@ case class QuickNote(
     new Item(itemId, content, words, rating, tags, created, modified, deleted, accountId)
   }
 
-  private val column = ItemTag.column
-
-  def addTag(tag: Tag)(implicit session: DBSession = Item.autoSession): Unit = withSQL {
-    tag.copy(refCount = tag.refCount + 1)
-    tag.save()
-
-    insert.into(ItemTag).namedValues(
-      column.itemId -> itemId,
-      column.tagId -> tag.tagId)
-  }.update.apply()
-
-  def deleteTag(tag: Tag)(implicit session: DBSession = Item.autoSession): Unit = withSQL {
-    tag.copy(refCount = tag.refCount - 1)
-    tag.save()
-
-    QueryDSL.delete.from(ItemTag)
-      .where.eq(column.itemId, itemId).and.eq(column.tagId, tag.tagId)
-  }.update.apply()
-
 }
 
 object QuickNote extends SQLSyntaxSupport[QuickNote] {

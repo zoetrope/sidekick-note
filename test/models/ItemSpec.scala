@@ -32,7 +32,7 @@ class ItemSpec extends Specification with TestDB {
         accountId = account.accountId)
 
       val tag = Tag.create("tag1", 0)
-      item.addTag(tag)
+      ItemTag.addTag(item.itemId, tag)
     }
   }
 

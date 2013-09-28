@@ -9,11 +9,8 @@ case class Tag(
   refCount: Int) {
 
   def save()(implicit session: DBSession = Tag.autoSession): Tag = Tag.save(this)(session)
-
   def destroy()(implicit session: DBSession = Tag.autoSession): Unit = Tag.destroy(this)(session)
-
 }
-      
 
 object Tag extends SQLSyntaxSupport[Tag] {
 
