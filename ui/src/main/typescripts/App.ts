@@ -18,7 +18,7 @@ module App {
 
     angular.module(
         appName,
-        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress"],
+        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress", 'ui.select2'],
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
