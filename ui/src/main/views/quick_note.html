@@ -5,14 +5,10 @@
             placeholder="add new note here" ng-disabled="sending"
             kick-focus="hasFocus"
             ui-keypress="{'ctrl-10':'keypress($event)'}"/>
-        <input type="submit" value="add" class="btn btn-default" ng-disabled="sending"/>
+        <input type="text" ui-select2="select2Options" ng-model="tags" style="width:300px" />
+        <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
     </form>
-    <select ui-select2 ng-model="select2" data-placeholder="Pick a number">
-        <option value=""></option>
-        <option value="one">First</option>
-        <option value="two">Second</option>
-        <option value="three">Third</option>
-    </select>
+
     preview: <input type="checkbox" ng-model="enablePreview"/>
     <div ng-bind-html-unsafe="toMarkdown(inputContent)" ng-show="enablePreview" />
 

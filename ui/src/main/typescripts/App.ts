@@ -6,7 +6,11 @@
 ///<reference path='controllers/ArticleController.ts' />
 ///<reference path='controllers/SearchController.ts' />
 ///<reference path='controllers/UserController.ts' />
+///<reference path='models/Article.ts' />
+///<reference path='models/Item.ts' />
 ///<reference path='models/QuickNote.ts' />
+///<reference path='models/Tag.ts' />
+///<reference path='models/Task.ts' />
 ///<reference path='services/ItemRenderService.ts' />
 
 console.log("initialize sidekick-note");

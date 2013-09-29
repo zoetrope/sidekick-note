@@ -1,19 +1,24 @@
 package controllers
 
-import models.{QuickNote, NormalUser, Item}
+import models._
 import com.github.tototoshi.play2.json4s.native._
 import org.json4s.{Extraction, DefaultFormats}
 import play.api.mvc._
 import jp.t2v.lab.play2.auth.AuthElement
-import org.json4s.native.Serialization
+import org.json4s.native.{JsonMethods, Serialization}
 import org.joda.time._
 import org.json4s.ext.JodaTimeSerializers
 import net.java.sen.SenFactory
 import net.java.sen.StringTagger
 import net.java.sen.dictionary.Token
 import scala.collection.JavaConversions._
+import scalikejdbc.DB
 
-case class QuickNoteForm(content: String)
+case class QuickNoteForm
+(
+  content: String,
+  tags: Seq[String]
+)
 
 object QuickNoteController extends Controller with AuthElement with AuthConfigImpl with Json4s {
 
@@ -38,6 +43,8 @@ object QuickNoteController extends Controller with AuthElement with AuthConfigIm
   def addQuickNote = StackAction(json, AuthorityKey -> NormalUser) {
     implicit request =>
       play.Logger.info("addQuickNote entry")
+      play.Logger.debug(JsonMethods.compact(JsonMethods.render(request.body)))
+
       val user = loggedIn
       val form = request.body.extract[QuickNoteForm]
 
@@ -48,8 +55,16 @@ object QuickNoteController extends Controller with AuthElement with AuthConfigIm
       val words = tokens.map(x=>x.getSurface).mkString(" ")
       play.Logger.info(words)
 
+    //DB localTx{
       val quick_note = QuickNote.create(
         form.content, words, 0, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.accountId)
+
+      form.tags.foreach(tagName => {
+        val tag = Tag.getOrCreate(tagName)
+        ItemTag.addTag(quick_note.itemId, tag)
+      })
+    //}
+
       play.Logger.info("addQuickNote exit")
       Ok(Extraction.decompose(quick_note)).as("application/json")
   }

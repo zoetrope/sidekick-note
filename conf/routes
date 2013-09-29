@@ -17,6 +17,8 @@ GET         /api/items/search         controllers.ItemController.search(words:St
 GET         /api/quick_notes          controllers.QuickNoteController.getQuickNotes(page:Int ?=1)
 POST        /api/quick_notes          controllers.QuickNoteController.addQuickNote
 
+GET         /api/tags                 controllers.TagController.getTags
+
 
 GET         /javascript-routes        controllers.Application.javascriptRoutes
 

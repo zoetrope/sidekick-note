@@ -4,8 +4,9 @@
 module models {
     'use strict';
 
-    export class QuickNote {
-        content:string;
-        created: string;
+    export class Tag {
+        constructor(public tagId: number, public name: string, public refCount: number){
+
+        }
     }
 }

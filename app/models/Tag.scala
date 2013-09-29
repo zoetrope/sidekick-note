@@ -35,9 +35,25 @@ object Tag extends SQLSyntaxSupport[Tag] {
       select.from(Tag as t).where.eq(t.tagId, tagId)
     }.map(Tag(t.resultName)).single.apply()
   }
+
+
+  def getOrCreate(tagName: String)(implicit session: DBSession = autoSession): Tag = {
+
+    val tag = withSQL {
+      select.from(Tag as t).where.eq(t.name, tagName)
+    }.map(Tag(t.resultName)).single.apply()
+
+    tag match{
+      case Some(t) => t
+      case None => Tag.create(tagName, 0)
+    }
+  }
           
   def findAll()(implicit session: DBSession = autoSession): List[Tag] = {
-    withSQL(select.from(Tag as t)).map(Tag(t.resultName)).list.apply()
+    withSQL(
+      select.from(Tag as t)
+        .orderBy(t.refCount).desc
+    ).map(Tag(t.resultName)).list.apply()
   }
           
   def countAll()(implicit session: DBSession = autoSession): Long = {

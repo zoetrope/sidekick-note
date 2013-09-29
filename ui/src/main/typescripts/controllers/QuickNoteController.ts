@@ -1,14 +1,20 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='../models/QuickNote.ts' />
+///<reference path='../models/Tag.ts' />
 ///<reference path='../services/ItemRenderService.ts' />
 
 module controllers {
     'use strict';
 
+    export class TagForm {
+        id : number;
+        text : string;
+    }
     export interface QuickNoteScope extends ng.IScope {
         // input
         inputContent: string;
+        tags: TagForm[];
 
         // output
         quickNotes: models.QuickNote[];
@@ -17,6 +23,8 @@ module controllers {
         sending : Boolean;
         hasFocus : Boolean;
         enablePreview : Boolean;
+
+        select2Options : any;
 
         // action
         addQuickNote() : void;
@@ -33,6 +41,13 @@ module controllers {
             $scope.sending = false
             $scope.enablePreview = false
 
+            $scope.tags = [ { "id": 1, "text": "tag1" } ]
+            $scope.select2Options = {
+                'multiple': true,
+                'simple_tags': true,
+                'tags': [{ "id": 1, "text": "tag1" }, { "id": 2, "text": "tag2" }, { "id": 3, "text": "tag3" }]
+            };
+
             var QuickNotes = $resource("/api/quick_notes")
 
             $scope.toMarkdown = input => {
@@ -43,7 +58,10 @@ module controllers {
                 $scope.sending = true
                 $scope.hasFocus = false
 
-                QuickNotes.save(null, {content: this.$scope.inputContent},
+                QuickNotes.save(null, {
+                        content: $scope.inputContent,
+                        tags: $scope.tags.map(tag=> tag.text)
+                    },
                     (data)=> {
                         $scope.quickNotes.unshift(data)
                         if($scope.quickNotes.length > 5){
