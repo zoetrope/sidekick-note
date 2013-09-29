@@ -48,8 +48,8 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
   val autoSession = AutoSession
 
   def find(itemId: Long)(implicit session: DBSession = autoSession): Option[QuickNote] = {
-    withSQL { 
-      select.from(QuickNote as qn)
+    withSQL {
+      select.from(Item as i)
         .join(QuickNote as qn).on(qn.itemId, i.itemId)
         .where.eq(qn.itemId, itemId)
     }.map(implicit rs => QuickNote(i.resultName, qn.resultName)).single.apply()
@@ -63,6 +63,17 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
       .map(implicit rs => QuickNote(i, qn))
       .list.apply()
   }
+
+  def findByAccountId(accountId:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[QuickNote] = {
+    withSQL(
+      select.from(Item as i)
+        .join(QuickNote as qn).on(qn.itemId, i.itemId)
+        .where.eq(i.accountId, accountId)
+        .orderBy(i.created).desc
+        .limit(limit).offset(offset)
+    ).map(implicit rs => QuickNote(i, qn)).list.apply()
+  }
+
   /*
 
     def countAll()(implicit session: DBSession = autoSession): Long = {

@@ -7,63 +7,68 @@ module controllers {
     'use strict';
 
     export interface QuickNoteScope extends ng.IScope {
-        items: models.QuickNote[];
-        input_content: string;
-        add_item() : void;
-        sending : Boolean;
-        keypress($event : ng.IAngularEvent) : void;
-        hasFocus : Boolean;
-        toMarkdown(input: string) : string;
-    }
+        // input
+        inputContent: string;
 
-    declare var jsRouter:any
+        // output
+        quickNotes: models.QuickNote[];
+
+        // state
+        sending : Boolean;
+        hasFocus : Boolean;
+
+        // action
+        addQuickNote() : void;
+        toMarkdown(input: string) : string;
+
+        // event
+        keypress($event : ng.IAngularEvent) : void;
+    }
 
     export class QuickNoteController {
 
         constructor(public $scope:QuickNoteScope, public $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) {
             $scope.hasFocus = true;
-
-            var Items = $resource(jsRouter.controllers.ItemController.items().url)
             $scope.sending = false
+
+            var QuickNotes = $resource("/api/quick_notes")
 
             $scope.toMarkdown = input => {
                 return itemRenderService.render(input)
             }
 
-            $scope.add_item = () => {
+            $scope.addQuickNote = () => {
                 $scope.sending = true
                 $scope.hasFocus = false
 
-                Items.save(null, {content: this.$scope.input_content},
+                QuickNotes.save(null, {content: this.$scope.inputContent},
                     (data)=> {
-                        data.content = itemRenderService.render(data.content)
-                        alert(typeof($scope.items))
-                        $scope.items.unshift(data)
-                        if($scope.items.length > 5){
-                            $scope.items.pop()
+                        $scope.quickNotes.unshift(data)
+                        if($scope.quickNotes.length > 5){
+                            $scope.quickNotes.pop()
                         }
-                        $scope.input_content = ""
+                        $scope.inputContent = ""
                         $scope.sending = false
-                        $scope.hasFocus = true;
+                        $scope.hasFocus = true
                     },
                     (reason)=> {
-                        alert("error new item")
+                        alert("error add QuickNote")
                         $scope.sending = false
-                        $scope.hasFocus = true;
+                        $scope.hasFocus = true
                     })
             };
 
-            Items.query(
+            QuickNotes.query(
                 (data)=> {
-                    $scope.items = data.map(x=>{x.content = itemRenderService.render(x.content); return x})
+                    $scope.quickNotes = data
                 },
                 (reason)=> {
-                    alert("error get items")
+                    alert("error get QuickNotes")
                 });
 
             $scope.keypress = ($event : ng.IAngularEvent) => {
-                $scope.add_item()
-                $event.preventDefault();
+                $scope.addQuickNote()
+                $event.preventDefault()
             };
 
         }

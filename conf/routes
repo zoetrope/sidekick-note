@@ -5,14 +5,18 @@
 # Home page
 GET         /                         controllers.Application.main(title="")
 
-POST        /login                    controllers.Application.authenticate
-GET         /logout                   controllers.Application.logout
-GET         /loggedin                 controllers.Application.loggedin
+POST        /api/login                controllers.Application.authenticate
+GET         /api/logout               controllers.Application.logout
+GET         /api/loggedin             controllers.Application.loggedin
 
-GET         /items                    controllers.ItemController.items(page:Int ?=1)
-POST        /items                    controllers.ItemController.newItem
+GET         /api/items                controllers.ItemController.items(page:Int ?=1)
+POST        /api/items                controllers.ItemController.newItem
 
-GET         /items/search             controllers.ItemController.search(words:String)
+GET         /api/items/search         controllers.ItemController.search(words:String)
+
+GET         /api/quick_notes          controllers.QuickNoteController.getQuickNotes(page:Int ?=1)
+POST        /api/quick_notes          controllers.QuickNoteController.addQuickNote
+
 
 GET         /javascript-routes        controllers.Application.javascriptRoutes
 
