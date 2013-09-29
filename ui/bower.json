@@ -24,7 +24,8 @@
     "marked": "~0.2.9",
     "highlightjs": "~7.3.0",
     "angular-ui-utils": "~0.0.4",
-    "angular-ui-select2": "~0.0.2"
+    "angular-ui-select2": "~0.0.2",
+    "angular-ui-bootstrap": "~0.6.0"
   },
   "devDependencies": {
     "jasmine": "~1.3.1",
@@ -47,13 +48,16 @@
     "angular-ui-utils": {
       "public/scripts/libs": "modules/keypress/keypress.js"
     },
+    "angular-ui-bootstrap": {
+      "public/scripts/libs": "dist/ui-bootstrap-tpls-0.6.0.js"
+    },
     "select2": {
       "public/scripts/libs": "select2.js",
       "public/stylesheets": [
-          "select2.css",
-          "select2-spinner.gif",
-          "select2.png",
-          "select2x2.png"
+        "select2.css",
+        "select2-spinner.gif",
+        "select2.png",
+        "select2x2.png"
       ]
     },
     "bootstrap": {
