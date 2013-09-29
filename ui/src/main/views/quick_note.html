@@ -7,7 +7,9 @@
             ui-keypress="{'ctrl-10':'keypress($event)'}"/>
         <input type="submit" value="add" class="btn btn-default" ng-disabled="sending"/>
     </form>
-    <div ng-bind-html-unsafe="toMarkdown(inputContent)" />
+    preview: <input type="checkbox" ng-model="enablePreview"/>
+    <div ng-bind-html-unsafe="toMarkdown(inputContent)" ng-show="enablePreview" />
+
     <div class="list-group">
         <div ng-repeat="note in quickNotes" class="list-group-item">
             <p class="list-group-item-text">

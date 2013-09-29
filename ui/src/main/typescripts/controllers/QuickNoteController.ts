@@ -16,6 +16,7 @@ module controllers {
         // state
         sending : Boolean;
         hasFocus : Boolean;
+        enablePreview : Boolean;
 
         // action
         addQuickNote() : void;
@@ -28,8 +29,9 @@ module controllers {
     export class QuickNoteController {
 
         constructor(public $scope:QuickNoteScope, public $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) {
-            $scope.hasFocus = true;
+            $scope.hasFocus = true
             $scope.sending = false
+            $scope.enablePreview = false
 
             var QuickNotes = $resource("/api/quick_notes")
 
