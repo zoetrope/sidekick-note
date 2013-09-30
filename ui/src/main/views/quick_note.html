@@ -1,23 +1,40 @@
 <h2>Item List</h2>
 <div ng-controller="QuickNoteController">
-    <form ng-submit="addQuickNote()" role="form" class="form">
-        <textarea rows="3" ng-model="inputContent" class="form-control"
-            placeholder="add new note here" ng-disabled="sending"
-            kick-focus="hasFocus"
-            ui-keypress="{'ctrl-10':'keypress($event)'}"/>
-        <input type="text" ui-select2="select2Options" ng-model="selectedTags" style="width:300px" />
-        <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
-        <rating value="rate" max="5" readonly="false"></rating>
-    </form>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form ng-submit="addQuickNote()" role="form" class="form">
+                <p>
+                    <textarea rows="3" ng-model="inputContent" class="form-control"
+                              placeholder="add new note here" ng-disabled="sending"
+                              kick-focus="hasFocus"
+                              ui-keypress="{'ctrl-10':'keypress($event)'}"/>
+                </p>
 
-    {{select2Options | json}}
-    preview: <input type="checkbox" ng-model="enablePreview"/>
-    <div ng-bind-html-unsafe="toMarkdown(inputContent)" ng-show="enablePreview" />
-
+                <div class="row">
+                <div class="col-lg-10">
+                    <input id="select2Options" type="text" ui-select2="select2Options" ng-model="selectedTags"
+                           style="width:100%"/>
+                </div>
+                <div class="col-lg-2">
+                    <rating value="rate" max="5" readonly="false"></rating>
+                </div>
+                </div>
+                <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
+                preview: <input type="checkbox" ng-model="enablePreview"/>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-default" ng-show="enablePreview">
+        <div class="panel-heading">Preview</div>
+        <div class="panel-body">
+            <div ng-bind-html-unsafe="toMarkdown(inputContent)"/>
+        </div>
+    </div>
     <div class="list-group">
         <div ng-repeat="note in quickNotes" class="list-group-item">
             <p class="list-group-item-text">
-                <div ng-bind-html-unsafe="toMarkdown(note.content)" />
+
+            <div ng-bind-html-unsafe="toMarkdown(note.content)"/>
             </p>
             <p class="list-group-item-text text-muted text-right">
                 <small>
