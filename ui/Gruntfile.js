@@ -26,7 +26,8 @@ module.exports = function (grunt) {
             stylesheets: '../public/stylesheets',
             views: '../public/views',
             images: '../public/images',
-            fonts: '../public/fonts'
+            fonts: '../public/fonts',
+            glyphicons: '../public/stylesheets/fonts'
         }
     };
 
@@ -85,6 +86,11 @@ module.exports = function (grunt) {
                     {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.views %>/*.html'], dest: '<%= conf.dist.views %>'},
                     {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.images %>/*.*'], dest: '<%= conf.dist.images %>'}
                 ]
+            },
+            fonts: {
+                files: [
+                    {expand: true, flatten: true, cwd: '', src: ['<%= conf.dist.fonts %>/bootstrap/*.*'], dest: '<%= conf.dist.glyphicons %>'}
+                ]
             }
         },
         uglify: {
@@ -107,7 +113,7 @@ module.exports = function (grunt) {
                         '<%= conf.dist.libs %>/angular-resource/*.js',
                         '<%= conf.dist.libs %>/angular-ui-utils/*.js',
                         '<%= conf.dist.libs %>/angular-ui-select2/*.js',
-                        '<%= conf.dist.libs %>/angular-ui-bootstrap-bower/*.js',
+                        '<%= conf.dist.libs %>/angular-ui-bootstrap/*.js',
                         '<%= conf.dist.libs %>/select2/*.js',
                         '<%= conf.dist.libs %>/bootstrap/*.js',
                         '<%= conf.dist.libs %>/highlightjs/*.js',
@@ -176,12 +182,12 @@ module.exports = function (grunt) {
     grunt.registerTask(
         'default',
         "compile",
-        ['clean:dist', 'bower', 'copy:static', 'typescript:main', 'uglify:dev']);
+        ['clean:dist', 'bower', 'copy', 'typescript:main', 'uglify:dev']);
 
     grunt.registerTask(
         'run',
         "compile and watch",
-        ['clean:dist', 'bower', 'copy:static', 'typescript:main', 'uglify:dev', 'watch']);
+        ['clean:dist', 'bower', 'copy', 'typescript:main', 'uglify:dev', 'watch']);
 
     grunt.registerTask(
         'test',

@@ -5,10 +5,12 @@
             placeholder="add new note here" ng-disabled="sending"
             kick-focus="hasFocus"
             ui-keypress="{'ctrl-10':'keypress($event)'}"/>
-        <input type="text" ui-select2="select2Options" ng-model="tags" style="width:300px" />
+        <input type="text" ui-select2="select2Options" ng-model="selectedTags" style="width:300px" />
         <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
+        <rating value="rate" max="5" readonly="false"></rating>
     </form>
 
+    {{select2Options | json}}
     preview: <input type="checkbox" ng-model="enablePreview"/>
     <div ng-bind-html-unsafe="toMarkdown(inputContent)" ng-show="enablePreview" />
 

@@ -13,24 +13,24 @@ object ItemTag extends SQLSyntaxSupport[ItemTag] {
   val autoSession = AutoSession
 
   def addTag(itemId: Long, tag: Tag)(implicit session: DBSession = autoSession): Unit = withSQL {
-    tag.copy(refCount = tag.refCount + 1)
-    tag.save()
+    val newTag =tag.copy(refCount = tag.refCount + 1)
+    newTag.save()
 
     insert.into(ItemTag).columns(
       column.itemId,
       column.tagId
     ).values(
       itemId,
-      tag.tagId
+      newTag.tagId
     )
   }.update.apply()
 
   def deleteTag(itemId: Long, tag: Tag)(implicit session: DBSession = autoSession): Unit = withSQL {
-    tag.copy(refCount = tag.refCount - 1)
-    tag.save()
+    val newTag = tag.copy(refCount = tag.refCount - 1)
+    newTag.save()
 
     delete.from(ItemTag)
       .where.eq(column.itemId, itemId)
-      .and.eq(column.tagId, tag.tagId)
+      .and.eq(column.tagId, newTag.tagId)
   }.update.apply()
 }

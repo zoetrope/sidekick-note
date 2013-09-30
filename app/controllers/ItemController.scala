@@ -26,17 +26,16 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       if (page < 1) {
         play.Logger.error("invalid page number")
         BadRequest("invalid page number")
-      } else {
-        val limit = 5
-        val offset = (page - 1) * limit
-
-        play.Logger.info("items")
-        val user = loggedIn
-        val items = Item.findByAccountId(user.accountId, offset, limit)
-        play.Logger.info("items length = " + items.length)
-        play.Logger.info(Serialization.write(items))
-        Ok(Extraction.decompose(items)).as("application/json")
       }
+      val limit = 5
+      val offset = (page - 1) * limit
+
+      play.Logger.info("items")
+      val user = loggedIn
+      val items = Item.findByAccountId(user.accountId, offset, limit)
+      play.Logger.info("items length = " + items.length)
+      play.Logger.info(Serialization.write(items))
+      Ok(Extraction.decompose(items)).as("application/json")
   }
 
   def newItem = StackAction(json, AuthorityKey -> NormalUser) {

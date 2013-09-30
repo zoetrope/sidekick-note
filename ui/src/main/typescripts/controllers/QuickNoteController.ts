@@ -14,7 +14,8 @@ module controllers {
     export interface QuickNoteScope extends ng.IScope {
         // input
         inputContent: string;
-        tags: TagForm[];
+        selectedTags: TagForm[];
+        rate: number;
 
         // output
         quickNotes: models.QuickNote[];
@@ -25,6 +26,7 @@ module controllers {
         enablePreview : Boolean;
 
         select2Options : any;
+        allTags : string[];
 
         // action
         addQuickNote() : void;
@@ -40,13 +42,20 @@ module controllers {
             $scope.hasFocus = true
             $scope.sending = false
             $scope.enablePreview = false
+            $scope.rate = 1
 
-            $scope.tags = [ { "id": 1, "text": "tag1" } ]
+            $scope.selectedTags = []
             $scope.select2Options = {
                 'multiple': true,
                 'simple_tags': true,
-                'tags': [{ "id": 1, "text": "tag1" }, { "id": 2, "text": "tag2" }, { "id": 3, "text": "tag3" }]
+                'tags': () => {
+                    return $scope.allTags;
+                }
             };
+            var Tags = $resource("/api/tags")
+            Tags.query(data => {
+                $scope.allTags = data.map(tag => {return {"id": tag.name, "text": tag.name}})
+            });
 
             var QuickNotes = $resource("/api/quick_notes")
 
@@ -60,7 +69,8 @@ module controllers {
 
                 QuickNotes.save(null, {
                         content: $scope.inputContent,
-                        tags: $scope.tags.map(tag=> tag.text)
+                        tags: $scope.selectedTags.map(tag=> tag.text),
+                        rate: $scope.rate
                     },
                     (data)=> {
                         $scope.quickNotes.unshift(data)

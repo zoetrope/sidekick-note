@@ -17,7 +17,8 @@ import scalikejdbc.DB
 case class QuickNoteForm
 (
   content: String,
-  tags: Seq[String]
+  tags: Seq[String],
+  rate: Int
 )
 
 object QuickNoteController extends Controller with AuthElement with AuthConfigImpl with Json4s {
@@ -57,7 +58,7 @@ object QuickNoteController extends Controller with AuthElement with AuthConfigIm
 
     //DB localTx{
       val quick_note = QuickNote.create(
-        form.content, words, 0, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.accountId)
+        form.content, words, form.rate, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.accountId)
 
       form.tags.foreach(tagName => {
         val tag = Tag.getOrCreate(tagName)
