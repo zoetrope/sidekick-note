@@ -2,6 +2,7 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 
 ///<reference path='../models/Task.ts' />
+///<reference path='../models/Tag.ts' />
 ///<reference path='../services/ItemRenderService.ts' />
 
 module controllers {
@@ -9,10 +10,31 @@ module controllers {
 
     export interface TaskScope extends ng.IScope {
 
-        selectedTags: models.TagForm[];
-        select2Options : any;
+        searchSelectedTags: models.TagForm[];
+        searchSelectOptions : any;
+
+        // input
+        inputContent: string;
+        inputSelectedTags: models.TagForm[];
+        rate: number;
+
+        // output
+        tasks: models.Task[];
+
+        // state
+        sending : Boolean;
+        hasFocus : Boolean;
+        enablePreview : Boolean;
+
+        inputSelectOptions : any;
         allTags : string[];
 
+        // action
+        addTask() : void;
+        toMarkdown(input: string) : string;
+
+        // event
+        keypress($event : ng.IAngularEvent) : void;
     }
 
     export class TaskController {
@@ -20,8 +42,8 @@ module controllers {
         constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
 
 
-            $scope.selectedTags = []
-            $scope.select2Options = {
+            $scope.searchSelectedTags = []
+            $scope.searchSelectOptions = {
                 'multiple': true,
                 'allowClear' : true,
                 'closeOnSelect' : false,
@@ -31,10 +53,59 @@ module controllers {
                 }
             };
 
+            $scope.inputSelectedTags = []
+            $scope.inputSelectOptions = {
+                'multiple': true,
+                'simple_tags': true,
+                'tags': () => {
+                    return $scope.allTags;
+                }
+            };
+
             var Tags = $resource("/api/tags")
             Tags.query(data => {
                 $scope.allTags = data.map(tag => {return {"id": tag.name, "text": tag.name}})
             });
+
+
+            var Tasks = $resource("/api/tasks")
+
+            $scope.toMarkdown = input => {
+                return itemRenderService.render(input)
+            }
+
+            $scope.addTask = () => {
+                $scope.sending = true
+                $scope.hasFocus = false
+
+                Tasks.save(null, {
+                        content: $scope.inputContent,
+                        tags: $scope.inputSelectedTags.map(tag=> tag.text),
+                        rate: $scope.rate
+                    },
+                    (data)=> {
+                        $scope.tasks.unshift(data)
+                        if($scope.tasks.length > 5){
+                            $scope.tasks.pop()
+                        }
+                        $scope.inputContent = ""
+                        $scope.sending = false
+                        $scope.hasFocus = true
+                    },
+                    (reason)=> {
+                        alert("error add QuickNote")
+                        $scope.sending = false
+                        $scope.hasFocus = true
+                    })
+            };
+
+            Tasks.query(
+                (data)=> {
+                    $scope.tasks = data
+                },
+                (reason)=> {
+                    alert("error get QuickNotes")
+                });
         }
 
     }
