@@ -12,6 +12,7 @@ module controllers {
         loggedin: string;
 
         login(): void
+        logout(): void
     }
 
     declare var jsRouter:any
@@ -21,6 +22,7 @@ module controllers {
 
             var Auth = $resource(jsRouter.controllers.Application.authenticate().url)
             var LoggedIn = $resource(jsRouter.controllers.Application.loggedin().url)
+            var Logout = $resource("/api/logout")
 
             LoggedIn.get(x=>$scope.loggedin = x.name, reason => alert(reason))
 
@@ -37,6 +39,13 @@ module controllers {
                     alert("failed login." + reason)
                 });
             };
+
+            $scope.logout = () => {
+                Logout.get(_=>{
+                    $scope.loggedin = ""
+                    window.location.href = "/login";
+                })
+            }
         }
 
     }

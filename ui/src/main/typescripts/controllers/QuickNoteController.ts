@@ -7,14 +7,10 @@
 module controllers {
     'use strict';
 
-    export class TagForm {
-        id : number;
-        text : string;
-    }
     export interface QuickNoteScope extends ng.IScope {
         // input
         inputContent: string;
-        selectedTags: TagForm[];
+        selectedTags: models.TagForm[];
         rate: number;
 
         // output

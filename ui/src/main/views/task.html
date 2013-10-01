@@ -1,0 +1,45 @@
+<div ng-controller="TaskController" class="row">
+    <div class="col-sm-4 well">
+        <input type="text" ui-select2="searchSelectOptions" ng-model="selectedTags" style="width:100%"/>
+    </div>
+
+    <div class="col-sm-8">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form ng-submit="addTask()" role="form" class="form">
+                    <p>
+                        <textarea rows="3" ng-model="inputContent" class="form-control"
+                                  placeholder="add new note here" ng-disabled="sending"
+                                  kick-focus="hasFocus"
+                                  ui-keypress="{'ctrl-10':'keypress($event)'}"/>
+                    </p>
+
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <input type="text" ui-select2="inputSelectOptions" ng-model="selectedTags"
+                                   style="width:100%"/>
+                        </div>
+                        <div class="col-lg-2">
+                            <rating value="rate" max="5" readonly="false"></rating>
+                        </div>
+                    </div>
+                    <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
+                </form>
+            </div>
+        </div>
+        <div class="list-group">
+            <div ng-repeat="task in tasks" class="list-group-item">
+                <p class="list-group-item-text">
+
+                <div ng-bind-html-unsafe="toMarkdown(task.content)"/>
+                </p>
+                <p class="list-group-item-text text-muted text-right">
+                    <small>
+                        {{task.created}}
+                    </small>
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>

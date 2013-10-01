@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS attachments;
 DROP TABLE IF EXISTS quick_notes;
 DROP TABLE IF EXISTS tasks;
 DROP TABLE IF EXISTS articles;
@@ -23,7 +24,7 @@ CREATE TABLE items (
   item_id BIGINT NOT NULL AUTO_INCREMENT,
   content TEXT NOT NULL,
   words TEXT NOT NULL,
-  rating INT NOT NULL,
+  rate INT NOT NULL,
   created DATETIME NOT NULL,
   modified DATETIME NOT NULL,
   deleted DATETIME,
@@ -43,6 +44,7 @@ CREATE TABLE quick_notes(
 CREATE TABLE tasks (
   item_id BIGINT,
   status VARCHAR(32) NOT NULL,
+  due_date DATETIME,
   PRIMARY KEY (item_id),
   FOREIGN KEY (item_id) REFERENCES items(item_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
@@ -67,4 +69,15 @@ CREATE TABLE items_tags (
   PRIMARY KEY (item_id, tag_id),
   FOREIGN KEY (item_id) REFERENCES items(item_id),
   FOREIGN KEY (tag_id) REFERENCES tags(tag_id)
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
+
+CREATE TABLE attachments (
+  attachment_id BIGINT NOT NULL,
+  data BLOB NOT NULL,
+  file_name VARCHAR(256) NOT NULL,
+  description TEXT,
+  content_type VARCHAR(64) NOT NULL,
+  item_id BIGINT NOT NULL,
+  PRIMARY KEY (attachment_id),
+  FOREIGN KEY (item_id) REFERENCES items(item_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;

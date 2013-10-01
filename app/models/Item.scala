@@ -8,7 +8,7 @@ case class Item(
                  itemId: Long,
                  content: String,
                  words: String,
-                 rating: Int = 0,
+                 rate: Int = 0,
                  tags: Seq[Tag] = Nil,
                  created: DateTime,
                  modified: DateTime,
@@ -25,14 +25,14 @@ object Item extends SQLSyntaxSupport[Item] {
 
   override val tableName = "items"
 
-  override val columns = Seq("item_id", "content", "words", "rating", "created", "modified", "deleted", "account_id")
+  override val columns = Seq("item_id", "content", "words", "rate", "created", "modified", "deleted", "account_id")
 
   def apply(i: SyntaxProvider[Item])(implicit rs: WrappedResultSet): Item = apply(i.resultName)(rs)
   def apply(i: ResultName[Item])(implicit rs: WrappedResultSet): Item = new Item(
     itemId = rs.long(i.itemId),
     content = rs.string(i.content),
     words = rs.string(i.words),
-    rating = rs.int(i.rating),
+    rate = rs.int(i.rate),
     created = rs.timestamp(i.created).toDateTime,
     modified = rs.timestamp(i.modified).toDateTime,
     deleted = rs.timestampOpt(i.deleted).map(_.toDateTime),
@@ -102,7 +102,7 @@ object Item extends SQLSyntaxSupport[Item] {
 
   def create(content: String,
               words: String,
-              rating: Int = 0,
+              rate: Int = 0,
               created: DateTime,
               modified: DateTime,
               deleted: Option[DateTime] = None,
@@ -111,7 +111,7 @@ object Item extends SQLSyntaxSupport[Item] {
       insert.into(Item).columns(
         column.content,
         column.words,
-        column.rating,
+        column.rate,
         column.created,
         column.modified,
         column.deleted,
@@ -119,7 +119,7 @@ object Item extends SQLSyntaxSupport[Item] {
       ).values(
         content,
         words,
-        rating,
+        rate,
         created,
         modified,
         deleted,
@@ -131,7 +131,7 @@ object Item extends SQLSyntaxSupport[Item] {
       itemId = generatedKey,
       content = content,
       words = words,
-      rating = rating,
+      rate = rate,
       created = created,
       modified = modified,
       deleted = deleted,
@@ -144,7 +144,7 @@ object Item extends SQLSyntaxSupport[Item] {
         i.itemId -> entity.itemId,
         i.content -> entity.content,
         i.words -> entity.words,
-        i.rating -> entity.rating,
+        i.rate -> entity.rate,
         i.created -> entity.created,
         i.modified -> entity.modified,
         i.deleted -> entity.deleted,

@@ -1,0 +1,15 @@
+body {
+    padding-top: 70px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0px auto;
+}
+
+.form-signin .form-control , .form-signin .btn{
+    margin: 10px;
+}

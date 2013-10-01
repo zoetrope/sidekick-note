@@ -10,6 +10,7 @@ module.exports = function (grunt) {
         tsd: 'src/d.ts',
         app: {
             typescripts: 'src/main/typescripts',
+            stylesheets: 'src/main/stylesheets',
             libs: 'src/main/libs',
             views: 'src/main/views',
             images: 'src/main/images'
@@ -64,7 +65,7 @@ module.exports = function (grunt) {
                 tasks: ['typescript']
             },
             views: {
-                files: ['<%= conf.app.views %>/**/*.html'],
+                files: ['<%= conf.app.views %>/**/*.html', '<%= conf.app.stylesheets %>/**/*.css'],
                 tasks: ['copy:static']
             }
         },
@@ -84,7 +85,8 @@ module.exports = function (grunt) {
             static: {
                 files: [
                     {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.views %>/*.html'], dest: '<%= conf.dist.views %>'},
-                    {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.images %>/*.*'], dest: '<%= conf.dist.images %>'}
+                    {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.images %>/*.*'], dest: '<%= conf.dist.images %>'},
+                    {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.stylesheets %>/*.css'], dest: '<%= conf.dist.stylesheets %>'}
                 ]
             },
             fonts: {

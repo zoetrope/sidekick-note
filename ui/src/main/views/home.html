@@ -1,0 +1,21 @@
+<div ng-controller="HomeController" class="row">
+    <div class="col-sm-4">
+
+        <tabset>
+            <tab heading="add">
+                <p>新しいタブの追加</p>
+                <button class="btn btn-small" ng-click="addTab()">add tab</button>
+            </tab>
+            <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active">
+                {{tab.content}}
+            </tab>
+        </tabset>
+    </div>
+    <div class="col-sm-8">
+        <div class="well">
+            <p>
+                hoge
+            </p>
+        </div>
+    </div>
+</div>

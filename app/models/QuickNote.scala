@@ -8,7 +8,7 @@ case class QuickNote(
   itemId: Long,
   content: String,
   words: String,
-  rating: Int = 0,
+  rate: Int = 0,
   tags: Seq[Tag] = Nil,
   created: DateTime,
   modified: DateTime,
@@ -19,7 +19,7 @@ case class QuickNote(
   def destroy()(implicit session: DBSession = QuickNote.autoSession): Unit = QuickNote.destroy(this)(session)
 
   def getParent() : Item = {
-    new Item(itemId, content, words, rating, tags, created, modified, deleted, accountId)
+    new Item(itemId, content, words, rate, tags, created, modified, deleted, accountId)
   }
 
 }
@@ -35,7 +35,7 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
     itemId = rs.long(i.itemId),
     content = rs.string(i.content),
     words = rs.string(i.words),
-    rating = rs.int(i.rating),
+    rate = rs.int(i.rate),
     created = rs.timestamp(i.created).toDateTime,
     modified = rs.timestamp(i.modified).toDateTime,
     deleted = rs.timestampOpt(i.deleted).map(_.toDateTime),
@@ -93,13 +93,13 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
     */
   def create(content: String,
              words: String,
-             rating: Int = 0,
+             rate: Int = 0,
              created: DateTime,
              modified: DateTime,
              deleted: Option[DateTime] = None,
              accountId: Long)(implicit session: DBSession = autoSession): QuickNote = {
 
-    val item = Item.create(content, words, rating, created, modified, deleted, accountId)
+    val item = Item.create(content, words, rate, created, modified, deleted, accountId)
     withSQL {
       insert.into(QuickNote).columns(
         column.itemId
@@ -112,7 +112,7 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
       itemId = item.itemId,
       content = content,
       words = words,
-      rating = rating,
+      rate = rate,
       created = created,
       modified = modified,
       deleted = deleted,

@@ -12,6 +12,7 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap/bootstrap-theme.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/highlightjs/default.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/select2/select2.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
 
         <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
         <script type="text/javascript" src="@routes.Assets.at("scripts/main.min.js")"></script>
@@ -46,7 +47,7 @@
                                 {{loggedin}} <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/logout">logout</a></li>
+                                <li><a href="" ng-click="logout()">logout</a></li>
                                 <li><a href="/setting">setting</a></li>
                             </ul>
                         </li>
@@ -55,8 +56,6 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div ng-view></div>
-        </div>
+        <div ng-view></div>
     </body>
 </html>

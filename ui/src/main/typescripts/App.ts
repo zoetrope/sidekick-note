@@ -1,6 +1,7 @@
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='controllers/ApplicationController.ts' />
+///<reference path='controllers/HomeController.ts' />
 ///<reference path='controllers/QuickNoteController.ts' />
 ///<reference path='controllers/TaskController.ts' />
 ///<reference path='controllers/ArticleController.ts' />
@@ -84,6 +85,10 @@ module App {
     ).controller("ApplicationController", ["$scope", "$location", "$resource",
             ($scope:controllers.AppScope, $location:ng.ILocationService, $resource:ng.resource.IResourceService) : controllers.ApplicationController => {
                 return new controllers.ApplicationController($scope, $location, $resource)
+            }])
+     .controller("HomeController", ["$scope", "$resource", "itemRenderService",
+            ($scope:controllers.HomeScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.HomeController => {
+                return new controllers.HomeController($scope, $resource, itemRenderService)
             }])
      .controller("QuickNoteController", ["$scope", "$resource", "itemRenderService",
             ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.QuickNoteController => {
