@@ -16,7 +16,7 @@ object ApplicationBuild extends Build {
     "com.github.seratch" %% "scalikejdbc-play-plugin" % "[1.6,)",
     "com.github.seratch" %% "scalikejdbc-test" % "[1.6,)"  % "test",
     "mysql" % "mysql-connector-java" % "5.1.26",
-    "com.typesafe" %% "play-plugins-redis" % "2.1-09092012-2",
+    "com.typesafe" %% "play-plugins-redis" % "2.1.1",
     "com.github.tototoshi" %% "play-json4s-native" % "0.1.0",
     "org.json4s" % "json4s-ext_2.10" % "3.1.0",
     "com.github.tototoshi" %% "play-flyway" % "0.2.0",

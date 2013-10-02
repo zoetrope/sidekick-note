@@ -88,11 +88,32 @@ module.exports = function (grunt) {
                     {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.images %>/*.*'], dest: '<%= conf.dist.images %>'},
                     {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.stylesheets %>/*.css'], dest: '<%= conf.dist.stylesheets %>'}
                 ]
+            }
+        },
+        shell: {
+            mkdir_glyphicons: {
+                command: 'mkdir <%= conf.dist.glyphicons %>',
+                options: {
+                    stdout: true
+                }
             },
-            fonts: {
-                files: [
-                    {expand: true, flatten: true, cwd: '', src: ['<%= conf.dist.fonts %>/bootstrap/*.*'], dest: '<%= conf.dist.glyphicons %>'}
-                ]
+            move_bootstrap_fonts: {
+                command: 'mv <%= conf.dist.fonts %>/bootstrap/* <%= conf.dist.glyphicons %>',
+                options: {
+                    stdout: true
+                }
+            },
+            mkdir_jqueryui_images: {
+                command: 'mkdir <%= conf.dist.stylesheets %>/jquery-ui/images',
+                options: {
+                    stdout: true
+                }
+            },
+            move_jqueryui_images: {
+                command: 'mv <%= conf.dist.images %>/jquery-ui/* <%= conf.dist.stylesheets %>/jquery-ui/images',
+                options: {
+                    stdout: true
+                }
             }
         },
         uglify: {
@@ -111,10 +132,12 @@ module.exports = function (grunt) {
                     '<%= conf.dist.scripts %>/main.min.js': [
                         /* 依存関係の順に並べること */
                         '<%= conf.dist.libs %>/jquery/*.js',
+                        '<%= conf.dist.libs %>/jquery-ui/*.js',
                         '<%= conf.dist.libs %>/angular/*.js',
                         '<%= conf.dist.libs %>/angular-resource/*.js',
                         '<%= conf.dist.libs %>/angular-ui-utils/*.js',
                         '<%= conf.dist.libs %>/angular-ui-select2/*.js',
+                        '<%= conf.dist.libs %>/angular-ui-date/*.js',
                         '<%= conf.dist.libs %>/angular-ui-bootstrap/*.js',
                         '<%= conf.dist.libs %>/select2/*.js',
                         '<%= conf.dist.libs %>/bootstrap/*.js',
@@ -184,12 +207,12 @@ module.exports = function (grunt) {
     grunt.registerTask(
         'default',
         "compile",
-        ['clean:dist', 'bower', 'copy', 'typescript:main', 'uglify:dev']);
+        ['clean:dist', 'bower', 'copy', 'shell', 'typescript:main', 'uglify:dev']);
 
     grunt.registerTask(
         'run',
         "compile and watch",
-        ['clean:dist', 'bower', 'copy', 'typescript:main', 'uglify:dev', 'watch']);
+        ['clean:dist', 'bower', 'copy', 'shell', 'typescript:main', 'uglify:dev', 'watch']);
 
     grunt.registerTask(
         'test',
