@@ -34,6 +34,8 @@ module controllers {
         addTask() : void;
         toMarkdown(input: string) : string;
 
+        updateTask(id:number):void;
+
         // event
         keypress($event : ng.IAngularEvent) : void;
     }

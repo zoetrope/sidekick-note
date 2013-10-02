@@ -26,7 +26,7 @@ case class TaskForm
 
 object TaskController extends Controller with AuthElement with AuthConfigImpl with Json4s {
 
-  implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
+  implicit val formats = DefaultFormats  + new org.json4s.ext.EnumNameSerializer() ++ JodaTimeSerializers.all
 
   def getTasks(page: Int) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>

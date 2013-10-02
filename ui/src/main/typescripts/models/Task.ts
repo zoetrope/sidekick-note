@@ -5,8 +5,11 @@ module models {
     'use strict';
 
     export class Task {
+        itemId:number;
         content:string;
         title:string
         created: string;
+        status: string;
+        completed:Boolean;
     }
 }

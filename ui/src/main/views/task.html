@@ -13,9 +13,9 @@
                                   kick-focus="hasFocus"
                                   ui-keypress="{'ctrl-10':'keypress($event)'}"/>
                     </p>
-                            <input type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
-                                   style="width:100%"/>
-                            <rating value="rate" max="5" readonly="false"></rating>
+                    <input type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
+                           style="width:100%"/>
+                    <rating value="rate" max="5" readonly="false"></rating>
                     <input ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
                     <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
                 </form>
@@ -25,16 +25,18 @@
         <div class="list-group">
             <div ng-repeat="task in tasks" class="list-group-item">
                 <p class="list-group-item-text">
-
                 <div ng-bind-html-unsafe="toMarkdown(task.content)"/>
                 </p>
+                <input type="checkbox" ng-model="task.completed">
                 <p class="list-group-item-text text-muted text-right">
                     <small>
-                        {{task.created}}
+                        {{task.created}},{{task.status}},{{task.itemId}}
                     </small>
                 </p>
+                <button ng-click="updateTask(task.itemId)">update</button>
             </div>
         </div>
 
+        {{tasks | json}}
     </div>
 </div>
