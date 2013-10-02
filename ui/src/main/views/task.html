@@ -13,17 +13,10 @@
                                   kick-focus="hasFocus"
                                   ui-keypress="{'ctrl-10':'keypress($event)'}"/>
                     </p>
-
-                    <div class="row">
-                        <div class="col-lg-10">
                             <input type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
                                    style="width:100%"/>
-                        </div>
-                        <div class="col-lg-2">
                             <rating value="rate" max="5" readonly="false"></rating>
-                        </div>
-                    </div>
-                    <input ui-date ui-date-format="yyyy/MM/dd" ng-model="myDate">
+                    <input ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
                     <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
                 </form>
             </div>

@@ -17,6 +17,7 @@ module controllers {
         inputContent: string;
         inputSelectedTags: models.TagForm[];
         rate: number;
+        dueDate: any;
 
         // output
         tasks: models.Task[];
@@ -41,6 +42,7 @@ module controllers {
 
         constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
 
+            $scope.rate = 1
 
             $scope.searchSelectedTags = []
             $scope.searchSelectOptions = {
@@ -81,7 +83,9 @@ module controllers {
                 Tasks.save(null, {
                         content: $scope.inputContent,
                         tags: $scope.inputSelectedTags.map(tag=> tag.text),
-                        rate: $scope.rate
+                        rate: $scope.rate,
+                        status: "New",
+                        dueDate: $scope.dueDate
                     },
                     (data)=> {
                         $scope.tasks.unshift(data)

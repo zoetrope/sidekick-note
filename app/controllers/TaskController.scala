@@ -60,7 +60,7 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
       play.Logger.info(words)
 
       val dueDate = try{
-        Some(DateTimeFormat.forPattern("yyyy/MM/dd HH:mm:ss").parseDateTime(form.dueDate))
+        Some(DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z").parseDateTime(form.dueDate))
       } catch {
         case _ : Throwable => Option.empty[DateTime]
       }
@@ -73,7 +73,7 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
         DateTime.now(),
         Option.empty[DateTime],
         user.accountId,
-        New,
+        TaskStatus.valueOf(form.status),
         dueDate)
 
       form.tags.foreach(tagName => {

@@ -46,8 +46,8 @@ object Task extends SQLSyntaxSupport[Task] {
 
   override val columns = Seq("item_id", "status", "due_date")
 
-  def apply(i: SyntaxProvider[Item], qn: SyntaxProvider[Task])(implicit rs: WrappedResultSet): Task = apply(i.resultName, t.resultName)(rs)
-  def apply(i: ResultName[Item], qn: ResultName[Task])(implicit rs: WrappedResultSet): Task = new Task(
+  def apply(i: SyntaxProvider[Item], t: SyntaxProvider[Task])(implicit rs: WrappedResultSet): Task = apply(i.resultName, t.resultName)(rs)
+  def apply(i: ResultName[Item], t: ResultName[Task])(implicit rs: WrappedResultSet): Task = new Task(
     itemId = rs.long(i.itemId),
     content = rs.string(i.content),
     words = rs.string(i.words),
@@ -110,7 +110,7 @@ object Task extends SQLSyntaxSupport[Task] {
         column.dueDate
       ).values(
         item.itemId,
-        status,
+        status.toString,
         dueDate
       )
     }.update().apply()
