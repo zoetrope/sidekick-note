@@ -112,6 +112,21 @@ object Task extends SQLSyntaxSupport[Task] {
       .map( (task, tags) => task.copy(tags = tags) ).list.apply()
   }
 
+  def findByTags(accountId:Long, offset:Int, limit:Int, tags:List[Tag])(implicit session: DBSession = autoSession): List[Task] = {
+    withSQL(
+      select.from(Item as i)
+        .join(Task as t).on(t.itemId, i.itemId)
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
+        .where.eq(i.accountId, accountId)
+        .and.in(tg.tagId, tags.map(tag=>tag.tagId))
+        .orderBy(i.created).desc
+        .limit(limit).offset(offset)
+    ).one(implicit rs => Task(i.resultName, t.resultName))
+      .toMany(Tag.opt(tg))
+      .map( (task, tags) => task.copy(tags = tags) ).list.apply()
+  }
+
   def create(content: String,
              words: String,
              rate: Int = 0,

@@ -24,10 +24,12 @@
 
         <div class="list-group">
             <div ng-repeat="task in tasks" class="list-group-item">
-                <p class="list-group-item-text">
-                <div ng-bind-html-unsafe="toMarkdown(task.content)"/>
-                </p>
                 <input type="checkbox" ng-model="task.completed">
+                <p class="list-group-item-text">
+                    <div ng-bind-html-unsafe="toMarkdown(task.content)" ng-hide="task.completed"/>
+                    <textarea ng-model="task.content" ng-show="task.completed"/>
+                </p>
+
                 <p class="list-group-item-text text-muted text-right">
                     <small>
                         {{task.created}},{{task.status}},{{task.itemId}}
