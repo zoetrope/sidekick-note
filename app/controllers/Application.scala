@@ -8,7 +8,7 @@ import play.api.mvc._
 import play.api.data._
 import play.api.data.Form
 import play.api.data.Forms._
-import models.{Account, Item}
+import models.{PermissionSerializer, Account, Item}
 import org.joda.time.DateTime
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
 
@@ -16,7 +16,7 @@ case class LoginForm(name: String, password: String)
 
 object Application extends Controller with OptionalAuthElement with LoginLogout with AuthConfigImpl with Json4s {
 
-  implicit val formats = DefaultFormats
+  implicit val formats = DefaultFormats + new PermissionSerializer
 
   def main(title : String) = Action { implicit request =>
     Ok(views.html.main(title))

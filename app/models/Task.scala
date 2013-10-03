@@ -3,6 +3,8 @@ package models
 import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 import org.joda.time.DateTime
+import org.json4s.CustomSerializer
+import org.json4s.JsonAST.JString
 
 sealed trait TaskStatus
 case object Completed extends TaskStatus
@@ -15,21 +17,29 @@ object TaskStatus {
     case "New"    => New
     case _ => throw new IllegalArgumentException()
   }
-
 }
 
-case class Task(
-                      itemId: Long,
-                      content: String,
-                      words: String,
-                      rate: Int = 0,
-                      tags: Seq[Tag] = Nil,
-                      created: DateTime,
-                      modified: DateTime,
-                      deleted: Option[DateTime] = None,
-                      accountId: Long,
-                      status: TaskStatus,
-                      dueDate: Option[DateTime]) {
+class TaskStatusSerializer extends CustomSerializer[TaskStatus](format =>
+  ( {
+    case x: JString => TaskStatus.valueOf(x.toString)
+  }, {
+    case x: TaskStatus => JString(x.toString)
+  })
+)
+
+case class Task
+(
+  itemId: Long,
+  content: String,
+  words: String,
+  rate: Int = 0,
+  tags: Seq[Tag] = Nil,
+  created: DateTime,
+  modified: DateTime,
+  deleted: Option[DateTime] = None,
+  accountId: Long,
+  status: TaskStatus,
+  dueDate: Option[DateTime]) {
 
   def save()(implicit session: DBSession = Task.autoSession): Task = Task.save(this)(session)
   def destroy()(implicit session: DBSession = Task.autoSession): Unit = Task.destroy(this)(session)
@@ -61,7 +71,7 @@ object Task extends SQLSyntaxSupport[Task] {
   )
 
   val t = Task.syntax("t")
-  val i = Item.i
+  private val (i, it, tg) = (Item.i, ItemTag.it, Tag.tg)
 
   val autoSession = AutoSession
 
@@ -69,27 +79,37 @@ object Task extends SQLSyntaxSupport[Task] {
     withSQL {
       select.from(Item as i)
         .join(Task as t).on(t.itemId, i.itemId)
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(t.itemId, itemId)
-    }.map(implicit rs => Task(i.resultName, t.resultName)).single.apply()
+    }.one(implicit rs => Task(i.resultName, t.resultName))
+      .toMany(Tag.opt(tg))
+      .map( (task, tags) => task.copy(tags = tags) ).single.apply()
   }
 
   def findAll()(implicit session: DBSession = autoSession): List[Task] = {
-    withSQL{
+    withSQL {
       select.from(Item as i)
         .join(Task as t).on(t.itemId, i.itemId)
-    }
-      .map(implicit rs => Task(i, t))
-      .list.apply()
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
+    }.one(implicit rs => Task(i.resultName, t.resultName))
+      .toMany(Tag.opt(tg))
+      .map( (task, tags) => task.copy(tags = tags) ).list.apply()
   }
 
   def findByAccountId(accountId:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Task] = {
     withSQL(
       select.from(Item as i)
         .join(Task as t).on(t.itemId, i.itemId)
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(i.accountId, accountId)
         .orderBy(i.created).desc
         .limit(limit).offset(offset)
-    ).map(implicit rs => Task(i, t)).list.apply()
+    ).one(implicit rs => Task(i.resultName, t.resultName))
+      .toMany(Tag.opt(tg))
+      .map( (task, tags) => task.copy(tags = tags) ).list.apply()
   }
 
   def create(content: String,

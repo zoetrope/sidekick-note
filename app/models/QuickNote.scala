@@ -43,7 +43,7 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
   )
 
   val qn = QuickNote.syntax("qn")
-  val i = Item.i
+  private val (i, it, tg) = (Item.i, ItemTag.it, Tag.tg)
 
   val autoSession = AutoSession
 
@@ -51,27 +51,37 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
     withSQL {
       select.from(Item as i)
         .join(QuickNote as qn).on(qn.itemId, i.itemId)
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(qn.itemId, itemId)
-    }.map(implicit rs => QuickNote(i.resultName, qn.resultName)).single.apply()
+    }.one(implicit rs => QuickNote(i.resultName, qn.resultName))
+      .toMany(Tag.opt(tg))
+      .map( (note, tags) => note.copy(tags = tags) ).single.apply()
   }
 
   def findAll()(implicit session: DBSession = autoSession): List[QuickNote] = {
     withSQL{
       select.from(Item as i)
         .join(QuickNote as qn).on(qn.itemId, i.itemId)
-    }
-      .map(implicit rs => QuickNote(i, qn))
-      .list.apply()
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
+    }.one(implicit rs => QuickNote(i.resultName, qn.resultName))
+      .toMany(Tag.opt(tg))
+      .map( (note, tags) => note.copy(tags = tags) ).list.apply()
   }
 
   def findByAccountId(accountId:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[QuickNote] = {
     withSQL(
       select.from(Item as i)
         .join(QuickNote as qn).on(qn.itemId, i.itemId)
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(i.accountId, accountId)
         .orderBy(i.created).desc
         .limit(limit).offset(offset)
-    ).map(implicit rs => QuickNote(i, qn)).list.apply()
+    ).one(implicit rs => QuickNote(i.resultName, qn.resultName))
+      .toMany(Tag.opt(tg))
+      .map( (note, tags) => note.copy(tags = tags) ).list.apply()
   }
 
   /*

@@ -24,24 +24,24 @@ object Tag extends SQLSyntaxSupport[Tag] {
     refCount = rs.int(t.refCount)
   )
       
-  val t = Tag.syntax("t")
+  val tg = Tag.syntax("tg")
 
-  def opt(s: SyntaxProvider[Tag])(rs: WrappedResultSet): Option[Tag] = rs.longOpt(t.resultName.tagId).map(_ => apply(t.resultName)(rs))
+  def opt(s: SyntaxProvider[Tag])(rs: WrappedResultSet): Option[Tag] = rs.longOpt(tg.resultName.tagId).map(_ => apply(tg.resultName)(rs))
 
   val autoSession = AutoSession
 
   def find(tagId: Long)(implicit session: DBSession = autoSession): Option[Tag] = {
     withSQL { 
-      select.from(Tag as t).where.eq(t.tagId, tagId)
-    }.map(Tag(t.resultName)).single.apply()
+      select.from(Tag as tg).where.eq(tg.tagId, tagId)
+    }.map(Tag(tg.resultName)).single.apply()
   }
 
 
   def getOrCreate(tagName: String)(implicit session: DBSession = autoSession): Tag = {
 
     val tag = withSQL {
-      select.from(Tag as t).where.eq(t.name, tagName)
-    }.map(Tag(t.resultName)).single.apply()
+      select.from(Tag as tg).where.eq(tg.name, tagName)
+    }.map(Tag(tg.resultName)).single.apply()
 
     tag match{
       case Some(t) => t
@@ -51,24 +51,24 @@ object Tag extends SQLSyntaxSupport[Tag] {
           
   def findAll()(implicit session: DBSession = autoSession): List[Tag] = {
     withSQL(
-      select.from(Tag as t)
-        .orderBy(t.refCount).desc
-    ).map(Tag(t.resultName)).list.apply()
+      select.from(Tag as tg)
+        .orderBy(tg.refCount).desc
+    ).map(Tag(tg.resultName)).list.apply()
   }
           
   def countAll()(implicit session: DBSession = autoSession): Long = {
-    withSQL(select(sqls"count(1)").from(Tag as t)).map(rs => rs.long(1)).single.apply().get
+    withSQL(select(sqls"count(1)").from(Tag as tg)).map(rs => rs.long(1)).single.apply().get
   }
           
   def findAllBy(where: SQLSyntax)(implicit session: DBSession = autoSession): List[Tag] = {
     withSQL { 
-      select.from(Tag as t).where.append(sqls"${where}")
-    }.map(Tag(t.resultName)).list.apply()
+      select.from(Tag as tg).where.append(sqls"${where}")
+    }.map(Tag(tg.resultName)).list.apply()
   }
       
   def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = {
     withSQL { 
-      select(sqls"count(1)").from(Tag as t).where.append(sqls"${where}")
+      select(sqls"count(1)").from(Tag as tg).where.append(sqls"${where}")
     }.map(_.long(1)).single.apply().get
   }
       
@@ -93,11 +93,11 @@ object Tag extends SQLSyntaxSupport[Tag] {
 
   def save(entity: Tag)(implicit session: DBSession = autoSession): Tag = {
     withSQL { 
-      update(Tag as t).set(
-        t.tagId -> entity.tagId,
-        t.name -> entity.name,
-        t.refCount -> entity.refCount
-      ).where.eq(t.tagId, entity.tagId)
+      update(Tag as tg).set(
+        tg.tagId -> entity.tagId,
+        tg.name -> entity.name,
+        tg.refCount -> entity.refCount
+      ).where.eq(tg.tagId, entity.tagId)
     }.update.apply()
     entity 
   }

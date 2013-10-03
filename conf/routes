@@ -19,6 +19,7 @@ POST        /api/quick_notes          controllers.QuickNoteController.addQuickNo
 
 GET         /api/tasks                controllers.TaskController.getTasks(page:Int ?=1)
 POST        /api/tasks                controllers.TaskController.addTask
+PUT         /api/tasks/:id            controllers.TaskController.updateTask(id:Int)
 
 GET         /api/tags                 controllers.TagController.getTags
 

@@ -4,8 +4,11 @@ import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 import org.joda.time.{DateTime}
 import org.mindrot.jbcrypt.BCrypt
+import org.json4s.CustomSerializer
+import org.json4s.JsonAST.JString
 
 sealed trait Permission
+
 case object Administrator extends Permission
 case object NormalUser extends Permission
 
@@ -16,6 +19,14 @@ object Permission {
     case _ => throw new IllegalArgumentException()
   }
 }
+
+class PermissionSerializer extends CustomSerializer[Permission](format =>
+  ( {
+    case x: JString => Permission.valueOf(x.toString)
+  }, {
+    case x: Permission => JString(x.toString)
+  })
+)
 
 case class Account(
   accountId: Long, 

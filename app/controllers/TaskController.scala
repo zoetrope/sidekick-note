@@ -26,7 +26,7 @@ case class TaskForm
 
 object TaskController extends Controller with AuthElement with AuthConfigImpl with Json4s {
 
-  implicit val formats = DefaultFormats  + new org.json4s.ext.EnumNameSerializer() ++ JodaTimeSerializers.all
+  implicit val formats = DefaultFormats + new TaskStatusSerializer ++ JodaTimeSerializers.all
 
   def getTasks(page: Int) = StackAction(AuthorityKey -> NormalUser) {
     implicit request =>
@@ -86,4 +86,11 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
       Ok(Extraction.decompose(task)).as("application/json")
   }
 
+  def updateTask(itemId: Int) = StackAction(json, AuthorityKey -> NormalUser) {
+    implicit request =>
+
+      play.Logger.debug("update task itemId = " + itemId)
+      play.Logger.debug(JsonMethods.compact(JsonMethods.render(request.body)))
+    Ok
+  }
 }

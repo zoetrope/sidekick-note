@@ -40,6 +40,10 @@ module controllers {
         keypress($event : ng.IAngularEvent) : void;
     }
 
+    export interface IResourceWithUpdate extends ng.resource.IResourceClass  {
+        update: ng.resource.IActionCall;
+    }
+
     export class TaskController {
 
         constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
@@ -104,6 +108,17 @@ module controllers {
                         $scope.hasFocus = true
                     })
             };
+
+            var Task = <IResourceWithUpdate>$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
+            $scope.updateTask = id => {
+                Task.update({itemId:id}, {
+                    content: $scope.inputContent,
+                    tags: $scope.inputSelectedTags.map(tag=> tag.text),
+                    rate: $scope.rate,
+                    status: "New",
+                    dueDate: $scope.dueDate
+                },data=>alert("update ok"), reason=>alert("update ng"))
+            }
 
             Tasks.query(
                 (data)=> {

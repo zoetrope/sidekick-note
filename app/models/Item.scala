@@ -42,7 +42,7 @@ object Item extends SQLSyntaxSupport[Item] {
   val i = Item.syntax("i")
   val autoSession = AutoSession
 
-  private val (t, it) = (Tag.t, ItemTag.it)
+  private val (t, it) = (Tag.tg, ItemTag.it)
 
   def find(itemId: Long)(implicit session: DBSession = autoSession): Option[Item] = {
     withSQL {
