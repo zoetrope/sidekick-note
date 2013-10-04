@@ -127,4 +127,12 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
         }
       }
   }
+
+
+  def search(words:String, tags:String) = StackAction(AuthorityKey -> Permission.NormalUser) {
+    implicit request =>
+      play.Logger.info("words=" + words)
+      play.Logger.info("tags=" + tags)
+      Ok
+  }
 }

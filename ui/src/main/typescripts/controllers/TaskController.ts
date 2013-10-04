@@ -17,7 +17,7 @@ module controllers {
         inputContent: string;
         inputSelectedTags: string[];
         rate: number;
-        dueDate: string;
+        dueDate: Date;
 
         // output
         tasks: models.Task[];
@@ -31,13 +31,13 @@ module controllers {
         allTags : string[];
 
         // action
-        toMarkdown(input: string) : string;
+        toMarkdown(input:string) : string;
         addTask : Function;
         updateTask : Function;
         searchTask : Function;
 
         // event
-        keypress($event : ng.IAngularEvent) : void;
+        keypress($event:ng.IAngularEvent) : void;
     }
 
     export interface IResourceWithUpdate extends ng.resource.IResourceClass  {
@@ -49,14 +49,15 @@ module controllers {
         constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
 
             $scope.rate = 1
-            $scope.dueDate = ""
+            $scope.dueDate = null
 
             $scope.searchSelectedTags = []
             $scope.searchSelectOptions = {
                 'multiple': true,
-                'allowClear' : true,
-                'closeOnSelect' : false,
-                'createSearchChoice' : null,
+                'simple_tags': true,
+                'allowClear': true,
+                'closeOnSelect': false,
+                'createSearchChoice': null,
                 'tags': () => {
                     return $scope.allTags;
                 }
@@ -79,6 +80,7 @@ module controllers {
             this.tasksResource = this.$resource("/api/tasks")
             this.taskResource = <IResourceWithUpdate>this.$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
             this.tagsResource = $resource("/api/tags")
+            this.searchTasksResource = $resource("/api/tasks/search")
 
             this.tagsResource.query(data => {
                 $scope.allTags = data.map(tag => tag.name)
@@ -93,11 +95,12 @@ module controllers {
                 });
         }
 
-        taskResource :IResourceWithUpdate
-        tasksResource : ng.resource.IResourceClass
-        tagsResource : ng.resource.IResourceClass
+        taskResource:IResourceWithUpdate
+        tasksResource:ng.resource.IResourceClass
+        tagsResource:ng.resource.IResourceClass
+        searchTasksResource:ng.resource.IResourceClass
 
-        addTask(){
+        addTask() {
             this.$scope.sending = true
             this.$scope.hasFocus = false
 
@@ -110,7 +113,7 @@ module controllers {
                 },
                 (data)=> {
                     this.$scope.tasks.unshift(data)
-                    if(this.$scope.tasks.length > 5){
+                    if (this.$scope.tasks.length > 5) {
                         this.$scope.tasks.pop()
                     }
                     this.$scope.inputContent = ""
@@ -125,19 +128,30 @@ module controllers {
         }
 
         updateTask(id:number, content:string, tags:string[], rate:number, status:string, dueDate:string) {
-            alert("content:"+ content +",tags:"+ tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
+            alert("content:" + content + ",tags:" + tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
 
-            this.taskResource.update({itemId:id}, {
+            this.taskResource.update({itemId: id}, {
                 content: content,
                 tags: tags,
                 rate: rate,
                 status: status,
                 dueDate: dueDate
-            },data=>alert("update ok"), reason=>alert("update ng"))
+            }, data=>alert("update ok"), reason=>alert("update ng"))
         }
 
         searchTask() {
-
+            var tags = this.$scope.searchSelectedTags.join(" ")
+            if (tags) {
+                alert("tags = " + tags)
+                this.searchTasksResource.query({tags: tags},
+                    (data)=> {
+                        alert("search ok")
+                        this.$scope.tasks = data
+                    },
+                    (reason)=> {
+                        alert("search ng")
+                    });
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
     <div class="col-sm-4 well">
         <input type="text" ui-select2="searchSelectOptions" ng-model="searchSelectedTags" style="width:100%"/>
         <button ng-click="searchTask()">search</button>
+        {{searchSelectedTags | json}}
     </div>
 
     <div class="col-sm-8">

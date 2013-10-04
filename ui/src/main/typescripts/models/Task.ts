@@ -12,7 +12,7 @@ module models {
         created: string;
         status: string;
         tags: string[];
-        dueDate: string;
+        dueDate: Date;
 
         //
         editable: Boolean;
