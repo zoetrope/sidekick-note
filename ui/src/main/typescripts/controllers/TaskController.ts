@@ -31,10 +31,10 @@ module controllers {
         allTags : string[];
 
         // action
-        addTask() : void;
         toMarkdown(input: string) : string;
-
-        updateTask(id:number, content:string, tags:string[], rate:number, status:string, dueDate:string):void;
+        addTask : Function;
+        updateTask : Function;
+        searchTask : Function;
 
         // event
         keypress($event : ng.IAngularEvent) : void;
@@ -71,58 +71,20 @@ module controllers {
                 }
             };
 
-            var Tags = $resource("/api/tags")
-            Tags.query(data => {
+            $scope.toMarkdown = input => itemRenderService.render(input)
+            $scope.addTask = angular.bind(this, this.addTask)
+            $scope.updateTask = angular.bind(this, this.updateTask)
+            $scope.searchTask = angular.bind(this, this.searchTask)
+
+            this.tasksResource = this.$resource("/api/tasks")
+            this.taskResource = <IResourceWithUpdate>this.$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
+            this.tagsResource = $resource("/api/tags")
+
+            this.tagsResource.query(data => {
                 $scope.allTags = data.map(tag => tag.name)
             });
 
-
-            var Tasks = $resource("/api/tasks")
-
-            $scope.toMarkdown = input => {
-                return itemRenderService.render(input)
-            }
-
-            $scope.addTask = () => {
-                $scope.sending = true
-                $scope.hasFocus = false
-
-                Tasks.save(null, {
-                        content: $scope.inputContent,
-                        tags: $scope.inputSelectedTags,
-                        rate: $scope.rate,
-                        status: "New",
-                        dueDate: $scope.dueDate
-                    },
-                    (data)=> {
-                        $scope.tasks.unshift(data)
-                        if($scope.tasks.length > 5){
-                            $scope.tasks.pop()
-                        }
-                        $scope.inputContent = ""
-                        $scope.sending = false
-                        $scope.hasFocus = true
-                    },
-                    (reason)=> {
-                        alert("error add QuickNote")
-                        $scope.sending = false
-                        $scope.hasFocus = true
-                    })
-            };
-
-            var Task = <IResourceWithUpdate>$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
-            $scope.updateTask = (id, content, tags, rate, status, dueDate) => {
-                alert("content:"+ content +",tags:"+ tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
-                Task.update({itemId:id}, {
-                    content: content,
-                    tags: tags,
-                    rate: rate,
-                    status: status,
-                    dueDate: dueDate
-                },data=>alert("update ok"), reason=>alert("update ng"))
-            }
-
-            Tasks.query(
+            this.tasksResource.query(
                 (data)=> {
                     $scope.tasks = data
                 },
@@ -131,5 +93,51 @@ module controllers {
                 });
         }
 
+        taskResource :IResourceWithUpdate
+        tasksResource : ng.resource.IResourceClass
+        tagsResource : ng.resource.IResourceClass
+
+        addTask(){
+            this.$scope.sending = true
+            this.$scope.hasFocus = false
+
+            this.tasksResource.save(null, {
+                    content: this.$scope.inputContent,
+                    tags: this.$scope.inputSelectedTags,
+                    rate: this.$scope.rate,
+                    status: "New",
+                    dueDate: this.$scope.dueDate
+                },
+                (data)=> {
+                    this.$scope.tasks.unshift(data)
+                    if(this.$scope.tasks.length > 5){
+                        this.$scope.tasks.pop()
+                    }
+                    this.$scope.inputContent = ""
+                    this.$scope.sending = false
+                    this.$scope.hasFocus = true
+                },
+                (reason)=> {
+                    alert("error add QuickNote")
+                    this.$scope.sending = false
+                    this.$scope.hasFocus = true
+                })
+        }
+
+        updateTask(id:number, content:string, tags:string[], rate:number, status:string, dueDate:string) {
+            alert("content:"+ content +",tags:"+ tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
+
+            this.taskResource.update({itemId:id}, {
+                content: content,
+                tags: tags,
+                rate: rate,
+                status: status,
+                dueDate: dueDate
+            },data=>alert("update ok"), reason=>alert("update ng"))
+        }
+
+        searchTask() {
+
+        }
     }
 }

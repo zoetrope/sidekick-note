@@ -98,9 +98,7 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
       play.Logger.debug("update task itemId = " + itemId)
       play.Logger.debug(JsonMethods.compact(JsonMethods.render(request.body)))
 
-      val maybeTask = Task.find(itemId)
-
-      maybeTask match {
+      Task.find(itemId) match {
         case None => BadRequest
         case Some(task) => {
           val user = loggedIn
