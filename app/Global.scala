@@ -1,4 +1,4 @@
-import models.{NormalUser, Administrator, Account}
+import models.{Account}
 import org.joda.time.DateTime
 import play.api._
 

@@ -10,14 +10,14 @@ module controllers {
 
     export interface TaskScope extends ng.IScope {
 
-        searchSelectedTags: models.TagForm[];
+        searchSelectedTags: string[];
         searchSelectOptions : any;
 
         // input
         inputContent: string;
-        inputSelectedTags: models.TagForm[];
+        inputSelectedTags: string[];
         rate: number;
-        dueDate: any;
+        dueDate: string;
 
         // output
         tasks: models.Task[];
@@ -34,7 +34,7 @@ module controllers {
         addTask() : void;
         toMarkdown(input: string) : string;
 
-        updateTask(id:number):void;
+        updateTask(id:number, content:string, tags:string[], rate:number, status:string, dueDate:string):void;
 
         // event
         keypress($event : ng.IAngularEvent) : void;
@@ -49,6 +49,7 @@ module controllers {
         constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
 
             $scope.rate = 1
+            $scope.dueDate = ""
 
             $scope.searchSelectedTags = []
             $scope.searchSelectOptions = {
@@ -72,7 +73,7 @@ module controllers {
 
             var Tags = $resource("/api/tags")
             Tags.query(data => {
-                $scope.allTags = data.map(tag => {return {"id": tag.name, "text": tag.name}})
+                $scope.allTags = data.map(tag => tag.name)
             });
 
 
@@ -88,7 +89,7 @@ module controllers {
 
                 Tasks.save(null, {
                         content: $scope.inputContent,
-                        tags: $scope.inputSelectedTags.map(tag=> tag.text),
+                        tags: $scope.inputSelectedTags,
                         rate: $scope.rate,
                         status: "New",
                         dueDate: $scope.dueDate
@@ -110,13 +111,14 @@ module controllers {
             };
 
             var Task = <IResourceWithUpdate>$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
-            $scope.updateTask = id => {
+            $scope.updateTask = (id, content, tags, rate, status, dueDate) => {
+                alert("content:"+ content +",tags:"+ tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
                 Task.update({itemId:id}, {
-                    content: $scope.inputContent,
-                    tags: $scope.inputSelectedTags.map(tag=> tag.text),
-                    rate: $scope.rate,
-                    status: "New",
-                    dueDate: $scope.dueDate
+                    content: content,
+                    tags: tags,
+                    rate: rate,
+                    status: status,
+                    dueDate: dueDate
                 },data=>alert("update ok"), reason=>alert("update ng"))
             }
 
@@ -125,7 +127,7 @@ module controllers {
                     $scope.tasks = data
                 },
                 (reason)=> {
-                    alert("error get QuickNotes")
+                    alert("error get tasks")
                 });
         }
 

@@ -2,6 +2,8 @@ package models
 
 import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
+import org.json4s.CustomSerializer
+import org.json4s.JsonAST.JString
 
 case class Tag(
   tagId: Long, 
@@ -11,6 +13,14 @@ case class Tag(
   def save()(implicit session: DBSession = Tag.autoSession): Tag = Tag.save(this)(session)
   def destroy()(implicit session: DBSession = Tag.autoSession): Unit = Tag.destroy(this)(session)
 }
+
+class SimpleTagSerializer extends CustomSerializer[Tag](format =>
+  ( {
+    case x: JString => Tag(0,x.toString,0) //ここに入ることはないはず
+  }, {
+    case x: Tag => JString(x.name)
+  })
+)
 
 object Tag extends SQLSyntaxSupport[Tag] {
 

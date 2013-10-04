@@ -15,13 +15,12 @@ module controllers {
         logout(): void
     }
 
-    declare var jsRouter:any
     export class ApplicationController {
 
         constructor(public $scope:AppScope, public $location:ng.ILocationService, public $resource:ng.resource.IResourceService) {
 
-            var Auth = $resource(jsRouter.controllers.Application.authenticate().url)
-            var LoggedIn = $resource(jsRouter.controllers.Application.loggedin().url)
+            var Auth = $resource("/api/login")
+            var LoggedIn = $resource("/api/loggedin")
             var Logout = $resource("/api/logout")
 
             LoggedIn.get(x=>$scope.loggedin = x.name, reason => alert(reason))
@@ -41,7 +40,7 @@ module controllers {
             };
 
             $scope.logout = () => {
-                Logout.get(_=>{
+                Logout.get(_=> {
                     $scope.loggedin = ""
                     window.location.href = "/login";
                 })

@@ -1,6 +1,6 @@
 package controllers
 
-import models.{NormalUser, Item}
+import models.{Permission, Item}
 import com.github.tototoshi.play2.json4s.native._
 import org.json4s.{Extraction, DefaultFormats}
 import play.api.mvc._
@@ -9,7 +9,6 @@ import org.json4s.native.Serialization
 import org.joda.time._
 import org.json4s.ext.JodaTimeSerializers
 import net.java.sen.SenFactory
-import net.java.sen.StringTagger
 import net.java.sen.dictionary.Token
 import scala.collection.JavaConversions._
 
@@ -20,7 +19,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
   //implicit val formats = DefaultFormats
 
-  def items(page: Int) = StackAction(AuthorityKey -> NormalUser) {
+  def items(page: Int) = StackAction(AuthorityKey -> Permission.NormalUser) {
     implicit request =>
 
       if (page < 1) {
@@ -38,7 +37,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       Ok(Extraction.decompose(items)).as("application/json")
   }
 
-  def newItem = StackAction(json, AuthorityKey -> NormalUser) {
+  def newItem = StackAction(json, AuthorityKey -> Permission.NormalUser) {
     implicit request =>
       play.Logger.info("newitem entry")
       val user = loggedIn
@@ -48,7 +47,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       val tokens = new java.util.ArrayList[Token]()
       tagger.analyze(form.content, tokens)
 
-      val words = tokens.map(x=>x.getSurface).mkString(" ")
+      val words = tokens.map(x => x.getSurface).mkString(" ")
       play.Logger.info(words)
 
       val item = Item.create(form.content, words, 0, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.accountId)
@@ -56,7 +55,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       Ok(Extraction.decompose(item)).as("application/json")
   }
 
-  def search(words : String) = StackAction(AuthorityKey -> NormalUser) {
+  def search(words: String) = StackAction(AuthorityKey -> Permission.NormalUser) {
     implicit request => {
       play.Logger.info("search words = " + words)
       val limit = 10
@@ -66,7 +65,7 @@ object ItemController extends Controller with AuthElement with AuthConfigImpl wi
       val tokens = new java.util.ArrayList[Token]()
       tagger.analyze(words, tokens)
 
-      val keywords = tokens.map(x=> "+" + x.getSurface).mkString(" ")
+      val keywords = tokens.map(x => "+" + x.getSurface).mkString(" ")
 
       val user = loggedIn
       val items = Item.findByKeywords(keywords, user.accountId, offset, limit)

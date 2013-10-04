@@ -24,7 +24,7 @@
     "marked": "~0.2.9",
     "highlightjs": "~7.3.0",
     "angular-ui-utils": "~0.0.4",
-    "angular-ui-select2": "~0.0.2",
+    "angular-ui-select2": "dba325bb404fb527110c96f6a84551637c05ad6f",
     "angular-ui-bootstrap": "https://github.com/hall5714/angular-ui-bootstrap.git#bootstrap3",
     "angular-ui-date": "~0.0.3",
     "jquery-ui": "~1.10.3"
@@ -86,7 +86,7 @@
         "ui/jquery.ui.datepicker.js"
       ],
       "public/stylesheets": [
-          "themes/smoothness/jquery-ui.css"
+        "themes/smoothness/jquery-ui.css"
       ],
       "public/images": [
         "themes/smoothness/images/*"

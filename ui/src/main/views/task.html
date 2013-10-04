@@ -15,6 +15,7 @@
                     </p>
                     <input type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
                            style="width:100%"/>
+                    {{inputSelectedTags | json}}
                     <rating value="rate" max="5" readonly="false"></rating>
                     <input ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
                     <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
@@ -24,7 +25,7 @@
 
         <div class="list-group">
             <div ng-repeat="task in tasks" class="list-group-item">
-                <input type="checkbox" ng-model="task.completed">
+                <input type="checkbox" ng-model="task.status" ng-true-value="Completed" ng-false-value="New">
                 <p class="list-group-item-text">
                     <div ng-bind-html-unsafe="toMarkdown(task.content)" ng-hide="task.completed"/>
                     <textarea ng-model="task.content" ng-show="task.completed"/>
@@ -35,7 +36,7 @@
                         {{task.created}},{{task.status}},{{task.itemId}}
                     </small>
                 </p>
-                <button ng-click="updateTask(task.itemId)">update</button>
+                <button ng-click="updateTask(task.itemId, task.content, task.tags, task.rate, task.status, task.dueDate)">update</button>
             </div>
         </div>
 

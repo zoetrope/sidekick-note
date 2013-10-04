@@ -4,21 +4,32 @@ import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 import org.joda.time.{DateTime}
 
-case class Item(
-                 itemId: Long,
-                 content: String,
-                 words: String,
-                 rate: Int = 0,
-                 tags: Seq[Tag] = Nil,
-                 created: DateTime,
-                 modified: DateTime,
-                 deleted: Option[DateTime] = None,
-                 accountId: Long) {
+class Item
+(
+  val itemId: Long,
+  var content: String,
+  var words: String,
+  var rate: Int = 0,
+  var tags: Seq[Tag] = Nil,
+  val created: DateTime,
+  var modified: DateTime,
+  var deleted: Option[DateTime] = None,
+  val accountId: Long) {
 
   def save()(implicit session: DBSession = Item.autoSession): Item = Item.save(this)(session)
 
   def destroy()(implicit session: DBSession = Item.autoSession): Unit = Item.destroy(this)(session)
 
+
+  override def equals(obj: Any): Boolean = {
+    if (!obj.isInstanceOf[Item]) false
+
+    val t = obj.asInstanceOf[Item]
+
+    this.itemId == t.itemId
+  }
+
+  override def hashCode(): Int = (itemId % Int.MaxValue).asInstanceOf[Int]
 }
 
 object Item extends SQLSyntaxSupport[Item] {
@@ -28,6 +39,7 @@ object Item extends SQLSyntaxSupport[Item] {
   override val columns = Seq("item_id", "content", "words", "rate", "created", "modified", "deleted", "account_id")
 
   def apply(i: SyntaxProvider[Item])(implicit rs: WrappedResultSet): Item = apply(i.resultName)(rs)
+
   def apply(i: ResultName[Item])(implicit rs: WrappedResultSet): Item = new Item(
     itemId = rs.long(i.itemId),
     content = rs.string(i.content),
@@ -45,27 +57,37 @@ object Item extends SQLSyntaxSupport[Item] {
   private val (t, it) = (Tag.tg, ItemTag.it)
 
   def find(itemId: Long)(implicit session: DBSession = autoSession): Option[Item] = {
-    withSQL {
+    withSQL[Item] {
       select.from(Item as i)
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
         .leftJoin(Tag as t).on(it.tagId, t.tagId)
         .where.eq(i.itemId, itemId)
     }.one(implicit rs => Item(i))
       .toMany(Tag.opt(t))
-      .map{ (item, tags) => item.copy(tags = tags) }.single.apply()
+      .map {
+      (item: Item, tags: Seq[Tag]) => {
+        item.tags = tags;
+        item
+      }
+    }.single.apply()
   }
 
   def findAll()(implicit session: DBSession = autoSession): List[Item] = {
-    withSQL {
+    withSQL[Item] {
       select.from(Item as i)
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
         .leftJoin(Tag as t).on(it.tagId, t.tagId)
     }.one(implicit rs => Item(i))
       .toMany(Tag.opt(t))
-      .map{ (item, tags) => item.copy(tags = tags) }.list.apply()
+      .map {
+      (item: Item, tags: Seq[Tag]) => {
+        item.tags = tags;
+        item
+      }
+    }.list.apply()
   }
 
-  def findByAccountId(accountId:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Item] = {
+  def findByAccountId(accountId: Long, offset: Int, limit: Int)(implicit session: DBSession = autoSession): List[Item] = {
     withSQL(
       select
         .from(Item as i)
@@ -75,7 +97,7 @@ object Item extends SQLSyntaxSupport[Item] {
     ).map(implicit rs => Item(i)).list.apply()
   }
 
-  def findByKeywords(keywords:String, account_id:Long, offset:Int, limit:Int)(implicit session: DBSession = autoSession): List[Item] = {
+  def findByKeywords(keywords: String, account_id: Long, offset: Int, limit: Int)(implicit session: DBSession = autoSession): List[Item] = {
     sql"""
       select ${i.result.*}
         from ${Item.as(i)}
@@ -100,13 +122,15 @@ object Item extends SQLSyntaxSupport[Item] {
     }.map(_.long(1)).single.apply().get
   }
 
-  def create(content: String,
-              words: String,
-              rate: Int = 0,
-              created: DateTime,
-              modified: DateTime,
-              deleted: Option[DateTime] = None,
-              accountId: Long)(implicit session: DBSession = autoSession): Item = {
+  def create
+  (
+    content: String,
+    words: String,
+    rate: Int = 0,
+    created: DateTime,
+    modified: DateTime,
+    deleted: Option[DateTime] = None,
+    accountId: Long)(implicit session: DBSession = autoSession): Item = {
     val generatedKey = withSQL {
       insert.into(Item).columns(
         column.content,
@@ -127,7 +151,7 @@ object Item extends SQLSyntaxSupport[Item] {
       )
     }.updateAndReturnGeneratedKey.apply()
 
-    Item(
+    new Item(
       itemId = generatedKey,
       content = content,
       words = words,
@@ -141,21 +165,20 @@ object Item extends SQLSyntaxSupport[Item] {
   def save(entity: Item)(implicit session: DBSession = autoSession): Item = {
     withSQL {
       update(Item as i).set(
-        i.itemId -> entity.itemId,
         i.content -> entity.content,
         i.words -> entity.words,
         i.rate -> entity.rate,
-        i.created -> entity.created,
         i.modified -> entity.modified,
-        i.deleted -> entity.deleted,
-        i.accountId -> entity.accountId
+        i.deleted -> entity.deleted
       ).where.eq(i.itemId, entity.itemId)
     }.update.apply()
     entity
   }
 
   def destroy(entity: Item)(implicit session: DBSession = autoSession): Unit = {
-    withSQL { delete.from(Item).where.eq(column.itemId, entity.itemId) }.update.apply()
+    withSQL {
+      delete.from(Item).where.eq(column.itemId, entity.itemId)
+    }.update.apply()
   }
 
 }

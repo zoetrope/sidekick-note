@@ -5,11 +5,16 @@ module models {
     'use strict';
 
     export class Task {
+        // content
         itemId:number;
         content:string;
-        title:string
+        title:string;
         created: string;
         status: string;
-        completed:Boolean;
+        tags: string[];
+        dueDate: string;
+
+        //
+        editable: Boolean;
     }
 }

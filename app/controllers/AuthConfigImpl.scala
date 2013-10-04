@@ -1,17 +1,16 @@
 package controllers
 
-import models.{Permission, Administrator, NormalUser, Account}
+import models.{Permission, Account}
 import play.api.mvc._
 import play.api.mvc.Results._
 import jp.t2v.lab.play2.auth._
 import reflect.classTag
 import org.json4s._
-import org.json4s.JsonDSL._
 import com.github.tototoshi.play2.json4s.native.Json4s
 
 case class AccessUrl(url: String)
 
-trait AuthConfigImpl extends AuthConfig with Json4s{
+trait AuthConfigImpl extends AuthConfig with Json4s {
   type Id = Long
 
   type User = Account
@@ -49,8 +48,8 @@ trait AuthConfigImpl extends AuthConfig with Json4s{
   }
 
   def authorize(user: User, authority: Authority) = (user.permission, authority) match {
-    case (Administrator, _) => true
-    case (NormalUser, NormalUser) => true
+    case (Permission.Administrator, _) => true
+    case (Permission.NormalUser, Permission.NormalUser) => true
     case _ => false
   }
 

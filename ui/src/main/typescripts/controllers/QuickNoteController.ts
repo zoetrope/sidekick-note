@@ -10,7 +10,7 @@ module controllers {
     export interface QuickNoteScope extends ng.IScope {
         // input
         inputContent: string;
-        selectedTags: models.TagForm[];
+        selectedTags: string[];
         rate: number;
 
         // output
@@ -50,7 +50,7 @@ module controllers {
             };
             var Tags = $resource("/api/tags")
             Tags.query(data => {
-                $scope.allTags = data.map(tag => {return {"id": tag.name, "text": tag.name}})
+                $scope.allTags = data.map(tag => tag.name)
             });
 
             var QuickNotes = $resource("/api/quick_notes")
@@ -65,7 +65,7 @@ module controllers {
 
                 QuickNotes.save(null, {
                         content: $scope.inputContent,
-                        tags: $scope.selectedTags.map(tag=> tag.text),
+                        tags: $scope.selectedTags,
                         rate: $scope.rate
                     },
                     (data)=> {

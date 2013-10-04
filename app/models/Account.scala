@@ -2,44 +2,23 @@ package models
 
 import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
-import org.joda.time.{DateTime}
+import org.joda.time.DateTime
 import org.mindrot.jbcrypt.BCrypt
-import org.json4s.CustomSerializer
-import org.json4s.JsonAST.JString
 
-sealed trait Permission
-
-case object Administrator extends Permission
-case object NormalUser extends Permission
-
-object Permission {
-  def valueOf(value: String): Permission = value match {
-    case "Administrator" => Administrator
-    case "NormalUser"    => NormalUser
-    case _ => throw new IllegalArgumentException()
-  }
-}
-
-class PermissionSerializer extends CustomSerializer[Permission](format =>
-  ( {
-    case x: JString => Permission.valueOf(x.toString)
-  }, {
-    case x: Permission => JString(x.toString)
-  })
-)
-
-case class Account(
-  accountId: Long, 
-  name: String, 
-  password: String, 
+case class Account
+(
+  accountId: Long,
+  name: String,
+  password: String,
   permission: Permission,
-  language: String, 
-  timezone: String, 
-  created: DateTime, 
-  modified: DateTime, 
+  language: String,
+  timezone: String,
+  created: DateTime,
+  modified: DateTime,
   deleted: Option[DateTime] = None) {
 
   def save()(implicit session: DBSession = Account.autoSession): Account = Account.save(this)(session)
+
   def destroy()(implicit session: DBSession = Account.autoSession): Unit = Account.destroy(this)(session)
 }
 
@@ -62,13 +41,15 @@ object Account extends SQLSyntaxSupport[Account] {
     modified = rs.timestamp(a.modified).toDateTime,
     deleted = rs.timestampOpt(a.deleted).map(_.toDateTime)
   )
-      
+
   val a = Account.syntax("a")
 
   val autoSession = AutoSession
 
   def authenticate(name: String, password: String)(implicit s: DBSession = autoSession): Option[Account] = {
-    val res = findByName(name).filter { account => BCrypt.checkpw(password, account.password) }
+    val res = findByName(name).filter {
+      account => BCrypt.checkpw(password, account.password)
+    }
     return res
   }
 
@@ -77,7 +58,7 @@ object Account extends SQLSyntaxSupport[Account] {
   }.map(Account(a)).single.apply()
 
   def findById(accountId: Long)(implicit session: DBSession = autoSession): Option[Account] = {
-    withSQL { 
+    withSQL {
       select.from(Account as a).where.eq(a.accountId, accountId)
     }.map(Account(a.resultName)).single.apply()
   }
@@ -86,7 +67,8 @@ object Account extends SQLSyntaxSupport[Account] {
     withSQL(select(sqls"count(1)").from(Account as a)).map(rs => rs.long(1)).single.apply().get
   }
 
-  def create(
+  def create
+  (
     name: String,
     password: String,
     permission: String,
@@ -119,7 +101,7 @@ object Account extends SQLSyntaxSupport[Account] {
     }.updateAndReturnGeneratedKey.apply()
 
     Account(
-      accountId = generatedKey, 
+      accountId = generatedKey,
       name = name,
       password = password,
       permission = Permission.valueOf(permission),
@@ -131,7 +113,7 @@ object Account extends SQLSyntaxSupport[Account] {
   }
 
   def save(entity: Account)(implicit session: DBSession = autoSession): Account = {
-    withSQL { 
+    withSQL {
       update(Account as a).set(
         a.accountId -> entity.accountId,
         a.name -> entity.name,
@@ -144,11 +126,13 @@ object Account extends SQLSyntaxSupport[Account] {
         a.deleted -> entity.deleted
       ).where.eq(a.accountId, entity.accountId)
     }.update.apply()
-    entity 
+    entity
   }
-        
+
   def destroy(entity: Account)(implicit session: DBSession = autoSession): Unit = {
-    withSQL { delete.from(Account).where.eq(column.accountId, entity.accountId) }.update.apply()
+    withSQL {
+      delete.from(Account).where.eq(column.accountId, entity.accountId)
+    }.update.apply()
   }
-        
+
 }

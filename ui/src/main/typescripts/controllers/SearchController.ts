@@ -15,7 +15,6 @@ module controllers {
         hasFocus : Boolean;
     }
 
-    declare var jsRouter:any
     declare var hljs:any
 
     export class SearchController {
@@ -41,7 +40,7 @@ module controllers {
                 $scope.searching = true
                 $scope.hasFocus = false
 
-                var Search = $resource(jsRouter.controllers.ItemController.search($scope.input_words).url)
+                var Search = $resource("/items/search")
                 Search.query(
                     (data)=> {
                         $scope.items = data.map(x=>{x.content = marked(x.content); return x})
