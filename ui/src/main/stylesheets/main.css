@@ -13,3 +13,7 @@ body {
 .form-signin .form-control , .form-signin .btn{
     margin: 10px;
 }
+
+input[type=checkbox]#task-status{
+    margin-right: 10px;
+}

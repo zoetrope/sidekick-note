@@ -27,18 +27,45 @@
 
         <div class="list-group">
             <div ng-repeat="task in tasks" class="list-group-item">
-                <input type="checkbox" ng-model="task.status" ng-true-value="Completed" ng-false-value="New">
-                <p class="list-group-item-text">
-                    <div ng-bind-html-unsafe="toMarkdown(task.content)" ng-hide="task.completed"/>
-                    <textarea ng-model="task.content" ng-show="task.completed"/>
-                </p>
-
-                <p class="list-group-item-text text-muted text-right">
-                    <small>
-                        {{task.created}},{{task.status}},{{task.itemId}}
-                    </small>
-                </p>
-                <button ng-click="updateTask(task.itemId, task.content, task.tags, task.rate, task.status, task.dueDate)">update</button>
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">edit</a></li>
+                        <li><a href="#">delete</a></li>
+                    </ul>
+                </div>
+                <table width="100%">
+                    <tr>
+                        <td width="25px">
+                            <input id="task-status" type="checkbox" ng-model="task.status" ng-true-value="Completed" ng-false-value="New">
+                        </td>
+                        <td>
+                            <div ng-bind-html-unsafe="toMarkdown(task.content)" ng-hide="editable"/>
+                            <textarea ng-model="task.content" ng-show="editable"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class="text-muted">
+                                {{task.tags.join(' ')}}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                        <div class="text-muted text-right">
+                            <small>
+                                {{task.created}},{{task.status}},{{task.itemId}}
+                            </small>
+                        </div>
+                        </td>
+                    </tr>
+                </table>
+                <button ng-click="updateTask(task.itemId, task.content, task.tags, task.rate, task.status, task.dueDate)"
+                        ng-show="editable">update</button>
             </div>
         </div>
 
