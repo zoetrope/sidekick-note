@@ -8,7 +8,8 @@ case class Attachment(
   data: Array[Byte], 
   fileName: String, 
   description: Option[String] = None, 
-  contentType: String, 
+  contentType: String,
+  fileSize: Option[Int],
   itemId: Long) {
 
   def save()(implicit session: DBSession = Attachment.autoSession): Attachment = Attachment.save(this)(session)
@@ -22,7 +23,7 @@ object Attachment extends SQLSyntaxSupport[Attachment] {
 
   override val tableName = "attachments"
 
-  override val columns = Seq("attachment_id", "data", "file_name", "description", "content_type", "item_id")
+  override val columns = Seq("attachment_id", "data", "file_name", "description", "content_type", "file_size", "item_id")
 
   def apply(a: ResultName[Attachment])(rs: WrappedResultSet): Attachment = new Attachment(
     attachmentId = rs.long(a.attachmentId),
@@ -30,6 +31,7 @@ object Attachment extends SQLSyntaxSupport[Attachment] {
     fileName = rs.string(a.fileName),
     description = rs.stringOpt(a.description),
     contentType = rs.string(a.contentType),
+    fileSize = rs.intOpt(a.fileSize),
     itemId = rs.long(a.itemId)
   )
       
@@ -69,6 +71,7 @@ object Attachment extends SQLSyntaxSupport[Attachment] {
     fileName: String,
     description: Option[String] = None,
     contentType: String,
+    fileSize: Option[Int],
     itemId: Long)(implicit session: DBSession = autoSession): Attachment = {
     withSQL {
       insert.into(Attachment).columns(
@@ -77,6 +80,7 @@ object Attachment extends SQLSyntaxSupport[Attachment] {
         column.fileName,
         column.description,
         column.contentType,
+        column.fileSize,
         column.itemId
       ).values(
         attachmentId,
@@ -84,6 +88,7 @@ object Attachment extends SQLSyntaxSupport[Attachment] {
         fileName,
         description,
         contentType,
+        fileSize,
         itemId
       )
     }.update.apply()
@@ -94,6 +99,7 @@ object Attachment extends SQLSyntaxSupport[Attachment] {
       fileName = fileName,
       description = description,
       contentType = contentType,
+      fileSize = fileSize,
       itemId = itemId)
   }
 
@@ -105,6 +111,7 @@ object Attachment extends SQLSyntaxSupport[Attachment] {
         a.fileName -> entity.fileName,
         a.description -> entity.description,
         a.contentType -> entity.contentType,
+        a.fileSize -> entity.fileSize,
         a.itemId -> entity.itemId
       ).where.eq(a.attachmentId, entity.attachmentId)
     }.update.apply()

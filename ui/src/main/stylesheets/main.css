@@ -17,3 +17,7 @@ body {
 input[type=checkbox]#task-status{
     margin-right: 10px;
 }
+
+#task-menu {
+    vertical-align: top;
+}

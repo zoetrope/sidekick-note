@@ -6,7 +6,7 @@ module models {
 
     export class Item {
         content:string;
-        created: string;
+        createdAt: string;
 
     }
 }

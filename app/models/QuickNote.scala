@@ -3,17 +3,18 @@ package models
 import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 import org.joda.time.DateTime
+import scala.collection.mutable
 
 class QuickNote(
                  itemId: Long,
                  content: String,
                  words: String,
                  rate: Int = 0,
-                 tags: Seq[Tag] = Nil,
-                 created: DateTime,
-                 modified: DateTime,
-                 deleted: Option[DateTime] = None,
-                 accountId: Long) extends Item(itemId, content, words, rate, tags, created, modified, deleted, accountId) {
+                 tags: mutable.MutableList[Tag] = new mutable.MutableList,
+                 createdAt: DateTime,
+                 modifiedAt: DateTime,
+                 deletedAt: Option[DateTime] = None,
+                 accountId: Long) extends Item(itemId, content, words, rate, tags, createdAt, modifiedAt, deletedAt, accountId) {
 
   override def save()(implicit session: DBSession = QuickNote.autoSession): QuickNote = {
     super.save()
@@ -40,9 +41,9 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
     content = rs.string(i.content),
     words = rs.string(i.words),
     rate = rs.int(i.rate),
-    created = rs.timestamp(i.created).toDateTime,
-    modified = rs.timestamp(i.modified).toDateTime,
-    deleted = rs.timestampOpt(i.deleted).map(_.toDateTime),
+    createdAt = rs.timestamp(i.createdAt).toDateTime,
+    modifiedAt = rs.timestamp(i.modifiedAt).toDateTime,
+    deletedAt = rs.timestampOpt(i.deletedAt).map(_.toDateTime),
     accountId = rs.long(i.accountId)
   )
 
@@ -61,7 +62,7 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
     }.one(implicit rs => QuickNote(i, qn))
       .toMany(Tag.opt(tg))
       .map((note, tags) => {
-      note.tags = tags; note
+      note.tags ++= tags; note
     }).single.apply()
   }
 
@@ -74,7 +75,7 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
     }.one(implicit rs => QuickNote(i, qn))
       .toMany(Tag.opt(tg))
       .map((note, tags) => {
-      note.tags = tags; note
+      note.tags ++= tags; note
     }).list.apply()
   }
 
@@ -85,12 +86,12 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(i.accountId, accountId)
-        .orderBy(i.created).desc
+        .orderBy(i.createdAt).desc
         .limit(limit).offset(offset)
     ).one(implicit rs => QuickNote(i, qn))
       .toMany(Tag.opt(tg))
       .map((note, tags) => {
-      note.tags = tags; note
+      note.tags ++= tags; note
     }).list.apply()
   }
 
@@ -116,12 +117,12 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
     content: String,
     words: String,
     rate: Int = 0,
-    created: DateTime,
-    modified: DateTime,
-    deleted: Option[DateTime] = None,
+    createdAt: DateTime,
+    modifiedAt: DateTime,
+    deletedAt: Option[DateTime] = None,
     accountId: Long)(implicit session: DBSession = autoSession): QuickNote = {
 
-    val item = Item.create(content, words, rate, created, modified, deleted, accountId)
+    val item = Item.create(content, words, rate, createdAt, modifiedAt, deletedAt, accountId)
     withSQL {
       insert.into(QuickNote).columns(
         column.itemId
@@ -135,9 +136,9 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
       content = content,
       words = words,
       rate = rate,
-      created = created,
-      modified = modified,
-      deleted = deleted,
+      createdAt = createdAt,
+      modifiedAt = modifiedAt,
+      deletedAt = deletedAt,
       accountId = accountId)
   }
 

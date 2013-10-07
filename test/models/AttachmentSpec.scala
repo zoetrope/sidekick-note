@@ -30,7 +30,7 @@ class AttachmentSpec extends Specification {
       count should be_>(0L)
     }
     "create new record" in new AutoRollback {
-      val created = Attachment.create(attachmentId = 1L, data = Array[Byte](), fileName = "MyString", contentType = "MyString", itemId = 1L)
+      val created = Attachment.create(attachmentId = 1L, data = Array[Byte](), fileName = "MyString", contentType = "MyString", fileSize = Some(100), itemId = 1L)
       created should not beNull
     }
     "save a record" in new AutoRollback {

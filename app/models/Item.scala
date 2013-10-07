@@ -3,6 +3,7 @@ package models
 import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 import org.joda.time.{DateTime}
+import scala.collection.mutable
 
 class Item
 (
@@ -10,16 +11,25 @@ class Item
   var content: String,
   var words: String,
   var rate: Int = 0,
-  var tags: Seq[Tag] = Nil,
-  val created: DateTime,
-  var modified: DateTime,
-  var deleted: Option[DateTime] = None,
+  var tags: mutable.MutableList[Tag] = new mutable.MutableList,
+  val createdAt: DateTime,
+  var modifiedAt: DateTime,
+  var deletedAt: Option[DateTime] = None,
   val accountId: Long) {
 
   def save()(implicit session: DBSession = Item.autoSession): Item = Item.save(this)(session)
 
   def destroy()(implicit session: DBSession = Item.autoSession): Unit = Item.destroy(this)(session)
 
+  def addTag(tagName: String): Unit = {
+    val tag = Tag.getOrCreate(tagName)
+    ItemTag.addTag(itemId, tag)
+    tags += tag
+  }
+
+  def deleteTag(tagName: String): Unit = {
+
+  }
 
   override def equals(obj: Any): Boolean = {
     if (!obj.isInstanceOf[Item]) false
@@ -36,7 +46,7 @@ object Item extends SQLSyntaxSupport[Item] {
 
   override val tableName = "items"
 
-  override val columns = Seq("item_id", "content", "words", "rate", "created", "modified", "deleted", "account_id")
+  override val columns = Seq("item_id", "content", "words", "rate", "created_at", "modified_at", "deleted_at", "account_id")
 
   def apply(i: SyntaxProvider[Item])(implicit rs: WrappedResultSet): Item = apply(i.resultName)(rs)
 
@@ -45,9 +55,9 @@ object Item extends SQLSyntaxSupport[Item] {
     content = rs.string(i.content),
     words = rs.string(i.words),
     rate = rs.int(i.rate),
-    created = rs.timestamp(i.created).toDateTime,
-    modified = rs.timestamp(i.modified).toDateTime,
-    deleted = rs.timestampOpt(i.deleted).map(_.toDateTime),
+    createdAt = rs.timestamp(i.createdAt).toDateTime,
+    modifiedAt = rs.timestamp(i.modifiedAt).toDateTime,
+    deletedAt = rs.timestampOpt(i.deletedAt).map(_.toDateTime),
     accountId = rs.long(i.accountId)
   )
 
@@ -66,7 +76,7 @@ object Item extends SQLSyntaxSupport[Item] {
       .toMany(Tag.opt(t))
       .map {
       (item: Item, tags: Seq[Tag]) => {
-        item.tags = tags;
+        item.tags ++= tags
         item
       }
     }.single.apply()
@@ -81,7 +91,7 @@ object Item extends SQLSyntaxSupport[Item] {
       .toMany(Tag.opt(t))
       .map {
       (item: Item, tags: Seq[Tag]) => {
-        item.tags = tags;
+        item.tags ++= tags
         item
       }
     }.list.apply()
@@ -92,7 +102,7 @@ object Item extends SQLSyntaxSupport[Item] {
       select
         .from(Item as i)
         .where.eq(i.accountId, accountId)
-        .orderBy(i.created).desc
+        .orderBy(i.createdAt).desc
         .limit(limit).offset(offset)
     ).map(implicit rs => Item(i)).list.apply()
   }
@@ -127,26 +137,26 @@ object Item extends SQLSyntaxSupport[Item] {
     content: String,
     words: String,
     rate: Int = 0,
-    created: DateTime,
-    modified: DateTime,
-    deleted: Option[DateTime] = None,
+    createdAt: DateTime,
+    modifiedAt: DateTime,
+    deletedAt: Option[DateTime] = None,
     accountId: Long)(implicit session: DBSession = autoSession): Item = {
     val generatedKey = withSQL {
       insert.into(Item).columns(
         column.content,
         column.words,
         column.rate,
-        column.created,
-        column.modified,
-        column.deleted,
+        column.createdAt,
+        column.modifiedAt,
+        column.deletedAt,
         column.accountId
       ).values(
         content,
         words,
         rate,
-        created,
-        modified,
-        deleted,
+        createdAt,
+        modifiedAt,
+        deletedAt,
         accountId
       )
     }.updateAndReturnGeneratedKey.apply()
@@ -156,9 +166,9 @@ object Item extends SQLSyntaxSupport[Item] {
       content = content,
       words = words,
       rate = rate,
-      created = created,
-      modified = modified,
-      deleted = deleted,
+      createdAt = createdAt,
+      modifiedAt = modifiedAt,
+      deletedAt = deletedAt,
       accountId = accountId)
   }
 
@@ -168,8 +178,8 @@ object Item extends SQLSyntaxSupport[Item] {
         i.content -> entity.content,
         i.words -> entity.words,
         i.rate -> entity.rate,
-        i.modified -> entity.modified,
-        i.deleted -> entity.deleted
+        i.modifiedAt -> entity.modifiedAt,
+        i.deletedAt -> entity.deletedAt
       ).where.eq(i.itemId, entity.itemId)
     }.update.apply()
     entity

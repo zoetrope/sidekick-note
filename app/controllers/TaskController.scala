@@ -46,7 +46,6 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
 
       val user = loggedIn
       val tasks = Task.findByAccountId(user.accountId, offset, limit)
-      play.Logger.info("tasks[0].tags.size = " + tasks.get(0).tags.size)
       Ok(Extraction.decompose(tasks)).as("application/json")
   }
 
@@ -80,11 +79,11 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
         Option.empty[DateTime],
         user.accountId,
         TaskStatus.valueOf(form.status),
-        dueDate)
+        dueDate,
+        Option.empty[DateTime])
 
-      form.tags.foreach(tagName => {
-        val tag = Tag.getOrCreate(tagName)
-        ItemTag.addTag(task.itemId, tag)
+      form.tags.distinct.foreach(tagName => {
+        task.addTag(tagName)
       })
       //}
 
@@ -107,7 +106,7 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
           } else {
             val form = request.body.extract[TaskForm]
             task.content = form.content
-            task.modified = DateTime.now()
+            task.modifiedAt = DateTime.now()
             task.rate = form.rate
             //task.tags
             //task.words

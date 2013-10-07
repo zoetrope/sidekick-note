@@ -13,9 +13,9 @@ case class Account
   permission: Permission,
   language: String,
   timezone: String,
-  created: DateTime,
-  modified: DateTime,
-  deleted: Option[DateTime] = None) {
+  createdAt: DateTime,
+  modifiedAt: DateTime,
+  deletedAt: Option[DateTime] = None) {
 
   def save()(implicit session: DBSession = Account.autoSession): Account = Account.save(this)(session)
 
@@ -26,7 +26,7 @@ object Account extends SQLSyntaxSupport[Account] {
 
   override val tableName = "accounts"
 
-  override val columns = Seq("account_id", "name", "password", "permission", "language", "timezone", "created", "modified", "deleted")
+  override val columns = Seq("account_id", "name", "password", "permission", "language", "timezone", "created_at", "modified_at", "deleted_at")
 
   def apply(a: SyntaxProvider[Account])(rs: WrappedResultSet): Account = apply(a.resultName)(rs)
 
@@ -37,9 +37,9 @@ object Account extends SQLSyntaxSupport[Account] {
     permission = Permission.valueOf(rs.string(a.permission)),
     language = rs.string(a.language),
     timezone = rs.string(a.timezone),
-    created = rs.timestamp(a.created).toDateTime,
-    modified = rs.timestamp(a.modified).toDateTime,
-    deleted = rs.timestampOpt(a.deleted).map(_.toDateTime)
+    createdAt = rs.timestamp(a.createdAt).toDateTime,
+    modifiedAt = rs.timestamp(a.modifiedAt).toDateTime,
+    deletedAt = rs.timestampOpt(a.deletedAt).map(_.toDateTime)
   )
 
   val a = Account.syntax("a")
@@ -74,9 +74,9 @@ object Account extends SQLSyntaxSupport[Account] {
     permission: String,
     language: String,
     timezone: String,
-    created: DateTime,
-    modified: DateTime,
-    deleted: Option[DateTime] = None)(implicit session: DBSession = autoSession): Account = {
+    createdAt: DateTime,
+    modifiedAt: DateTime,
+    deletedAt: Option[DateTime] = None)(implicit session: DBSession = autoSession): Account = {
     val generatedKey = withSQL {
       val hashedPass = BCrypt.hashpw(password, BCrypt.gensalt())
       insert.into(Account).columns(
@@ -85,18 +85,18 @@ object Account extends SQLSyntaxSupport[Account] {
         column.permission,
         column.language,
         column.timezone,
-        column.created,
-        column.modified,
-        column.deleted
+        column.createdAt,
+        column.modifiedAt,
+        column.deletedAt
       ).values(
         name,
         hashedPass,
         permission,
         language,
         timezone,
-        created,
-        modified,
-        deleted
+        createdAt,
+        modifiedAt,
+        deletedAt
       )
     }.updateAndReturnGeneratedKey.apply()
 
@@ -107,9 +107,9 @@ object Account extends SQLSyntaxSupport[Account] {
       permission = Permission.valueOf(permission),
       language = language,
       timezone = timezone,
-      created = created,
-      modified = modified,
-      deleted = deleted)
+      createdAt = createdAt,
+      modifiedAt = modifiedAt,
+      deletedAt = deletedAt)
   }
 
   def save(entity: Account)(implicit session: DBSession = autoSession): Account = {
@@ -121,9 +121,9 @@ object Account extends SQLSyntaxSupport[Account] {
         a.permission -> entity.permission,
         a.language -> entity.language,
         a.timezone -> entity.timezone,
-        a.created -> entity.created,
-        a.modified -> entity.modified,
-        a.deleted -> entity.deleted
+        a.createdAt -> entity.createdAt,
+        a.modifiedAt -> entity.modifiedAt,
+        a.deletedAt -> entity.deletedAt
       ).where.eq(a.accountId, entity.accountId)
     }.update.apply()
     entity

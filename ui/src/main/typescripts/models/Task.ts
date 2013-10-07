@@ -9,10 +9,11 @@ module models {
         itemId:number;
         content:string;
         title:string;
-        created: string;
+        createdAt: string;
         status: string;
         tags: string[];
         dueDate: Date;
+        completedAt: Date;
 
         //
         editable: Boolean;

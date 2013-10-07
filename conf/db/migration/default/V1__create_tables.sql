@@ -14,9 +14,9 @@ CREATE TABLE accounts (
   permission VARCHAR(128) NOT NULL,
   language VARCHAR(128) NOT NULL,
   timezone VARCHAR(128) NOT NULL,
-  created DATETIME NOT NULL,
-  modified DATETIME NOT NULL,
-  deleted DATETIME,
+  created_at DATETIME NOT NULL,
+  modified_at DATETIME NOT NULL,
+  deleted_at DATETIME,
   PRIMARY KEY(account_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
@@ -25,13 +25,13 @@ CREATE TABLE items (
   content TEXT NOT NULL,
   words TEXT NOT NULL,
   rate INT NOT NULL,
-  created DATETIME NOT NULL,
-  modified DATETIME NOT NULL,
-  deleted DATETIME,
+  created_at DATETIME NOT NULL,
+  modified_at DATETIME NOT NULL,
+  deleted_at DATETIME,
   account_id BIGINT NOT Null,
   PRIMARY KEY(item_id),
   FOREIGN KEY (account_id) REFERENCES accounts(account_id),
-  INDEX (account_id, created),
+  INDEX (account_id, created_at),
   FULLTEXT (words)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
 
@@ -45,6 +45,7 @@ CREATE TABLE tasks (
   item_id BIGINT,
   status VARCHAR(32) NOT NULL,
   due_date DATETIME,
+  completed_at DATETIME,
   PRIMARY KEY (item_id),
   FOREIGN KEY (item_id) REFERENCES items(item_id)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_unicode_ci;
@@ -77,6 +78,7 @@ CREATE TABLE attachments (
   file_name VARCHAR(256) NOT NULL,
   description TEXT,
   content_type VARCHAR(64) NOT NULL,
+  file_size INT,
   item_id BIGINT NOT NULL,
   PRIMARY KEY (attachment_id),
   FOREIGN KEY (item_id) REFERENCES items(item_id)

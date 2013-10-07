@@ -7,6 +7,6 @@ module models {
     export class Article {
         content:string;
         title:string;
-        created: string;
+        createdAt: string;
     }
 }

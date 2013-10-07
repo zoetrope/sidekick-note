@@ -18,8 +18,8 @@ class AccountSpec extends Specification with TestDB{
         permission = "NormalUser",
         language = "ja",
         timezone = "Asia/Tokyo",
-        created = DateTime.now,
-        modified = DateTime.now)
+        createdAt = DateTime.now,
+        modifiedAt = DateTime.now)
     }
   }
   "Account" should {
@@ -34,8 +34,8 @@ class AccountSpec extends Specification with TestDB{
         permission = "NormalUser",
         language = "ja",
         timezone = "Asia/Tokyo",
-        created = DateTime.now,
-        modified = DateTime.now)
+        createdAt = DateTime.now,
+        modifiedAt = DateTime.now)
       created should not beNull
     }
     "authenticate by correct password" in new AutoRollbackWithFixture {

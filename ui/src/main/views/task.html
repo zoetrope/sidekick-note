@@ -27,15 +27,7 @@
 
         <div class="list-group">
             <div ng-repeat="task in tasks" class="list-group-item">
-                <div class="btn-group pull-right">
-                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">edit</a></li>
-                        <li><a href="#">delete</a></li>
-                    </ul>
-                </div>
+
                 <table width="100%">
                     <tr>
                         <td width="25px">
@@ -44,6 +36,17 @@
                         <td>
                             <div ng-bind-html-unsafe="toMarkdown(task.content)" ng-hide="editable"/>
                             <textarea ng-model="task.content" ng-show="editable"/>
+                        </td>
+                        <td width="30px">
+                            <div id="task-menu" class="btn-group pull-right">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">edit</a></li>
+                                    <li><a href="#">delete</a></li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -55,12 +58,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">
-                        <div class="text-muted text-right">
-                            <small>
-                                {{task.created}},{{task.status}},{{task.itemId}}
-                            </small>
-                        </div>
+                        <td></td>
+                        <td>
+                            <rating class="pull-left" value="task.rate" max="5" readonly="!editable"></rating>
+                            <span class="text-muted pull-right">
+                                <small>
+                                    {{task.dueDate}}
+                                </small>
+                            </span>
                         </td>
                     </tr>
                 </table>

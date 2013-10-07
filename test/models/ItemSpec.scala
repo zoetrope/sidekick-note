@@ -21,14 +21,14 @@ class ItemSpec extends Specification with TestDB {
         permission = "NormalUser",
         language = "ja",
         timezone = "Asia/Tokyo",
-        created = DateTime.now,
-        modified = DateTime.now)
+        createdAt = DateTime.now,
+        modifiedAt = DateTime.now)
 
       val item = Item.create(
         content = "MyString",
         words = "MyString",
-        created = DateTime.now,
-        modified = DateTime.now,
+        createdAt = DateTime.now,
+        modifiedAt = DateTime.now,
         accountId = account.accountId)
 
       val tag = Tag.create("tag1", 0)
