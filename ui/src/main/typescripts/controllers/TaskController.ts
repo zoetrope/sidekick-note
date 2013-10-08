@@ -95,14 +95,14 @@ module controllers {
                 });
         }
 
-        taskResource:IResourceWithUpdate
-        tasksResource:ng.resource.IResourceClass
-        tagsResource:ng.resource.IResourceClass
-        searchTasksResource:ng.resource.IResourceClass
+        taskResource:IResourceWithUpdate;
+        tasksResource:ng.resource.IResourceClass;
+        tagsResource:ng.resource.IResourceClass;
+        searchTasksResource:ng.resource.IResourceClass;
 
         addTask() {
-            this.$scope.sending = true
-            this.$scope.hasFocus = false
+            this.$scope.sending = true;
+            this.$scope.hasFocus = false;
 
             this.tasksResource.save(null, {
                     content: this.$scope.inputContent,
@@ -112,31 +112,36 @@ module controllers {
                     dueDate: this.$scope.dueDate
                 },
                 (data)=> {
-                    this.$scope.tasks.unshift(data)
+                    this.$scope.tasks.unshift(data);
                     if (this.$scope.tasks.length > 5) {
-                        this.$scope.tasks.pop()
+                        //this.$scope.tasks.pop();
                     }
-                    this.$scope.inputContent = ""
-                    this.$scope.sending = false
-                    this.$scope.hasFocus = true
+                    this.$scope.inputContent = "";
+                    this.$scope.sending = false;
+                    this.$scope.hasFocus = true;
                 },
                 (reason)=> {
-                    alert("error add QuickNote")
-                    this.$scope.sending = false
-                    this.$scope.hasFocus = true
+                    alert("error add QuickNote");
+                    this.$scope.sending = false;
+                    this.$scope.hasFocus = true;
                 })
         }
 
-        updateTask(id:number, content:string, tags:string[], rate:number, status:string, dueDate:string) {
-            alert("content:" + content + ",tags:" + tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
+        updateTask(index: number) {
+            //alert("content:" + content + ",tags:" + tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
 
-            this.taskResource.update({itemId: id}, {
-                content: content,
-                tags: tags,
-                rate: rate,
-                status: status,
-                dueDate: dueDate
-            }, data=>alert("update ok"), reason=>alert("update ng"))
+            this.$scope.tasks[index].editable = false;
+            this.taskResource.update({itemId: this.$scope.tasks[index].itemId}, {
+                content: this.$scope.tasks[index].content,
+                tags: this.$scope.tasks[index].tags,
+                rate: this.$scope.tasks[index].rate,
+                status: this.$scope.tasks[index].status,
+                dueDate: null
+                //dueDate: this.$scope.tasks[index].dueDate
+            }, data=>{}, reason=>{
+                alert("update ng");
+                this.$scope.tasks[index].editable = true;
+            })
         }
 
         searchTask() {

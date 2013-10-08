@@ -41,7 +41,7 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
         BadRequest("invalid page number")
       }
 
-      val limit = 5
+      val limit = 100
       val offset = (page - 1) * limit
 
       val user = loggedIn
@@ -108,19 +108,34 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
             task.content = form.content
             task.modifiedAt = DateTime.now()
             task.rate = form.rate
-            //task.tags
-            //task.words
-            task.status = try {
+
+            //task.words =
+            val status = try {
               TaskStatus.valueOf(form.status)
             } catch {
               case _: Throwable => task.status
             }
+            if ((task.status != status) && (status == TaskStatus.Completed)) {
+              task.completedAt = Some(DateTime.now)
+            }
+            task.status = status;
+
             task.dueDate = try {
               Some(DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z").parseDateTime(form.dueDate))
             } catch {
               case _: Throwable => task.dueDate
             }
+            //TODO: transaction
             task.save()
+
+            // update tags
+            val formTags = form.tags.distinct
+            val orgTags = task.tags.map(tag=>tag.name)
+            val addTags = formTags diff orgTags
+            val remTags = orgTags diff formTags
+            addTags.foreach(tag => task.addTag(tag))
+            remTags.foreach(tag => task.deleteTag(tag))
+
             Ok
           }
         }
@@ -132,6 +147,12 @@ object TaskController extends Controller with AuthElement with AuthConfigImpl wi
     implicit request =>
       play.Logger.info("words=" + words)
       play.Logger.info("tags=" + tags)
-      Ok
+
+      val limit = 100
+      val offset = 0
+
+      val user = loggedIn
+      val tasks = Task.findByTags(user.accountId, offset, limit, tags.split(" ").toList)
+      Ok(Extraction.decompose(tasks)).as("application/json")
   }
 }

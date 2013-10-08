@@ -46,6 +46,11 @@ object Tag extends SQLSyntaxSupport[Tag] {
     }.map(Tag(tg.resultName)).single.apply()
   }
 
+  def findByName(tagName: String)(implicit session: DBSession = autoSession): Option[Tag] = {
+    withSQL {
+      select.from(Tag as tg).where.eq(tg.name, tagName)
+    }.map(Tag(tg.resultName)).single.apply()
+  }
 
   def getOrCreate(tagName: String)(implicit session: DBSession = autoSession): Tag = {
 

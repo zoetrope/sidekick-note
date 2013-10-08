@@ -10,7 +10,7 @@ class QuickNote(
                  content: String,
                  words: String,
                  rate: Int = 0,
-                 tags: mutable.MutableList[Tag] = new mutable.MutableList,
+                 tags: mutable.ArrayBuffer[Tag] = new mutable.ArrayBuffer,
                  createdAt: DateTime,
                  modifiedAt: DateTime,
                  deletedAt: Option[DateTime] = None,

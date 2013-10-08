@@ -12,7 +12,7 @@ class Task
   content: String,
   words: String,
   rate: Int = 0,
-  tags: mutable.MutableList[Tag] = new mutable.MutableList,
+  tags: mutable.ArrayBuffer[Tag] = new mutable.ArrayBuffer,
   createdAt: DateTime,
   modifiedAt: DateTime,
   deletedAt: Option[DateTime] = None,
@@ -111,14 +111,14 @@ object Task extends SQLSyntaxSupport[Task] {
     }).list.apply()
   }
 
-  def findByTags(accountId: Long, offset: Int, limit: Int, tags: List[Tag])(implicit session: DBSession = autoSession): List[Task] = {
+  def findByTags(accountId: Long, offset: Int, limit: Int, tags: List[String])(implicit session: DBSession = autoSession): List[Task] = {
     withSQL[Task](
       select.from(Item as i)
         .join(Task as t).on(t.itemId, i.itemId)
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(i.accountId, accountId)
-        .and.in(tg.tagId, tags.map(tag => tag.tagId))
+        .and.in(tg.name, tags)
         .orderBy(i.createdAt).desc
         .limit(limit).offset(offset)
     ).one(implicit rs => Task(i, t))
@@ -173,7 +173,7 @@ object Task extends SQLSyntaxSupport[Task] {
   def save(entity: Task)(implicit session: DBSession = autoSession): Task = {
     withSQL {
       update(Task as t).set(
-        t.status -> entity.status,
+        t.status -> entity.status.toString,
         t.dueDate -> entity.dueDate,
         t.completedAt -> entity.completedAt
       ).where.eq(t.itemId, entity.itemId)

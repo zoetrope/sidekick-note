@@ -8,7 +8,7 @@ module models {
         // content
         itemId:number;
         content:string;
-        title:string;
+        rate:number;
         createdAt: string;
         status: string;
         tags: string[];

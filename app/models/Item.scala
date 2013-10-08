@@ -11,7 +11,7 @@ class Item
   var content: String,
   var words: String,
   var rate: Int = 0,
-  var tags: mutable.MutableList[Tag] = new mutable.MutableList,
+  var tags: mutable.ArrayBuffer[Tag] = new mutable.ArrayBuffer,
   val createdAt: DateTime,
   var modifiedAt: DateTime,
   var deletedAt: Option[DateTime] = None,
@@ -28,7 +28,13 @@ class Item
   }
 
   def deleteTag(tagName: String): Unit = {
-
+    Tag.findByName(tagName) match {
+      case Some(tag) => {
+        ItemTag.deleteTag(itemId, tag)
+        tags -= tag
+      }
+      case _ =>
+    }
   }
 
   override def equals(obj: Any): Boolean = {
