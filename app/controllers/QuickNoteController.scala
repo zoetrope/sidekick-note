@@ -19,53 +19,56 @@ case class QuickNoteForm
   rate: Int
   )
 
-object QuickNoteController extends Controller with AuthElement with AuthConfigImpl with Json4s {
+object QuickNoteController extends BaseController[QuickNoteForm, QuickNote] {
 
-  implicit val formats = DefaultFormats + FieldSerializer[QuickNote](FieldSerializer.ignore("words")) ++ JodaTimeSerializers.all
+  override implicit val formats = DefaultFormats +
+    FieldSerializer[QuickNote](FieldSerializer.ignore("words")) +
+    new SimpleTagSerializer +
+    new TaskStatusSerializer ++
+    JodaTimeSerializers.all
 
-  def getQuickNotes(page: Int) = StackAction(AuthorityKey -> Permission.NormalUser) {
-    implicit request =>
-
-      if (page < 1) {
-        play.Logger.error("invalid page number")
-        BadRequest("invalid page number")
-      }
-
-      val limit = 5
-      val offset = (page - 1) * limit
-
-      val user = loggedIn
-      val quick_notes = QuickNote.findByAccountId(user.accountId, offset, limit)
-      Ok(Extraction.decompose(quick_notes)).as("application/json")
+  override def findByAccountId(accountId: Long, offset: Int, limit: Int) = {
+    QuickNote.findByAccountId(accountId, offset, limit)
   }
 
-  def addQuickNote = StackAction(json, AuthorityKey -> Permission.NormalUser) {
-    implicit request =>
-      play.Logger.info("addQuickNote entry")
-      play.Logger.debug(JsonMethods.compact(JsonMethods.render(request.body)))
+  override def createInstance(user: User, form : QuickNoteForm) : QuickNote = {
 
-      val user = loggedIn
-      val form = request.body.extract[QuickNoteForm]
+    val words = separateWords(form.content)
+    play.Logger.info(words)
 
-      val tagger = SenFactory.getStringTagger(null)
-      val tokens = new java.util.ArrayList[Token]()
-      tagger.analyze(form.content, tokens)
+    //DB localTx{
+    val quickNote = QuickNote.create(
+      form.content,
+      words,
+      form.rate,
+      DateTime.now(),
+      DateTime.now(),
+      Option.empty[DateTime],
+      user.accountId)
 
-      val words = tokens.map(x => x.getSurface).mkString(" ")
-      play.Logger.info(words)
-
-      //DB localTx{
-      val quick_note = QuickNote.create(
-        form.content, words, form.rate, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.accountId)
-
-      form.tags.foreach(tagName => {
-        val tag = Tag.getOrCreate(tagName)
-        ItemTag.addTag(quick_note.itemId, tag)
-      })
-      //}
-
-      play.Logger.info("addQuickNote exit")
-      Ok(Extraction.decompose(quick_note)).as("application/json")
+    form.tags.distinct.foreach(tagName => {
+      quickNote.addTag(tagName)
+    })
+    //}
+    quickNote
   }
+  protected def findById(itemId: Long): Option[QuickNote] = QuickNote.find(itemId)
+
+  protected def updateInstance(quickNote: QuickNote, form : QuickNoteForm) = {
+    quickNote.content = form.content
+    quickNote.modifiedAt = DateTime.now()
+    quickNote.rate = form.rate
+
+    quickNote.words = separateWords(quickNote.content)
+
+    //TODO: transaction
+    //DB localTx{
+    quickNote.save()
+    updateTags(quickNote, form.tags)
+    //}
+  }
+
+  override def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String],  tags:List[String]) =
+    QuickNote.findByTags(accountId, offset, limit, tags)
 
 }

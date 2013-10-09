@@ -112,6 +112,24 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
       }.map(_.long(1)).single.apply().get
     }
     */
+
+
+  def findByTags(accountId: Long, offset: Int, limit: Int, tags: List[String])(implicit session: DBSession = autoSession): List[QuickNote] = {
+    withSQL[QuickNote](
+      select.from(Item as i)
+        .join(QuickNote as qn).on(qn.itemId, i.itemId)
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
+        .where.eq(i.accountId, accountId)
+        .and.in(tg.name, tags)
+        .orderBy(i.createdAt).desc
+        .limit(limit).offset(offset)
+    ).one(implicit rs => QuickNote(i, qn))
+      .toMany(Tag.opt(tg))
+      .map((quickNote, tags) => {
+      quickNote.tags ++= tags; quickNote
+    }).list.apply()
+  }
   def create
   (
     content: String,

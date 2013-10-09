@@ -4,6 +4,7 @@
 ///<reference path='../models/Task.ts' />
 ///<reference path='../models/Tag.ts' />
 ///<reference path='../services/ItemRenderService.ts' />
+///<reference path='../services/IUpdatableResourceClass.ts' />
 
 module controllers {
     'use strict';
@@ -40,10 +41,6 @@ module controllers {
         keypress($event:ng.IAngularEvent) : void;
     }
 
-    export interface IResourceWithUpdate extends ng.resource.IResourceClass  {
-        update: ng.resource.IActionCall;
-    }
-
     export class TaskController {
 
         constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
@@ -78,7 +75,7 @@ module controllers {
             $scope.searchTask = angular.bind(this, this.searchTask)
 
             this.tasksResource = this.$resource("/api/tasks")
-            this.taskResource = <IResourceWithUpdate>this.$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
+            this.taskResource = <services.IUpdatableResourceClass>this.$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
             this.tagsResource = $resource("/api/tags")
             this.searchTasksResource = $resource("/api/tasks/search")
 
@@ -95,7 +92,7 @@ module controllers {
                 });
         }
 
-        taskResource:IResourceWithUpdate;
+        taskResource:services.IUpdatableResourceClass;
         tasksResource:ng.resource.IResourceClass;
         tagsResource:ng.resource.IResourceClass;
         searchTasksResource:ng.resource.IResourceClass;

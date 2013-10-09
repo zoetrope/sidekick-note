@@ -82,19 +82,6 @@ object Task extends SQLSyntaxSupport[Task] {
     }).single.apply()
   }
 
-  def findAll()(implicit session: DBSession = autoSession): List[Task] = {
-    withSQL[Task] {
-      select.from(Item as i)
-        .join(Task as t).on(t.itemId, i.itemId)
-        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
-        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
-    }.one(implicit rs => Task(i, t))
-      .toMany(Tag.opt(tg))
-      .map((task, tags) => {
-      task.tags ++= tags; task
-    }).list.apply()
-  }
-
   def findByAccountId(accountId: Long, offset: Int, limit: Int)(implicit session: DBSession = autoSession): List[Task] = {
     withSQL[Task](
       select.from(Item as i)
