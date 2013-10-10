@@ -26,6 +26,7 @@ module services {
         }
 
         render(input:string):string {
+            //console.log(input)
             if (input) {
                 return marked(input)
             } else {

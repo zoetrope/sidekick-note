@@ -85,7 +85,7 @@ module controllers {
 
             this.tasksResource.query(
                 (data)=> {
-                    $scope.tasks = data
+                    $scope.tasks = data.map(x=>{x.renderedContent = $scope.toMarkdown(x.content); return x})
                 },
                 (reason)=> {
                     alert("error get tasks")
@@ -109,6 +109,7 @@ module controllers {
                     dueDate: this.$scope.dueDate
                 },
                 (data)=> {
+                    data.renderedContent = this.$scope.toMarkdown(data.content)
                     this.$scope.tasks.unshift(data);
                     if (this.$scope.tasks.length > 5) {
                         //this.$scope.tasks.pop();
@@ -124,10 +125,12 @@ module controllers {
                 })
         }
 
-        updateTask(index: number) {
+        updateTask(task: models.Task) {
             //alert("content:" + content + ",tags:" + tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
 
+            var index = this.$scope.tasks.indexOf(task)
             this.$scope.tasks[index].editable = false;
+
             this.taskResource.update({itemId: this.$scope.tasks[index].itemId}, {
                 content: this.$scope.tasks[index].content,
                 tags: this.$scope.tasks[index].tags,
@@ -135,8 +138,11 @@ module controllers {
                 status: this.$scope.tasks[index].status,
                 dueDate: null
                 //dueDate: this.$scope.tasks[index].dueDate
-            }, data=>{}, reason=>{
+            }, data=>{
+                data.renderedContent = this.$scope.toMarkdown(data.content)
+            }, reason=>{
                 alert("update ng");
+                var index = this.$scope.tasks.indexOf(task) // 更新処理が返ってくるまでの間にindexが変わってしまう可能性を考慮
                 this.$scope.tasks[index].editable = true;
             })
         }
@@ -144,11 +150,9 @@ module controllers {
         searchTask() {
             var tags = this.$scope.searchSelectedTags.join(" ")
             if (tags) {
-                alert("tags = " + tags)
                 this.searchTasksResource.query({tags: tags},
                     (data)=> {
-                        alert("search ok")
-                        this.$scope.tasks = data
+                        this.$scope.tasks = data.map(x=>{x.renderedContent = this.$scope.toMarkdown(x.content); return x})
                     },
                     (reason)=> {
                         alert("search ng")

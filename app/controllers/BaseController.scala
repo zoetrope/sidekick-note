@@ -81,8 +81,10 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
       val offset = 0
 
       val user = loggedIn
-      val tasks = searchItem(user.accountId, offset, limit, words.split(" ").toList, tags.split(" ").toList)
-      Ok(Extraction.decompose(tasks)).as("application/json")
+      val items = searchItem(user.accountId, offset, limit, words.split(" ").toList, tags.split(" ").toList)
+
+      play.Logger.info("find item size = " + items.size)
+      Ok(Extraction.decompose(items)).as("application/json")
   }
 
   protected def findByAccountId(accountId: Long, offset: Int, limit: Int): List[TOutput]
@@ -93,7 +95,7 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
 
   protected def updateInstance(item: TOutput, form : TInput) : Unit
 
-  protected def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String], tags:List[String]) : Unit
+  protected def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String], tags:List[String]) : List[TOutput]
 
   protected def updateTags(item: TOutput, tags:Seq[String]) = {
     val formTags = tags.distinct

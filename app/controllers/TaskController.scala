@@ -75,7 +75,7 @@ object TaskController extends BaseController[TaskForm, Task] {
     //}
   }
 
-  override def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String],  tags:List[String]) =
+  override def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String],  tags:List[String]) : List[Task] =
     Task.findByTags(accountId, offset, limit, tags)
 
   protected def parseStatus(input: String, defaultStatus: TaskStatus) : TaskStatus = {

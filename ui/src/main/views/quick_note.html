@@ -31,15 +31,50 @@
     </div>
     <div class="list-group">
         <div ng-repeat="note in quickNotes" class="list-group-item">
-            <p class="list-group-item-text">
 
-            <div ng-bind-html-unsafe="toMarkdown(note.content)"/>
-            </p>
-            <p class="list-group-item-text text-muted text-right">
-                <small>
-                    {{note.createdAt}}
-                </small>
-            </p>
+            <table width="100%">
+                <tr>
+                    <td>
+                        <div ng-bind-html-unsafe="note.renderedContent" ng-hide="note.editable"/>
+                        <textarea rows="3" ng-model="note.content" class="form-control"
+                                  ng-show="note.editable"/>
+                    </td>
+                    <td width="30px">
+                        <div id="note-menu" class="btn-group pull-right">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><input type="checkbox" ng-model="note.editable"/>edit</li>
+                                <li><a href="#">delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="text-muted" ng-hide="note.editable">
+                            {{note.tags.join(' ')}}
+                        </div>
+                        <div ng-show="note.editable">
+                            <input type="text" ui-select2="inputSelectOptions" ng-model="note.tags" style="width:100%"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <rating class="pull-left" value="note.rate" max="5" readonly="!note.editable"></rating>
+                            <span class="text-muted pull-right">
+                                <small>
+                                    {{note.createdAt}}
+                                </small>
+                            </span>
+                    </td>
+                </tr>
+            </table>
+            <button ng-click="updateNote($index)"
+                    ng-show="note.editable">update</button>
+
         </div>
     </div>
     {{quickNotes | json}}

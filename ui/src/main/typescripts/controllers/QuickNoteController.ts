@@ -86,7 +86,7 @@ module controllers {
 
             QuickNotes.query(
                 (data)=> {
-                    $scope.quickNotes = data
+                    $scope.quickNotes = data.map(x=>{x.renderedContent = $scope.toMarkdown(x.content); return x})
                 },
                 (reason)=> {
                     alert("error get QuickNotes")

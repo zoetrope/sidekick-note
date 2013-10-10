@@ -6,6 +6,7 @@ module models {
 
     export class QuickNote {
         content:string;
+        renderedContent: string;
         createdAt: string;
     }
 }
