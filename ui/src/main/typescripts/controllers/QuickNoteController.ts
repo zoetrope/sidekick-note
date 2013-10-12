@@ -3,6 +3,7 @@
 ///<reference path='../models/QuickNote.ts' />
 ///<reference path='../models/Tag.ts' />
 ///<reference path='../services/ItemRenderService.ts' />
+///<reference path='../services/IUpdatableResourceClass.ts' />
 
 module controllers {
     'use strict';
@@ -25,7 +26,8 @@ module controllers {
         allTags : string[];
 
         // action
-        addQuickNote() : void;
+        addQuickNote : Function;
+        updateQuickNote : Function;
         toMarkdown(input: string) : string;
 
         // event
@@ -33,6 +35,10 @@ module controllers {
     }
 
     export class QuickNoteController {
+
+        quickNoteResource:services.IUpdatableResourceClass;
+        quickNotesResource:ng.resource.IResourceClass;
+        tagsResource:ng.resource.IResourceClass;
 
         constructor(public $scope:QuickNoteScope, public $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) {
             $scope.hasFocus = true
@@ -48,43 +54,21 @@ module controllers {
                     return $scope.allTags;
                 }
             };
-            var Tags = $resource("/api/tags")
-            Tags.query(data => {
+
+            this.quickNotesResource = this.$resource("/api/quick_notes")
+            this.quickNoteResource = <services.IUpdatableResourceClass>this.$resource("/api/quick_notes/:itemId", {}, {update: {method: 'PUT'}})
+            this.tagsResource = $resource("/api/tags")
+
+            this.tagsResource.query(data => {
                 $scope.allTags = data.map(tag => tag.name)
             });
 
-            var QuickNotes = $resource("/api/quick_notes")
+            $scope.toMarkdown = input => itemRenderService.render(input)
+            $scope.addQuickNote = angular.bind(this, this.addQuickNote)
+            $scope.updateQuickNote = angular.bind(this, this.updateQuickNote)
 
-            $scope.toMarkdown = input => {
-                return itemRenderService.render(input)
-            }
 
-            $scope.addQuickNote = () => {
-                $scope.sending = true
-                $scope.hasFocus = false
-
-                QuickNotes.save(null, {
-                        content: $scope.inputContent,
-                        tags: $scope.selectedTags,
-                        rate: $scope.rate
-                    },
-                    (data)=> {
-                        $scope.quickNotes.unshift(data)
-                        if($scope.quickNotes.length > 5){
-                            $scope.quickNotes.pop()
-                        }
-                        $scope.inputContent = ""
-                        $scope.sending = false
-                        $scope.hasFocus = true
-                    },
-                    (reason)=> {
-                        alert("error add QuickNote")
-                        $scope.sending = false
-                        $scope.hasFocus = true
-                    })
-            };
-
-            QuickNotes.query(
+            this.quickNotesResource.query(
                 (data)=> {
                     $scope.quickNotes = data.map(x=>{x.renderedContent = $scope.toMarkdown(x.content); return x})
                 },
@@ -97,6 +81,50 @@ module controllers {
                 $event.preventDefault()
             };
 
+        }
+
+
+        addQuickNote() {
+            this.$scope.sending = true
+            this.$scope.hasFocus = false
+
+            this.quickNotesResource.save(null, {
+                    content: this.$scope.inputContent,
+                    tags: this.$scope.selectedTags,
+                    rate: this.$scope.rate
+                },
+                (data)=> {
+                    this.$scope.quickNotes.unshift(data)
+                    if(this.$scope.quickNotes.length > 5){
+                        this.$scope.quickNotes.pop()
+                    }
+                    this.$scope.inputContent = ""
+                    this.$scope.sending = false
+                    this.$scope.hasFocus = true
+                },
+                (reason)=> {
+                    alert("error add QuickNote")
+                    this.$scope.sending = false
+                    this.$scope.hasFocus = true
+                })
+        }
+
+        updateQuickNote(note: models.QuickNote) {
+            var index = this.$scope.quickNotes.indexOf(note)
+            this.$scope.quickNotes[index].editable = false;
+
+            this.quickNoteResource.update({itemId: this.$scope.quickNotes[index].itemId}, {
+                content: this.$scope.quickNotes[index].content,
+                tags: this.$scope.quickNotes[index].tags,
+                rate: this.$scope.quickNotes[index].rate
+            }, data=>{
+                var index = this.$scope.quickNotes.indexOf(note)
+                this.$scope.quickNotes[index].renderedContent = this.$scope.toMarkdown(data.content)
+            }, reason=>{
+                alert("update ng");
+                var index = this.$scope.quickNotes.indexOf(note) // 更新処理が返ってくるまでの間にindexが変わってしまう可能性を考慮
+                this.$scope.quickNotes[index].editable = true;
+            })
         }
 
     }

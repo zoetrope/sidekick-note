@@ -139,7 +139,8 @@ module controllers {
                 dueDate: null
                 //dueDate: this.$scope.tasks[index].dueDate
             }, data=>{
-                data.renderedContent = this.$scope.toMarkdown(data.content)
+                var index = this.$scope.tasks.indexOf(task)
+                this.$scope.tasks[index].renderedContent = this.$scope.toMarkdown(data.content)
             }, reason=>{
                 alert("update ng");
                 var index = this.$scope.tasks.indexOf(task) // 更新処理が返ってくるまでの間にindexが変わってしまう可能性を考慮

@@ -57,7 +57,7 @@
                             {{note.tags.join(' ')}}
                         </div>
                         <div ng-show="note.editable">
-                            <input type="text" ui-select2="inputSelectOptions" ng-model="note.tags" style="width:100%"/>
+                            <input type="text" ui-select2="select2Options" ng-model="note.tags" style="width:100%"/>
                         </div>
                     </td>
                 </tr>
@@ -72,7 +72,7 @@
                     </td>
                 </tr>
             </table>
-            <button ng-click="updateNote($index)"
+            <button ng-click="updateQuickNote(note)"
                     ng-show="note.editable">update</button>
 
         </div>
