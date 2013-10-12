@@ -94,6 +94,7 @@ module controllers {
                     rate: this.$scope.rate
                 },
                 (data)=> {
+                    data.renderedContent = this.$scope.toMarkdown(data.content)
                     this.$scope.quickNotes.unshift(data)
                     if(this.$scope.quickNotes.length > 5){
                         this.$scope.quickNotes.pop()

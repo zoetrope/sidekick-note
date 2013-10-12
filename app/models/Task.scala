@@ -89,7 +89,7 @@ object Task extends SQLSyntaxSupport[Task] {
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(i.accountId, accountId)
-        .and.not.eq(t.status, "Completed")
+        //.and.not.eq(t.status, "Completed")
         .orderBy(i.createdAt).desc
         .limit(limit).offset(offset)
     ).one(implicit rs => Task(i, t))
@@ -106,7 +106,7 @@ object Task extends SQLSyntaxSupport[Task] {
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(i.accountId, accountId)
-        .and.not.eq(t.status, "Completed")
+        //.and.not.eq(t.status, "Completed")
         .and.in(tg.name, tags)
         .orderBy(i.createdAt).desc
         .limit(limit).offset(offset)
