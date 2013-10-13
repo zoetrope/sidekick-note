@@ -100,6 +100,7 @@ object Task extends SQLSyntaxSupport[Task] {
   }
 
   def findByTags(accountId: Long, offset: Int, limit: Int, tags: List[String])(implicit session: DBSession = autoSession): List[Task] = {
+    val (match_it, search_tg, except_it) = (ItemTag.syntax("match_it"), Tag.syntax("search_tg"), ItemTag.syntax("except_it"))
     withSQL[Task](
       select.from(Item as i)
         .join(Task as t).on(t.itemId, i.itemId)
@@ -107,7 +108,18 @@ object Task extends SQLSyntaxSupport[Task] {
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(i.accountId, accountId)
         //.and.not.eq(t.status, "Completed")
-        .and.in(tg.name, tags)
+        .and.in(i.itemId,
+            select(match_it.result.itemId)
+              .from(ItemTag as match_it)
+              .where.notExists( // 差集合が空ならば条件にマッチするということ
+                select
+                  .from(Tag as search_tg)
+                  .where.in(search_tg.name, tags) // 検索条件に一致するタグの一覧
+                  .and.notExists( // 検索条件に一致するタグの一覧との差集合を求める
+                    select
+                      .from(ItemTag as except_it)
+                      .where.eq(search_tg.tagId,except_it.tagId)
+                      .and.eq(except_it.itemId,match_it.itemId))))
         .orderBy(i.createdAt).desc
         .limit(limit).offset(offset)
     ).one(implicit rs => Task(i, t))
