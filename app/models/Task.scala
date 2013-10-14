@@ -4,6 +4,7 @@ import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 import org.joda.time.DateTime
 import scala.collection.mutable
+import sqls.distinct
 
 
 class Task
@@ -109,7 +110,7 @@ object Task extends SQLSyntaxSupport[Task] {
         .where.eq(i.accountId, accountId)
         //.and.not.eq(t.status, "Completed")
         .and.in(i.itemId,
-            select(match_it.result.itemId)
+            select(distinct(match_it.result.itemId))
               .from(ItemTag as match_it)
               .where.notExists( // 差集合が空ならば条件にマッチするということ
                 select

@@ -30,7 +30,7 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
         BadRequest("invalid page number")
       }
       else {
-        val limit = 100
+        val limit = 1000
         val offset = (page - 1) * limit
 
         val user = loggedIn
@@ -77,7 +77,7 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
       play.Logger.info("words=" + words)
       play.Logger.info("tags=" + tags)
 
-      val limit = 100
+      val limit = 1000
       val offset = 0
 
       val user = loggedIn

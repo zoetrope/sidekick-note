@@ -36,7 +36,7 @@ object Application extends Controller with OptionalAuthElement with LoginLogout 
         }
         case None => {
           play.Logger.info("authenticate failed")
-          BadRequest(views.html.main(""))
+          BadRequest
         }
       }
   }
