@@ -109,9 +109,9 @@ module App {
         appName + ".controller",
         [appName + ".service", "ngResource"],
         ()=> {}
-    ).controller("ApplicationController", ["$scope", "$location", "$resource",
-            ($scope:controllers.AppScope, $location:ng.ILocationService, $resource:ng.resource.IResourceService) : controllers.ApplicationController => {
-                return new controllers.ApplicationController($scope, $location, $resource)
+    ).controller("ApplicationController", ["$scope", "$location", "$resource", "$timeout",
+            ($scope:controllers.AppScope, $location:ng.ILocationService, $resource:ng.resource.IResourceService, $timeout:ng.ITimeoutService) : controllers.ApplicationController => {
+                return new controllers.ApplicationController($scope, $location, $resource, $timeout)
             }])
      .controller("HomeController", ["$scope", "$resource", "itemRenderService",
             ($scope:controllers.HomeScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.HomeController => {

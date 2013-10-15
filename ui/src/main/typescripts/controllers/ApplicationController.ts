@@ -17,13 +17,20 @@ module controllers {
 
     export class ApplicationController {
 
-        constructor(public $scope:AppScope, public $location:ng.ILocationService, public $resource:ng.resource.IResourceService) {
+        constructor(public $scope:AppScope, public $location:ng.ILocationService, public $resource:ng.resource.IResourceService, public $timeout:ng.ITimeoutService) {
 
             var Auth = $resource("/api/login")
             var LoggedIn = $resource("/api/loggedin")
             var Logout = $resource("/api/logout")
 
             LoggedIn.get(x=>$scope.loggedin = x.name, reason => alert(reason))
+
+            var tick = () => {
+                LoggedIn.get(data=>{
+                    $timeout(tick, 10000);
+                },reason => alert("error"));
+            };
+            tick();
 
             $scope.login = () => {
                 var input = {name: $scope.input_name, password: $scope.input_password}
