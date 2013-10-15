@@ -23,20 +23,44 @@ module App {
 
     angular.module(
         appName,
-        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress", 'ui.select2', 'ui.bootstrap', 'ui.date'],
+        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress", 'ui.select2', 'ui.bootstrap', 'ui.date', 'ui.router'],
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
-            $routeProvider
-                .when("/home", {templateUrl: "/assets/views/home.html"})
-                .when("/quick_note", {templateUrl: "/assets/views/quick_note.html"})
-                .when("/task", {templateUrl: "/assets/views/task.html"})
-                .when("/article", {templateUrl: "/assets/views/article.html"})
-                .when("/search", {templateUrl: "/assets/views/search.html"})
-                .when("/login", {templateUrl: "/assets/views/login.html"})
-                .otherwise({redirectTo: '/home'});
             $locationProvider.html5Mode(true);
-        }
-    ).config($httpProvider => {
+        })
+        .config(($stateProvider, $urlRouterProvider) =>{
+            $urlRouterProvider.otherwise("/home")
+            $stateProvider.state('home', {
+                url: "/home",
+                templateUrl: "/assets/views/home.html"
+            })
+                .state('quick_note', {
+                    url: "/quick_note",
+                    templateUrl: "/assets/views/quick_note.html"
+                })
+                .state('task', {
+                    url: "/task",
+                    abstract: true,
+                    templateUrl: "/assets/views/task.html"
+                })
+                .state('task.list', {
+                    url: "",
+                    templateUrl: "/assets/views/task.list.html"
+                })
+                .state('article', {
+                    url: "/article",
+                    templateUrl: "/assets/views/article.html"
+                })
+                .state('search', {
+                    url: "/search",
+                    templateUrl: "/assets/views/search.html"
+                })
+                .state('login', {
+                    url: "/login",
+                    templateUrl: "/assets/views/login.html"
+                })
+        })
+        .config($httpProvider => {
             var interceptor = ["$q", "$location", ($q, $location) => {
                 return promise => {
                     return promise.then(response => response,
@@ -50,7 +74,10 @@ module App {
             }];
             $httpProvider.responseInterceptors.push(interceptor)
         })
-        .run(($rootScope:ng.IRootScopeService, $routeParams:ng.IRouteParamsService)=> {});
+        .run(['$rootScope', '$state', '$stateParams',($rootScope, $state, $stateParams)=> {
+            $rootScope.$state = $state;
+            $rootScope.$stateParams = $stateParams;
+        }]);
 
     angular.module(
         appName + ".directive",
