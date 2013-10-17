@@ -13,6 +13,8 @@
 ///<reference path='models/Tag.ts' />
 ///<reference path='models/Task.ts' />
 ///<reference path='services/ItemRenderService.ts' />
+///<reference path='directives/ItemDirective.ts' />
+///<reference path='directives/EnableFocus.ts' />
 
 console.log("initialize sidekick-note");
 
@@ -84,17 +86,8 @@ module App {
         [],
         ()=> {
         }
-    ).directive('kickFocus', [ () => {
-            return (scope, element, attrs) => {
-                scope.$watch(attrs.kickFocus, autofocus => {
-                    if (autofocus) {
-                        setTimeout(function () {
-                            element[0].focus()
-                        }, 0)
-                    }
-                })
-            }
-        }]);
+    ).directive('kickFocus', () => new directives.EnableFocus())
+        .directive('kickItem', () => new directives.ItemDirective());
 
     angular.module(
         appName + ".service",
