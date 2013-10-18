@@ -80,19 +80,21 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
   }
 
   def findByAccountId(accountId: Long, offset: Int, limit: Int)(implicit session: DBSession = autoSession): List[QuickNote] = {
+    val x = SubQuery.syntax("x", i.resultName, qn.resultName)
     withSQL[QuickNote](
-      select.from(Item as i)
-        .join(QuickNote as qn).on(qn.itemId, i.itemId)
-        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+      select(sqls"${x(i).result.*}, ${x(qn).result.*}, ${tg.result.*}")
+        .from(
+          select(sqls"${i.result.*}, ${qn.result.*}").from(Item as i)
+            .join(QuickNote as qn).on(qn.itemId, i.itemId)
+            .where.eq(i.accountId, accountId)
+            .orderBy(i.createdAt).desc
+            .limit(limit).offset(offset).as(x))
+        .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
-        .where.eq(i.accountId, accountId)
-        .orderBy(i.createdAt).desc
-        .limit(limit).offset(offset)
-    ).one(implicit rs => QuickNote(i, qn))
+    ).one(implicit rs => QuickNote(x(i).resultName, x(qn).resultName))
       .toMany(Tag.opt(tg))
-      .map((note, tags) => {
-      note.tags ++= tags; note
-    }).list.apply()
+      .map((note, tags) => {note.tags ++= tags; note})
+      .list.apply()
   }
 
   /*

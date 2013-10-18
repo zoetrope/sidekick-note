@@ -39,11 +39,19 @@ module controllers {
 
         // event
         keypress($event:ng.IAngularEvent) : void;
+
+        totalItems : number;
+        currentPage : number;
+        numPages : number;
     }
 
     export class TaskController {
 
         constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
+
+            $scope.totalItems = 100;
+            $scope.currentPage = 1;
+            $scope.numPages = 10;
 
             $scope.rate = 1
             $scope.dueDate = null

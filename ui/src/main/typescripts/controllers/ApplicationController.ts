@@ -27,7 +27,7 @@ module controllers {
 
             var tick = () => {
                 LoggedIn.get(data=>{
-                    $timeout(tick, 10000);
+                    $timeout(tick, 60000);
                 },reason => alert("error"));
             };
             tick();

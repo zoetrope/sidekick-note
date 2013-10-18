@@ -1,5 +1,6 @@
 <tabset>
     <tab heading="New">
+        <pagination total-items="totalItems" page="currentPage" maxSize="5" num-pages="numPages"></pagination>
         <div class="list-group">
             <div ng-repeat="task in tasks | filter:{status:'New'} | filter:searchText | orderBy:'rate':true" class="list-group-item">
                 <kick-item task="task"></kick-item>

@@ -84,20 +84,22 @@ object Task extends SQLSyntaxSupport[Task] {
   }
 
   def findByAccountId(accountId: Long, offset: Int, limit: Int)(implicit session: DBSession = autoSession): List[Task] = {
+    val x = SubQuery.syntax("x", i.resultName, t.resultName)
     withSQL[Task](
-      select.from(Item as i)
-        .join(Task as t).on(t.itemId, i.itemId)
-        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+      select(sqls"${x(i).result.*}, ${x(t).result.*}, ${tg.result.*}")
+        .from(
+            select(sqls"${i.result.*}, ${t.result.*}").from(Item as i)
+              .join(Task as t).on(t.itemId, i.itemId)
+              .where.eq(i.accountId, accountId)
+              .and.not.eq(t.status, "Completed")
+              .orderBy(i.rate).desc
+              .limit(limit).offset(offset).as(x))
+        .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
-        .where.eq(i.accountId, accountId)
-        //.and.not.eq(t.status, "Completed")
-        .orderBy(i.createdAt).desc
-        .limit(limit).offset(offset)
-    ).one(implicit rs => Task(i, t))
+    ).one(implicit rs => Task(x(i).resultName, x(t).resultName))
       .toMany(Tag.opt(tg))
-      .map((task, tags) => {
-      task.tags ++= tags; task
-    }).list.apply()
+      .map((task, tags) => {task.tags ++= tags; task})
+      .list.apply()
   }
 
   def findByTags(accountId: Long, offset: Int, limit: Int, tags: List[String])(implicit session: DBSession = autoSession): List[Task] = {
@@ -108,7 +110,7 @@ object Task extends SQLSyntaxSupport[Task] {
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(i.accountId, accountId)
-        //.and.not.eq(t.status, "Completed")
+        .and.not.eq(t.status, "Completed")
         .and.in(i.itemId,
             select(distinct(match_it.result.itemId))
               .from(ItemTag as match_it)
