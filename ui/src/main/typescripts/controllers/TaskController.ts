@@ -43,15 +43,22 @@ module controllers {
         totalItems : number;
         currentPage : number;
         numPages : number;
+        maxSize : number;
+
+        changePage(page: number) : void;
     }
 
     export class TaskController {
 
-        constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
+        constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public $location: ng.ILocationService, public itemRenderService:services.ItemRenderService) {
 
             $scope.totalItems = 100;
             $scope.currentPage = 1;
             $scope.numPages = 10;
+            $scope.maxSize = 5;
+            $scope.changePage = (page:number)=>{
+                $location.search({page: page})
+            }
 
             $scope.rate = 1
             $scope.dueDate = null

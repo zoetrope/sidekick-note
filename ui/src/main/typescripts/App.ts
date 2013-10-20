@@ -114,9 +114,9 @@ module App {
             ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.QuickNoteController => {
                 return new controllers.QuickNoteController($scope, $resource, itemRenderService)
             }])
-     .controller("TaskController", ["$scope", "$resource", "itemRenderService",
-            ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
-                return new controllers.TaskController($scope, $resource, itemRenderService)
+     .controller("TaskController", ["$scope", "$resource", "$location", "itemRenderService",
+            ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
+                return new controllers.TaskController($scope, $resource, $location, itemRenderService)
             }])
      .controller("ArticleController", ["$scope", "$resource", "itemRenderService",
             ($scope:controllers.ArticleScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.ArticleController => {

@@ -91,7 +91,7 @@ object Task extends SQLSyntaxSupport[Task] {
             select(sqls"${i.result.*}, ${t.result.*}").from(Item as i)
               .join(Task as t).on(t.itemId, i.itemId)
               .where.eq(i.accountId, accountId)
-              .and.not.eq(t.status, "Completed")
+              //.and.not.eq(t.status, "Completed")
               .orderBy(i.rate).desc
               .limit(limit).offset(offset).as(x))
         .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
