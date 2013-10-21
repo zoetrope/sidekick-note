@@ -1,19 +1,14 @@
 <div ng-controller="TaskController" class="row">
-    <div class="col-sm-4 well">
+    <div class="col-sm-4 well" ng-controller="SearchConditionController">
         <input type="text" ui-select2="searchSelectOptions" ng-model="searchSelectedTags" style="width:100%"/>
         <button ng-click="searchTask()">search</button>
         {{searchSelectedTags | json}}
         <input ng-model="searchText">
+
         <ul class="nav nav-list">
             <li ng-class="{ active: $state.includes('task.list') }"><a ui-sref="task.list">All Tasks</a></li>
-            <!--
-            <li class="nav-header">Top Contacts</li>
-            <li ng-repeat="contact in contacts | limitTo:2"
-                ng-class="{ active: $state.includes('contacts.detail') && $stateParams.contactId == contact.id }">
-                <a ui-sref="contacts.detail({contactId:contact.id})">{{contact.name}}</a>
-            </li>
-            -->
         </ul>
+
         <pre>
           $state = {{$state.current.name}}
           $stateParams = {{$stateParams}}

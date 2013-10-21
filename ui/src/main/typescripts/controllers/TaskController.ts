@@ -11,9 +11,6 @@ module controllers {
 
     export interface TaskScope extends ng.IScope {
 
-        searchSelectedTags: string[];
-        searchSelectOptions : any;
-
         // input
         inputContent: string;
         inputSelectedTags: string[];
@@ -35,7 +32,7 @@ module controllers {
         toMarkdown(input:string) : string;
         addTask : Function;
         updateTask : Function;
-        searchTask : Function;
+        searchTask(words:string, tags:string) : void;
 
         // event
         keypress($event:ng.IAngularEvent) : void;
@@ -63,17 +60,6 @@ module controllers {
             $scope.rate = 1
             $scope.dueDate = null
 
-            $scope.searchSelectedTags = []
-            $scope.searchSelectOptions = {
-                'multiple': true,
-                'simple_tags': true,
-                'allowClear': true,
-                'closeOnSelect': false,
-                'createSearchChoice': null,
-                'tags': () => {
-                    return $scope.allTags;
-                }
-            };
 
             $scope.inputSelectedTags = []
             $scope.inputSelectOptions = {
@@ -87,7 +73,6 @@ module controllers {
             $scope.toMarkdown = input => itemRenderService.render(input)
             $scope.addTask = angular.bind(this, this.addTask)
             $scope.updateTask = angular.bind(this, this.updateTask)
-            $scope.searchTask = angular.bind(this, this.searchTask)
 
             this.tasksResource = this.$resource("/api/tasks")
             this.taskResource = <services.IUpdatableResourceClass>this.$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
@@ -105,6 +90,10 @@ module controllers {
                 (reason)=> {
                     alert("error get tasks")
                 });
+
+            $scope.$on("search", (ev, words, tags)=>{
+                this.searchTask(words, tags)
+            })
         }
 
         taskResource:services.IUpdatableResourceClass;
@@ -163,17 +152,14 @@ module controllers {
             })
         }
 
-        searchTask() {
-            var tags = this.$scope.searchSelectedTags.join(" ")
-            if (tags) {
-                this.searchTasksResource.query({tags: tags},
-                    (data)=> {
-                        this.$scope.tasks = data.map(x=>{x.renderedContent = this.$scope.toMarkdown(x.content); return x})
-                    },
-                    (reason)=> {
-                        alert("search ng")
-                    });
-            }
+        searchTask(words: string, tags: string) {
+            this.searchTasksResource.query({words: words, tags: tags},
+                (data)=> {
+                    this.$scope.tasks = data.map(x=>{x.renderedContent = this.$scope.toMarkdown(x.content); return x})
+                },
+                (reason)=> {
+                    alert("search ng")
+                });
         }
     }
 }

@@ -6,14 +6,14 @@
                      ></pagination>
         <pre>Page: {{currentPage}} / {{numPages}} ({{maxSize}}, {{totalItems}})</pre>
         <div class="list-group">
-            <div ng-repeat="task in tasks | filter:{status:'New'} | filter:searchText | orderBy:'rate':true" class="list-group-item">
+            <div ng-repeat="task in tasks | filter:{status:'New'} | orderBy:'rate':true" class="list-group-item">
                 <kick-item task="task"></kick-item>
             </div>
         </div>
     </tab>
     <tab heading="Completed">
         <div class="list-group">
-            <div ng-repeat="task in tasks | filter:{status:'Completed'} | filter:searchText | orderBy:'completedAt':true" class="list-group-item">
+            <div ng-repeat="task in tasks | filter:{status:'Completed'} | orderBy:'completedAt':true" class="list-group-item">
                 <kick-item task="task"></kick-item>
             </div>
         </div>

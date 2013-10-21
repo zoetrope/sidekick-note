@@ -7,11 +7,13 @@
 ///<reference path='controllers/ArticleController.ts' />
 ///<reference path='controllers/SearchController.ts' />
 ///<reference path='controllers/UserController.ts' />
+///<reference path='controllers/SearchConditionController.ts' />
 ///<reference path='models/Article.ts' />
 ///<reference path='models/Item.ts' />
 ///<reference path='models/QuickNote.ts' />
 ///<reference path='models/Tag.ts' />
 ///<reference path='models/Task.ts' />
+///<reference path='models/SearchCondition.ts' />
 ///<reference path='services/ItemRenderService.ts' />
 ///<reference path='directives/ItemDirective.ts' />
 ///<reference path='directives/EnableFocus.ts' />
@@ -129,6 +131,10 @@ module App {
      .controller("UserController", ["$scope", "$resource",
             ($scope:controllers.UserScope, $resource:ng.resource.IResourceService) : controllers.UserController => {
                 return new controllers.UserController($scope, $resource)
+            }])
+     .controller("SearchConditionController", ["$scope", "$resource",
+            ($scope:controllers.SearchConditionScope, $resource:ng.resource.IResourceService) : controllers.SearchConditionController => {
+                return new controllers.SearchConditionController($scope, $resource)
             }])
 
 }
