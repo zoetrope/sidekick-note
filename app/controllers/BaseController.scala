@@ -72,19 +72,24 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
       }
   }
 
-  def search(words:String, tags:String) = StackAction(AuthorityKey -> Permission.NormalUser) {
+  def search(page: Int, words:String, tags:String) = StackAction(AuthorityKey -> Permission.NormalUser) {
     implicit request =>
       play.Logger.info("words=" + words)
       play.Logger.info("tags=" + tags)
 
-      val limit = 1000
-      val offset = 0
+      if (page < 1) {
+        play.Logger.error("invalid page number")
+        BadRequest("invalid page number")
+      } else {
+        val limit = 20
+        val offset = (page - 1) * limit
 
-      val user = loggedIn
-      val items = searchItem(user.accountId, offset, limit, words.split(" ").toList, tags.split(" ").toList)
+        val user = loggedIn
+        val items = searchItem(user.accountId, offset, limit, words.split(" ").toList, tags.split(" ").toList)
 
-      play.Logger.info("find item size = " + items.size)
-      Ok(Extraction.decompose(items)).as("application/json")
+        play.Logger.info("find item size = " + items.size)
+        Ok(Extraction.decompose(items)).as("application/json")
+      }
   }
 
   protected def findByAccountId(accountId: Long, offset: Int, limit: Int): List[TOutput]
@@ -119,5 +124,15 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
     val tokens = new java.util.ArrayList[Token]()
     tagger.analyze(input, tokens)
     tokens.map(x => x.getSurface).mkString(" ")
+  }
+
+  //TODO: articleのタイトルやタグもwordsに含めるためのメソッドを用意する
+
+  protected def generateKeywords(input: List[String]) : String = {
+    //TODO: 上のメソッドとほとんど同じ。共通化とか
+    val tagger = SenFactory.getStringTagger(null)
+    val tokens = new java.util.ArrayList[Token]()
+    tagger.analyze(input.mkString(" "), tokens)
+    tokens.map(x => "+" + x.getSurface).mkString(" ")
   }
 }

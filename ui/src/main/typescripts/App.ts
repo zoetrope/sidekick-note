@@ -122,9 +122,9 @@ module App {
             ($scope:controllers.ArticleScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.ArticleController => {
                 return new controllers.ArticleController($scope, $resource, itemRenderService)
             }])
-     .controller("SearchController", ["$scope", "$resource",
-            ($scope:controllers.SearchScope, $resource:ng.resource.IResourceService) : controllers.SearchController => {
-                return new controllers.SearchController($scope, $resource)
+     .controller("SearchController", ["$scope", "$resource", "$location", "itemRenderService",
+            ($scope:controllers.SearchScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.SearchController => {
+                return new controllers.SearchController($scope, $resource, $location, itemRenderService)
             }])
      .controller("UserController", ["$scope", "$resource",
             ($scope:controllers.UserScope, $resource:ng.resource.IResourceService) : controllers.UserController => {

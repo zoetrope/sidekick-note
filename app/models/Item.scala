@@ -4,6 +4,9 @@ import scalikejdbc._
 import scalikejdbc.SQLInterpolation._
 import org.joda.time.{DateTime}
 import scala.collection.mutable
+import scalikejdbc.interpolation.SQLSyntax._
+import scala.Some
+import scalikejdbc.WrappedResultSet
 
 class Item
 (
@@ -70,16 +73,16 @@ object Item extends SQLSyntaxSupport[Item] {
   val i = Item.syntax("i")
   val autoSession = AutoSession
 
-  private val (t, it) = (Tag.tg, ItemTag.it)
+  private val (tg, it) = (Tag.tg, ItemTag.it)
 
   def find(itemId: Long)(implicit session: DBSession = autoSession): Option[Item] = {
     withSQL[Item] {
       select.from(Item as i)
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
-        .leftJoin(Tag as t).on(it.tagId, t.tagId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.eq(i.itemId, itemId)
     }.one(implicit rs => Item(i))
-      .toMany(Tag.opt(t))
+      .toMany(Tag.opt(tg))
       .map {
       (item: Item, tags: Seq[Tag]) => {
         item.tags ++= tags
@@ -92,9 +95,9 @@ object Item extends SQLSyntaxSupport[Item] {
     withSQL[Item] {
       select.from(Item as i)
         .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
-        .leftJoin(Tag as t).on(it.tagId, t.tagId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
     }.one(implicit rs => Item(i))
-      .toMany(Tag.opt(t))
+      .toMany(Tag.opt(tg))
       .map {
       (item: Item, tags: Seq[Tag]) => {
         item.tags ++= tags
@@ -113,13 +116,62 @@ object Item extends SQLSyntaxSupport[Item] {
     ).map(implicit rs => Item(i)).list.apply()
   }
 
-  def findByKeywords(keywords: String, account_id: Long, offset: Int, limit: Int)(implicit session: DBSession = autoSession): List[Item] = {
-    sql"""
-      select ${i.result.*}
-        from ${Item.as(i)}
-        where match words against (${keywords})
-    """
-      .map(implicit rs => Item(i)).list.apply()
+  def findByKeywordsAndTags(accountId: Long, offset: Int, limit: Int, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): List[Item] = {
+    val (match_it, search_tg, except_it) = (ItemTag.syntax("match_it"), Tag.syntax("search_tg"), ItemTag.syntax("except_it"))
+    val x = SubQuery.syntax("x", i.resultName)
+
+    withSQL[Item](
+      select(sqls"${x(i).result.*}, ${tg.result.*}")
+        .from(
+          select(sqls"${i.result.*}").from(Item as i)
+            .where.eq(i.accountId, accountId)
+            .and.append(sqls"match words against (${keywords})")
+            .orderBy(i.rate).desc
+            .limit(limit).offset(offset).as(x))
+        .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
+        .where.in(x(i).itemId,
+          select(distinct(match_it.result.itemId))
+            .from(ItemTag as match_it)
+            .where.notExists( // 差集合が空ならば条件にマッチするということ
+            select
+              .from(Tag as search_tg)
+              .where.in(search_tg.name, tags) // 検索条件に一致するタグの一覧
+              .and.notExists( // 検索条件に一致するタグの一覧との差集合を求める
+              select
+                .from(ItemTag as except_it)
+                .where.eq(search_tg.tagId,except_it.tagId)
+                .and.eq(except_it.itemId,match_it.itemId))))
+    ).one(implicit rs => Item(x(i).resultName))
+      .toMany(Tag.opt(tg))
+      .map((item, tags) => {item.tags ++= tags; item})
+      .list.apply()
+  }
+
+
+  def countByKeywordsAndTags(accountId: Long, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): Long = {
+    val (match_it, search_tg, except_it) = (ItemTag.syntax("match_it"), Tag.syntax("search_tg"), ItemTag.syntax("except_it"))
+    val x = SubQuery.syntax("x", i.resultName)
+
+    withSQL(
+      select(sqls"count(1)")
+        .from(
+        select(sqls"${i.result.*}").from(Item as i)
+          .where.eq(i.accountId, accountId)
+          .and.append(sqls"match words against (${keywords})").as(x))
+        .where.in(x(i).itemId,
+        select(distinct(match_it.result.itemId))
+          .from(ItemTag as match_it)
+          .where.notExists( // 差集合が空ならば条件にマッチするということ
+          select
+            .from(Tag as search_tg)
+            .where.in(search_tg.name, tags) // 検索条件に一致するタグの一覧
+            .and.notExists( // 検索条件に一致するタグの一覧との差集合を求める
+            select
+              .from(ItemTag as except_it)
+              .where.eq(search_tg.tagId,except_it.tagId)
+              .and.eq(except_it.itemId,match_it.itemId))))
+    ).map(rs => rs.long(1)).single.apply().get
   }
 
   def countAll()(implicit session: DBSession = autoSession): Long = {

@@ -1,77 +1,36 @@
 package controllers
 
-import models.{Permission, Item}
-import com.github.tototoshi.play2.json4s.native._
-import org.json4s.{Extraction, DefaultFormats}
-import play.api.mvc._
-import jp.t2v.lab.play2.auth.AuthElement
-import org.json4s.native.Serialization
-import org.joda.time._
+import models._
+import org.json4s.{Extraction, FieldSerializer, DefaultFormats}
 import org.json4s.ext.JodaTimeSerializers
-import net.java.sen.SenFactory
-import net.java.sen.dictionary.Token
-import scala.collection.JavaConversions._
 
 case class ItemForm(content: String)
+case class SearchCount(count: Long)
 
-object ItemController extends Controller with AuthElement with AuthConfigImpl with Json4s {
+object ItemController extends BaseController[ItemForm, Item] {
 
-  implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
-  //implicit val formats = DefaultFormats
+  override implicit val formats = DefaultFormats +
+    FieldSerializer[Item](FieldSerializer.ignore("words")) +
+    new SimpleTagSerializer ++
+    JodaTimeSerializers.all
 
-  def items(page: Int) = StackAction(AuthorityKey -> Permission.NormalUser) {
+  //TODO: null返すのはダメ。直す。
+  override def findByAccountId(accountId: Long, offset: Int, limit: Int) = null
+  override def createInstance(user: User, form : ItemForm) : Item = null
+  override def updateInstance(item: Item, form : ItemForm) = null
+  override def findById(itemId: Long): Option[Task] = null
+
+  override def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String], tags:List[String]) : List[Item] =
+    Item.findByKeywordsAndTags(accountId, offset, limit, generateKeywords(keywords), tags)
+
+
+  def count(words:String, tags:String) = StackAction(AuthorityKey -> Permission.NormalUser) {
     implicit request =>
-
-      if (page < 1) {
-        play.Logger.error("invalid page number")
-        BadRequest("invalid page number")
-      }
-      val limit = 5
-      val offset = (page - 1) * limit
-
-      play.Logger.info("items")
       val user = loggedIn
-      val items = Item.findByAccountId(user.accountId, offset, limit)
-      play.Logger.info("items length = " + items.length)
-      play.Logger.info(Serialization.write(items))
-      Ok(Extraction.decompose(items)).as("application/json")
+      val size = Item.countByKeywordsAndTags(user.accountId, words, tags.split(" ").toList)
+      play.Logger.info("count = " + size)
+      Ok(Extraction.decompose(SearchCount(size))).as("application/json")
   }
 
-  def newItem = StackAction(json, AuthorityKey -> Permission.NormalUser) {
-    implicit request =>
-      play.Logger.info("newitem entry")
-      val user = loggedIn
-      val form: ItemForm = request.body.extract[ItemForm]
 
-      val tagger = SenFactory.getStringTagger(null)
-      val tokens = new java.util.ArrayList[Token]()
-      tagger.analyze(form.content, tokens)
-
-      val words = tokens.map(x => x.getSurface).mkString(" ")
-      play.Logger.info(words)
-
-      val item = Item.create(form.content, words, 0, DateTime.now(), DateTime.now(), Option.empty[DateTime], user.accountId)
-      play.Logger.info("newitem exit")
-      Ok(Extraction.decompose(item)).as("application/json")
-  }
-
-  def search(words: String) = StackAction(AuthorityKey -> Permission.NormalUser) {
-    implicit request => {
-      play.Logger.info("search words = " + words)
-      val limit = 10
-      val offset = 0
-
-      val tagger = SenFactory.getStringTagger(null)
-      val tokens = new java.util.ArrayList[Token]()
-      tagger.analyze(words, tokens)
-
-      val keywords = tokens.map(x => "+" + x.getSurface).mkString(" ")
-
-      val user = loggedIn
-      val items = Item.findByKeywords(keywords, user.accountId, offset, limit)
-      play.Logger.info("search result length = " + items.length)
-      play.Logger.info(Serialization.write(items))
-      Ok(Extraction.decompose(items)).as("application/json")
-    }
-  }
 }
