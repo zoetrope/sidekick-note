@@ -5,6 +5,7 @@
 ///<reference path='../models/Tag.ts' />
 ///<reference path='../services/ItemRenderService.ts' />
 ///<reference path='../services/IUpdatableResourceClass.ts' />
+///<reference path='../controllers/SearchParam.ts' />
 
 module controllers {
     'use strict';
@@ -32,7 +33,7 @@ module controllers {
         toMarkdown(input:string) : string;
         addTask : Function;
         updateTask : Function;
-        searchTask(words:string, tags:string) : void;
+        searchTask(page: number, words:string, tags:string) : void;
 
         // event
         keypress($event:ng.IAngularEvent) : void;
@@ -47,14 +48,14 @@ module controllers {
 
     export class TaskController {
 
-        constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public $location: ng.ILocationService, public itemRenderService:services.ItemRenderService) {
+        constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public $location: ng.ILocationService, public $stateParams:SearchParam, public itemRenderService:services.ItemRenderService) {
 
-            $scope.totalItems = 100;
+            $scope.totalItems = 0;
             $scope.currentPage = 1;
             $scope.numPages = 10;
-            $scope.maxSize = 5;
+            $scope.maxSize = 10;
             $scope.changePage = (page:number)=>{
-                $location.search({page: page})
+                this.search(page)
             }
 
             $scope.rate = 1
@@ -83,17 +84,22 @@ module controllers {
                 $scope.allTags = data.map(tag => tag.name)
             });
 
-            this.tasksResource.query(
-                (data)=> {
-                    $scope.tasks = data.map(x=>{x.renderedContent = $scope.toMarkdown(x.content); return x})
-                },
-                (reason)=> {
-                    alert("error get tasks")
-                });
-
             $scope.$on("search", (ev, words, tags)=>{
-                this.searchTask(words, tags)
-            })
+                this.searchTask(1, words, tags)
+            });
+
+            if ($stateParams.words || $stateParams.tags) {
+                this.searchTask(1, $stateParams.words, $stateParams.tags)
+            } else {
+                this.tasksResource.query(
+                    (data)=> {
+                        $scope.tasks = data.map(x=>{x.renderedContent = $scope.toMarkdown(x.content); return x})
+                    },
+                    (reason)=> {
+                        alert("error get tasks")
+                    });
+            }
+
         }
 
         taskResource:services.IUpdatableResourceClass;
@@ -152,14 +158,29 @@ module controllers {
             })
         }
 
-        searchTask(words: string, tags: string) {
-            this.searchTasksResource.query({words: words, tags: tags},
+        searchTask(page: number, words: string, tags: string) {
+            //TODO: 件数の取得
+            /*
+            this.countResource.get({words: words, tags: tags},
+                (data)=>{
+                    this.$scope.totalItems = data.count;
+                    this.$scope.numPages = Math.ceil(this.$scope.totalItems / 20)
+                },
+                (reason)=>{
+
+                });
+            */
+
+            this.searchTasksResource.query({page: page, words: words, tags: tags},
                 (data)=> {
                     this.$scope.tasks = data.map(x=>{x.renderedContent = this.$scope.toMarkdown(x.content); return x})
+                    //TODO: URLの変更
                 },
                 (reason)=> {
                     alert("search ng")
                 });
         }
-    }
+
+        //changePage(page:number){}
+   }
 }

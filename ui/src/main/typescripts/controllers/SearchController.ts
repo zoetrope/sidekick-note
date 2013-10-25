@@ -3,6 +3,7 @@
 
 ///<reference path='../services/ItemRenderService.ts' />
 ///<reference path='../models/Item.ts' />
+///<reference path='../controllers/SearchParam.ts' />
 
 module controllers {
     'use strict';

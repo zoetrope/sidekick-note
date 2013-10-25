@@ -8,6 +8,7 @@
 ///<reference path='controllers/SearchController.ts' />
 ///<reference path='controllers/UserController.ts' />
 ///<reference path='controllers/SearchConditionController.ts' />
+///<reference path='controllers/SearchParam.ts' />
 ///<reference path='models/Article.ts' />
 ///<reference path='models/Item.ts' />
 ///<reference path='models/QuickNote.ts' />
@@ -43,7 +44,7 @@ module App {
                     templateUrl: "/assets/views/quick_note.html"
                 })
                 .state('task', {
-                    url: "/task",
+                    url: "/task?page&words&tags",
                     abstract: true,
                     templateUrl: "/assets/views/task.html"
                 })
@@ -55,7 +56,7 @@ module App {
                     url: "/article",
                     templateUrl: "/assets/views/article.html"
                 })
-                .state('search', {
+                .state('search?page&words&tags', {
                     url: "/search",
                     templateUrl: "/assets/views/search.html"
                 })
@@ -116,9 +117,9 @@ module App {
             ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.QuickNoteController => {
                 return new controllers.QuickNoteController($scope, $resource, itemRenderService)
             }])
-     .controller("TaskController", ["$scope", "$resource", "$location", "itemRenderService",
-            ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
-                return new controllers.TaskController($scope, $resource, $location, itemRenderService)
+     .controller("TaskController", ["$scope", "$resource", "$location", "$stateParams", "itemRenderService",
+            ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, $stateParams:controllers.SearchParam, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
+                return new controllers.TaskController($scope, $resource, $location, $stateParams, itemRenderService)
             }])
      .controller("ArticleController", ["$scope", "$resource", "itemRenderService",
             ($scope:controllers.ArticleScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.ArticleController => {
