@@ -45,6 +45,7 @@ module controllers {
 
             this.countResource = $resource("/api/items/count")
 
+            $scope.searchWords = ""
 
             $scope.searchSelectedTags = []
             $scope.searchSelectOptions = {

@@ -14,11 +14,18 @@ object ItemController extends BaseController[ItemForm, Item] {
     new SimpleTagSerializer ++
     JodaTimeSerializers.all
 
-  //TODO: null返すのはダメ。直す。
-  override def findByAccountId(accountId: Long, offset: Int, limit: Int) = null
-  override def createInstance(user: User, form : ItemForm) : Item = null
-  override def updateInstance(item: Item, form : ItemForm) = null
-  override def findById(itemId: Long): Option[Task] = null
+  override def findByAccountId(accountId: Long, offset: Int, limit: Int) = {
+    null
+  }
+  override def createInstance(user: User, form : ItemForm) : Item = {
+    null
+  }
+  override def updateInstance(item: Item, form : ItemForm) = {
+
+  }
+  override def findById(itemId: Long): Option[Task] = {
+    null
+  }
 
   override def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String], tags:List[String]) : List[Item] =
     Item.findByKeywordsAndTags(accountId, offset, limit, generateKeywords(keywords), tags)

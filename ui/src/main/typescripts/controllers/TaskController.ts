@@ -55,7 +55,7 @@ module controllers {
             $scope.numPages = 10;
             $scope.maxSize = 10;
             $scope.changePage = (page:number)=>{
-                this.search(page)
+                this.changePage(page)
             }
 
             $scope.rate = 1
@@ -181,6 +181,8 @@ module controllers {
                 });
         }
 
-        //changePage(page:number){}
+        changePage(page:number) {
+
+        }
    }
 }

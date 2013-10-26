@@ -116,8 +116,31 @@ object Item extends SQLSyntaxSupport[Item] {
     ).map(implicit rs => Item(i)).list.apply()
   }
 
-  def findByKeywordsAndTags(accountId: Long, offset: Int, limit: Int, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): List[Item] = {
+  def matchTagsQuery(tags: List[String]) : SQLBuilder[_]= {
     val (match_it, search_tg, except_it) = (ItemTag.syntax("match_it"), Tag.syntax("search_tg"), ItemTag.syntax("except_it"))
+
+    select(distinct(match_it.result.itemId))
+      .from(ItemTag as match_it)
+      .where.notExists(// 差集合が空ならば条件にマッチするということ
+      select
+        .from(Tag as search_tg)
+        .where.in(search_tg.name, tags) // 検索条件に一致するタグの一覧
+        .and.notExists(// 検索条件に一致するタグの一覧との差集合を求める
+        select
+          .from(ItemTag as except_it)
+          .where.eq(search_tg.tagId, except_it.tagId)
+          .and.eq(except_it.itemId, match_it.itemId)))
+  }
+
+  def matchKeywordsQuery(keywords:String) : Option[SQLSyntax] = {
+    if (keywords == null || keywords.isEmpty) {
+      None
+    } else {
+      Some(sqls"match words against (${keywords})")
+    }
+  }
+
+  def findByKeywordsAndTags(accountId: Long, offset: Int, limit: Int, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): List[Item] = {
     val x = SubQuery.syntax("x", i.resultName)
 
     withSQL[Item](
@@ -125,32 +148,19 @@ object Item extends SQLSyntaxSupport[Item] {
         .from(
           select(sqls"${i.result.*}").from(Item as i)
             .where.eq(i.accountId, accountId)
-            .and.append(sqls"match words against (${keywords})")
+            .and(sqls.toAndConditionOpt(matchKeywordsQuery(keywords)))
             .orderBy(i.rate).desc
             .limit(limit).offset(offset).as(x))
         .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
-        .where.in(x(i).itemId,
-          select(distinct(match_it.result.itemId))
-            .from(ItemTag as match_it)
-            .where.notExists( // 差集合が空ならば条件にマッチするということ
-            select
-              .from(Tag as search_tg)
-              .where.in(search_tg.name, tags) // 検索条件に一致するタグの一覧
-              .and.notExists( // 検索条件に一致するタグの一覧との差集合を求める
-              select
-                .from(ItemTag as except_it)
-                .where.eq(search_tg.tagId,except_it.tagId)
-                .and.eq(except_it.itemId,match_it.itemId))))
+        .where.in(x(i).itemId, matchTagsQuery(tags))
     ).one(implicit rs => Item(x(i).resultName))
       .toMany(Tag.opt(tg))
       .map((item, tags) => {item.tags ++= tags; item})
       .list.apply()
   }
 
-
   def countByKeywordsAndTags(accountId: Long, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): Long = {
-    val (match_it, search_tg, except_it) = (ItemTag.syntax("match_it"), Tag.syntax("search_tg"), ItemTag.syntax("except_it"))
     val x = SubQuery.syntax("x", i.resultName)
 
     withSQL(
@@ -158,19 +168,9 @@ object Item extends SQLSyntaxSupport[Item] {
         .from(
         select(sqls"${i.result.*}").from(Item as i)
           .where.eq(i.accountId, accountId)
-          .and.append(sqls"match words against (${keywords})").as(x))
-        .where.in(x(i).itemId,
-        select(distinct(match_it.result.itemId))
-          .from(ItemTag as match_it)
-          .where.notExists( // 差集合が空ならば条件にマッチするということ
-          select
-            .from(Tag as search_tg)
-            .where.in(search_tg.name, tags) // 検索条件に一致するタグの一覧
-            .and.notExists( // 検索条件に一致するタグの一覧との差集合を求める
-            select
-              .from(ItemTag as except_it)
-              .where.eq(search_tg.tagId,except_it.tagId)
-              .and.eq(except_it.itemId,match_it.itemId))))
+          .and(sqls.toAndConditionOpt(matchKeywordsQuery(keywords)))
+          .as(x))
+        .where.in(x(i).itemId, matchTagsQuery(tags))
     ).map(rs => rs.long(1)).single.apply().get
   }
 
