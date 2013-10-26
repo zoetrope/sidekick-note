@@ -30,7 +30,7 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
         BadRequest("invalid page number")
       }
       else {
-        val limit = 200
+        val limit = 20
         val offset = (page - 1) * limit
 
         val user = loggedIn

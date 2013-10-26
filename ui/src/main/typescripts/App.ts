@@ -56,8 +56,8 @@ module App {
                     url: "/article",
                     templateUrl: "/assets/views/article.html"
                 })
-                .state('search?page&words&tags', {
-                    url: "/search",
+                .state('search', {
+                    url: "/search?page&words&tags",
                     templateUrl: "/assets/views/search.html"
                 })
                 .state('login', {
