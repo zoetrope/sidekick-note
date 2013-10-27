@@ -150,14 +150,15 @@ object Item extends SQLSyntaxSupport[Item] {
             .where.eq(i.accountId, accountId)
             .and(sqls.toAndConditionOpt(matchKeywordsQuery(keywords)))
             .orderBy(i.rate).desc
-            .limit(limit).offset(offset).as(x))
+            //.limit(limit).offset(offset)
+            .as(x))
         .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.in(x(i).itemId, matchTagsQuery(tags))
     ).one(implicit rs => Item(x(i).resultName))
       .toMany(Tag.opt(tg))
       .map((item, tags) => {item.tags ++= tags; item})
-      .list.apply()
+      .list.apply().drop(offset).take(limit)
   }
 
   def countByKeywordsAndTags(accountId: Long, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): Long = {

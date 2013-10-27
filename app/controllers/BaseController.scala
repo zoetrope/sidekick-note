@@ -30,7 +30,7 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
         BadRequest("invalid page number")
       }
       else {
-        val limit = 20
+        val limit = 200
         val offset = (page - 1) * limit
 
         val user = loggedIn
@@ -128,11 +128,12 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
 
   //TODO: articleのタイトルやタグもwordsに含めるためのメソッドを用意する
 
-  protected def generateKeywords(input: List[String]) : String = {
-    //TODO: 上のメソッドとほとんど同じ。共通化とか
+  protected def generateKeywords(inputs: List[String]) : String = {
     val tagger = SenFactory.getStringTagger(null)
-    val tokens = new java.util.ArrayList[Token]()
-    tagger.analyze(input.mkString(" "), tokens)
-    tokens.map(x => "+" + x.getSurface).mkString(" ")
+    inputs.map(input => {
+      val tokens = new java.util.ArrayList[Token]()
+      tagger.analyze(input, tokens)
+      "+\"" + tokens.map(x => x.getSurface).mkString(" ") + "\""
+    }).mkString(" ");
   }
 }

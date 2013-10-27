@@ -34,7 +34,7 @@ object ItemController extends BaseController[ItemForm, Item] {
   def count(words:String, tags:String) = StackAction(AuthorityKey -> Permission.NormalUser) {
     implicit request =>
       val user = loggedIn
-      val size = Item.countByKeywordsAndTags(user.accountId, words, tags.split(" ").toList)
+      val size = Item.countByKeywordsAndTags(user.accountId, generateKeywords(words.split(" ").toList), tags.split(" ").toList)
       play.Logger.info("count = " + size)
       Ok(Extraction.decompose(SearchCount(size))).as("application/json")
   }

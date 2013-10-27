@@ -52,7 +52,7 @@ module controllers {
                 'multiple': true,
                 'simple_tags': true,
                 'allowClear': true,
-                'closeOnSelect': false,
+                'closeOnSelect': true,
                 'createSearchChoice': null,
                 'tags': () => {
                     return $scope.allTags;
@@ -88,6 +88,7 @@ module controllers {
 
             var tags = this.$scope.searchSelectedTags.join(" ")
             var words = this.$scope.searchWords;
+            this.$scope.currentPage = page
 
             //TODO: 件数の取得
             this.countResource.get({words: words, tags: tags},
@@ -99,7 +100,8 @@ module controllers {
 
                 });
 
-            this.$location.search({page: page, words: words, tags:tags})
+            //this.$location.search({page: page, words: words, tags:tags})
+
             this.itemsResource.query({page: page, words: words, tags: tags},
                 (data)=> {
                     this.$scope.items = data.map(x=>{x.content = marked(x.content); return x})
