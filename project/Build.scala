@@ -11,10 +11,10 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     jdbc,
-    "com.github.seratch" %% "scalikejdbc" % "[1.6,)",
-    "com.github.seratch" %% "scalikejdbc-interpolation" % "[1.6,)",
-    "com.github.seratch" %% "scalikejdbc-play-plugin" % "[1.6,)",
-    "com.github.seratch" %% "scalikejdbc-test" % "[1.6,)" % "test",
+    "com.github.seratch" %% "scalikejdbc" % "1.6.10",
+    "com.github.seratch" %% "scalikejdbc-interpolation" % "1.6.10",
+    "com.github.seratch" %% "scalikejdbc-play-plugin" % "1.6.10",
+    "com.github.seratch" %% "scalikejdbc-test" % "1.6.10" % "test",
     "mysql" % "mysql-connector-java" % "5.1.26",
     "com.typesafe" %% "play-plugins-redis" % "2.1.1",
     "com.github.tototoshi" %% "play-json4s-native" % "0.1.0",
