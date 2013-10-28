@@ -20,6 +20,7 @@ PUT         /api/quick_notes/:id           controllers.QuickNoteController.updat
 GET         /api/tasks                     controllers.TaskController.all(page:Int ?=1)
 POST        /api/tasks                     controllers.TaskController.create
 GET         /api/tasks/search              controllers.TaskController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
+GET         /api/tasks/count               controllers.TaskController.count(words: String ?= "", tags: String ?= "")
 PUT         /api/tasks/:id                 controllers.TaskController.update(id:Int)
 
 GET         /api/articles                  controllers.ArticleController.all(page:Int ?=1)

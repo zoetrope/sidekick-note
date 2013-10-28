@@ -1,18 +1,36 @@
 <div ng-controller="TaskController" class="row">
     <div class="col-sm-4 well" ng-controller="SearchConditionController">
-        <input type="text" ui-select2="searchSelectOptions" ng-model="searchSelectedTags" style="width:100%"/>
-        <button ng-click="searchTask()">search</button>
-        {{searchSelectedTags | json}}
-        <input ng-model="searchText">
 
-        <ul class="nav nav-list">
-            <li ng-class="{ active: $state.includes('task.list') }"><a ui-sref="task.list">All Tasks</a></li>
-        </ul>
+        <form role="form">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title"  ng-model="searchTitle">
+            </div>
+            <div class="form-group">
+                <label for="keywords">Keywords</label>
+                <input type="text" class="form-control" id="keywords" ng-model="searchText">
+            </div>
+            <div class="form-group">
+                <label for="tags">Tags</label>
+                <input type="text" id="tags" ui-select2="searchSelectOptions" ng-model="searchSelectedTags" style="width:100%"/>
+            </div>
+            <div class="form-group">
+                <label for="sortOrder">Sort Order</label>
+                <input type="number" class="form-control" id="sortOrder" ng-model="searchSortOrder">
+            </div>
+            <button class="btn btn-default" ng-click="addSearchCondition()">Add</button>
+            <button class="btn btn-default" ng-click="searchTask(searchText, searchSelectedTags.join(' '))">Search</button>
+        </form>
 
+        <div class="list-group">
+            <div ng-repeat="cond in searchConditions | orderBy:'sortOrder':false" class="list-group-item">
+                <a href="#" ng-click="searchTask(cond.keywords, cond.tags)">{{cond.title}}</a>
+            </div>
+        </div>
         <pre>
-          $state = {{$state.current.name}}
-          $stateParams = {{$stateParams}}
-          $state full url = {{ $state.$current.url.source }}
+$state = {{$state.current.name}}
+$stateParams = {{$stateParams}}
+$state full url = {{ $state.$current.url.source }}
         </pre>
     </div>
 
@@ -21,8 +39,8 @@
             <div class="panel-body">
                 <form ng-submit="addTask()" role="form" class="form">
                     <p>
-                        <textarea rows="3" ng-model="inputContent" class="form-control"
-                                  placeholder="add new note here" ng-disabled="sending"
+                        <textarea rows="{{getComfortableRowNumber(inputContent)}}" ng-model="inputContent" class="form-control"
+                                  placeholder="add new task here" ng-disabled="sending"
                                   kick-focus="hasFocus"
                                   ui-keypress="{'ctrl-10':'keypress($event)'}"/>
                     </p>

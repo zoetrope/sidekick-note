@@ -76,7 +76,15 @@ object TaskController extends BaseController[TaskForm, Task] {
   }
 
   override def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String],  tags:List[String]) : List[Task] =
-    Task.findByTags(accountId, offset, limit, tags)
+    Task.findByKeywordsAndTags(accountId, offset, limit, generateKeywords(keywords), tags)
+
+  def count(words:String, tags:String) = StackAction(AuthorityKey -> Permission.NormalUser) {
+    implicit request =>
+      val user = loggedIn
+      val size = Task.countByKeywordsAndTags(user.accountId, generateKeywords(words.split(" ").toList), tags.split(" ").toList)
+      play.Logger.info("count = " + size)
+      Ok(Extraction.decompose(SearchCount(size))).as("application/json")
+  }
 
   protected def parseStatus(input: String, defaultStatus: TaskStatus) : TaskStatus = {
     try {

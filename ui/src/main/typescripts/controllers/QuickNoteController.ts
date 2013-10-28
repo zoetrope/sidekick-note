@@ -32,6 +32,8 @@ module controllers {
 
         // event
         keypress($event : ng.IAngularEvent) : void;
+
+        getComfortableRowNumber(content:string) : number;
     }
 
     export class QuickNoteController {
@@ -81,6 +83,18 @@ module controllers {
                 $event.preventDefault()
             };
 
+            //TODO: Taskと共通化すべき
+            $scope.getComfortableRowNumber = (content:string) => {
+                var rows = 3;
+                var match_str = content.match(/\n/g);
+                if (match_str) {
+                    rows += match_str.length;
+                }
+                if (rows > 40) {
+                    rows = 40;
+                }
+                return rows;
+            };
         }
 
 

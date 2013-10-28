@@ -6,7 +6,7 @@
         </td>
         <td>
             <div ng-bind-html-unsafe="task.renderedContent" ng-hide="task.editable"/>
-            <textarea rows="3" ng-model="task.content" class="form-control" ng-show="task.editable"/>
+            <textarea rows="{{getComfortableRowNumber(task.content)}}" ng-model="task.content" class="form-control" ng-show="task.editable"/>
         </td>
         <td width="30px">
             <div id="task-menu" class="btn-group pull-right">

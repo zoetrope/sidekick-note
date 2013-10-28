@@ -42,7 +42,7 @@ class Task
 
 }
 
-object Task extends SQLSyntaxSupport[Task] {
+object Task extends SQLSyntaxSupport[Task] with ItemModel[Task] {
 
   override val tableName = "tasks"
 
@@ -102,36 +102,45 @@ object Task extends SQLSyntaxSupport[Task] {
       .list.apply()
   }
 
-  def findByTags(accountId: Long, offset: Int, limit: Int, tags: List[String])(implicit session: DBSession = autoSession): List[Task] = {
-    val (match_it, search_tg, except_it) = (ItemTag.syntax("match_it"), Tag.syntax("search_tg"), ItemTag.syntax("except_it"))
+  def findByKeywordsAndTags(accountId: Long, offset: Int, limit: Int, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): List[Task] = {
+    val x = SubQuery.syntax("x", i.resultName)
+
     withSQL[Task](
-      select.from(Item as i)
-        .join(Task as t).on(t.itemId, i.itemId)
-        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+      select(sqls"${x(i).result.*}, ${x(t).result.*}, ${tg.result.*}")
+        .from(
+        select(sqls"${i.result.*}, ${t.result.*}").from(Item as i)
+          .join(Task as t).on(t.itemId, i.itemId)
+          .where.eq(i.accountId, accountId)
+          .and.not.eq(t.status, "Completed")
+          .and(sqls.toAndConditionOpt(matchKeywordsQuery(keywords)))
+          .orderBy(i.rate).desc
+          //.limit(limit).offset(offset)
+          .as(x))
+        .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
-        .where.eq(i.accountId, accountId)
-        .and.not.eq(t.status, "Completed")
-        .and.in(i.itemId,
-            select(distinct(match_it.result.itemId))
-              .from(ItemTag as match_it)
-              .where.notExists( // 差集合が空ならば条件にマッチするということ
-                select
-                  .from(Tag as search_tg)
-                  .where.in(search_tg.name, tags) // 検索条件に一致するタグの一覧
-                  .and.notExists( // 検索条件に一致するタグの一覧との差集合を求める
-                    select
-                      .from(ItemTag as except_it)
-                      .where.eq(search_tg.tagId,except_it.tagId)
-                      .and.eq(except_it.itemId,match_it.itemId))))
-        .orderBy(i.createdAt).desc
-        .limit(limit).offset(offset)
-    ).one(implicit rs => Task(i, t))
+        .where.in(x(i).itemId, matchTagsQuery(tags))
+    ).one(implicit rs => Task(x(i).resultName, x(t).resultName))
       .toMany(Tag.opt(tg))
-      .map((task, tags) => {
-      task.tags ++= tags; task
-    }).list.apply()
+      .map((task, tags) => {task.tags ++= tags; task})
+      .list.apply().drop(offset).take(limit)
   }
 
+  def countByKeywordsAndTags(accountId: Long, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): Long = {
+    val x = SubQuery.syntax("x", i.resultName)
+
+    withSQL(
+      select(sqls"count(1)")
+        .from(
+        select(sqls"${i.result.*}, ${t.result.*}").from(Item as i)
+          .join(Task as t).on(t.itemId, i.itemId)
+          .where.eq(i.accountId, accountId)
+          .and.not.eq(t.status, "Completed")
+          .and(sqls.toAndConditionOpt(matchKeywordsQuery(keywords)))
+          .as(x))
+        .where.in(x(i).itemId, matchTagsQuery(tags))
+    ).map(rs => rs.long(1)).single.apply().get
+  }
+  
   def create
   (
     content: String,

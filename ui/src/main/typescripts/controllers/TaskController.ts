@@ -44,6 +44,10 @@ module controllers {
         maxSize : number;
 
         changePage(page: number) : void;
+        currentKeywords : string;
+        currentTags : string;
+
+        getComfortableRowNumber(content:string) : number;
     }
 
     export class TaskController {
@@ -55,7 +59,7 @@ module controllers {
             $scope.numPages = 10;
             $scope.maxSize = 10;
             $scope.changePage = (page:number)=>{
-                this.changePage(page)
+                this.searchTask(page, $scope.currentKeywords, $scope.currentTags)
             }
 
             $scope.rate = 1
@@ -79,6 +83,7 @@ module controllers {
             this.taskResource = <services.IUpdatableResourceClass>this.$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
             this.tagsResource = $resource("/api/tags")
             this.searchTasksResource = $resource("/api/tasks/search")
+            this.countResource = $resource("/api/tasks/count")
 
             this.tagsResource.query(data => {
                 $scope.allTags = data.map(tag => tag.name)
@@ -88,17 +93,22 @@ module controllers {
                 this.searchTask(1, words, tags)
             });
 
-            if ($stateParams.words || $stateParams.tags) {
-                this.searchTask(1, $stateParams.words, $stateParams.tags)
-            } else {
-                this.tasksResource.query(
-                    (data)=> {
-                        $scope.tasks = data.map(x=>{x.renderedContent = $scope.toMarkdown(x.content); return x})
-                    },
-                    (reason)=> {
-                        alert("error get tasks")
-                    });
-            }
+            this.searchTask(1, $stateParams.words, $stateParams.tags)
+
+            $scope.inputContent = ""
+
+            //TODO: Directiveにできるんじゃないだろうか？
+            $scope.getComfortableRowNumber = (content:string) => {
+                var rows = 3;
+                var match_str = content.match(/\n/g);
+                if (match_str) {
+                    rows += match_str.length;
+                }
+                if (rows > 40) {
+                    rows = 40;
+                }
+                return rows;
+            };
 
         }
 
@@ -106,6 +116,7 @@ module controllers {
         tasksResource:ng.resource.IResourceClass;
         tagsResource:ng.resource.IResourceClass;
         searchTasksResource:ng.resource.IResourceClass;
+        countResource:ng.resource.IResourceClass;
 
         addTask() {
             this.$scope.sending = true;
@@ -159,8 +170,11 @@ module controllers {
         }
 
         searchTask(page: number, words: string, tags: string) {
-            //TODO: 件数の取得
-            /*
+
+            if (page == null) page = 1
+            if (words == null) words = ""
+            if (tags == null) tags = ""
+
             this.countResource.get({words: words, tags: tags},
                 (data)=>{
                     this.$scope.totalItems = data.count;
@@ -169,20 +183,18 @@ module controllers {
                 (reason)=>{
 
                 });
-            */
 
             this.searchTasksResource.query({page: page, words: words, tags: tags},
                 (data)=> {
                     this.$scope.tasks = data.map(x=>{x.renderedContent = this.$scope.toMarkdown(x.content); return x})
                     //TODO: URLの変更
+                    this.$scope.currentKeywords = words
+                    this.$scope.currentTags = tags
                 },
                 (reason)=> {
                     alert("search ng")
                 });
         }
 
-        changePage(page:number) {
-
-        }
    }
 }

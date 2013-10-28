@@ -90,7 +90,6 @@ module controllers {
             var words = this.$scope.searchWords;
             this.$scope.currentPage = page
 
-            //TODO: 件数の取得
             this.countResource.get({words: words, tags: tags},
                 (data)=>{
                     this.$scope.totalItems = data.count;

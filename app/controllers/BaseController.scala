@@ -130,7 +130,7 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
 
   protected def generateKeywords(inputs: List[String]) : String = {
     val tagger = SenFactory.getStringTagger(null)
-    inputs.map(input => {
+    inputs.filter(s => s != null && !s.isEmpty).map(input => {
       val tokens = new java.util.ArrayList[Token]()
       tagger.analyze(input, tokens)
       "+\"" + tokens.map(x => x.getSurface).mkString(" ") + "\""

@@ -1,21 +1,10 @@
-<tabset>
-    <tab heading="New">
-        <pagination total-items="totalItems" current-page="currentPage" max-size="maxSize"
-                    on-select-page="changePage(page)"
-                    class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"
-                     ></pagination>
-        <pre>Page: {{currentPage}} / {{numPages}} ({{maxSize}}, {{totalItems}})</pre>
-        <div class="list-group">
-            <div ng-repeat="task in tasks | filter:{status:'New'} | orderBy:'rate':true" class="list-group-item">
-                <kick-item task="task"></kick-item>
-            </div>
-        </div>
-    </tab>
-    <tab heading="Completed">
-        <div class="list-group">
-            <div ng-repeat="task in tasks | filter:{status:'Completed'} | orderBy:'completedAt':true" class="list-group-item">
-                <kick-item task="task"></kick-item>
-            </div>
-        </div>
-    </tab>
-</tabset>
+<pagination total-items="totalItems" current-page="currentPage" max-size="maxSize"
+            on-select-page="changePage(page)"
+            class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"
+             ></pagination>
+<pre>Page: {{currentPage}} / {{numPages}} ({{maxSize}}, {{totalItems}})</pre>
+<div class="list-group">
+    <div ng-repeat="task in tasks" class="list-group-item">
+        <kick-item task="task"></kick-item>
+    </div>
+</div>

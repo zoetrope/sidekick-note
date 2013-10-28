@@ -9,7 +9,8 @@ module models {
             public title: string,
             public targetType: string,
             public keywords: string,
-            public tags: string
+            public tags: string,
+            public sortOrder: number
             )
         {
         }

@@ -3,7 +3,7 @@
         <div class="panel-body">
             <form ng-submit="addQuickNote()" role="form" class="form">
                 <p>
-                    <textarea rows="3" ng-model="inputContent" class="form-control"
+                    <textarea rows="{{getComfortableRowNumber(inputContent)}}" ng-model="inputContent" class="form-control"
                               placeholder="add new note here" ng-disabled="sending"
                               kick-focus="hasFocus"
                               ui-keypress="{'ctrl-10':'keypress($event)'}"/>
@@ -36,7 +36,7 @@
                 <tr>
                     <td>
                         <div ng-bind-html-unsafe="note.renderedContent" ng-hide="note.editable"/>
-                        <textarea rows="3" ng-model="note.content" class="form-control"
+                        <textarea rows="{{getComfortableRowNumber(note.content)}}" ng-model="note.content" class="form-control"
                                   ng-show="note.editable"/>
                     </td>
                     <td width="30px">
