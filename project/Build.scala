@@ -11,16 +11,16 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     jdbc,
-    "com.github.seratch" %% "scalikejdbc" % "[1.6,)",
-    "com.github.seratch" %% "scalikejdbc-interpolation" % "[1.6,)",
-    "com.github.seratch" %% "scalikejdbc-play-plugin" % "[1.6,)",
-    "com.github.seratch" %% "scalikejdbc-test" % "[1.6,)"  % "test",
+    "com.github.seratch" %% "scalikejdbc" % "1.6.10",
+    "com.github.seratch" %% "scalikejdbc-interpolation" % "1.6.10",
+    "com.github.seratch" %% "scalikejdbc-play-plugin" % "1.6.10",
+    "com.github.seratch" %% "scalikejdbc-test" % "1.6.10" % "test",
     "mysql" % "mysql-connector-java" % "5.1.26",
     "com.typesafe" %% "play-plugins-redis" % "2.1.1",
-    "com.github.tototoshi" %% "play-json4s-native" % "0.1.0",
+    "com.github.tototoshi" %% "play-json4s-native" % "0.2.0",
     "org.json4s" % "json4s-ext_2.10" % "3.1.0",
     "com.github.tototoshi" %% "play-flyway" % "0.2.0",
-    "jp.t2v" %% "play2.auth" % "0.10.1",
+    "jp.t2v" %% "play2.auth" % "0.10.1" exclude("org.scala-stm", "scala-stm_2.10.0"),
     "org.mindrot" % "jbcrypt" % "0.3m",
     "org.slf4j" % "slf4j-simple" % "1.7.5" % "provided"
   )
