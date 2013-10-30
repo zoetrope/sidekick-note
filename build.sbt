@@ -1,1 +1,1 @@
-//scalikejdbcSettings
+scalikejdbcSettings
