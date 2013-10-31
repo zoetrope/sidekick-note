@@ -21,3 +21,8 @@ input[type=checkbox]#task-status{
 #task-menu {
     vertical-align: top;
 }
+
+ul.task-menu {list-style:none;}
+ul.task-menu > li {float:right; margin-left: 10px;}
+
+.task-button {float:right;}

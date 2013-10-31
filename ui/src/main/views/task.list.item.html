@@ -1,46 +1,48 @@
-<table width="100%">
-    <tr>
-        <td width="25px">
-            <input id="task-status" type="checkbox" ng-model="task.status" ng-true-value="Completed" ng-false-value="New"
-                   ng-change="updateTask(task)">
-        </td>
-        <td>
-            <div ng-bind-html-unsafe="task.renderedContent" ng-hide="task.editable"/>
-            <textarea rows="{{getComfortableRowNumber(task.content)}}" ng-model="task.content" class="form-control" ng-show="task.editable"/>
-        </td>
-        <td width="30px">
-            <div id="task-menu" class="btn-group pull-right">
-                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><input type="checkbox" ng-model="task.editable"/>edit</li>
-                    <li><a href="#">delete</a></li>
-                </ul>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <div class="text-muted" ng-hide="task.editable">
-                {{task.tags.join(' ')}}
-            </div>
-            <div ng-show="task.editable">
-                <input type="text" ui-select2="inputSelectOptions" ng-model="task.tags" style="width:100%"/>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <rating class="pull-left" value="task.rate" max="5" readonly="!task.editable"></rating>
-            <span class="text-muted pull-right">
-                <small>
-                    {{task.dueDate}}
-                </small>
-            </span>
-        </td>
-    </tr>
-</table>
-<button ng-click="updateTask(task)" ng-show="task.editable">update</button>
+<div class="clearfix">
+    <div>
+        <div ng-bind-html-unsafe="task.renderedContent" ng-hide="task.editable"/>
+        <textarea rows="{{getComfortableRowNumber(task.content)}}" ng-model="task.content" class="form-control"
+                  ng-show="task.editable"/>
+    </div>
+
+    <div>
+        <div class="text-muted" ng-hide="task.editable">
+            {{task.tags.join(' ')}}
+        </div>
+        <div ng-show="task.editable">
+            <input type="text" ui-select2="inputSelectOptions" ng-model="task.tags" style="width:100%"/>
+        </div>
+    </div>
+
+    <div>
+
+        <div class="btn-group" ng-show="task.editable">
+            <button type="button" class="btn btn-sm btn-default" ng-model="task.status" btn-radio="'New'">
+                <span class="glyphicon glyphicon-unchecked"></span>  New
+            </button>
+            <button type="button" class="btn btn-sm btn-default" ng-model="task.status" btn-radio="'Completed'">
+                <span class="glyphicon glyphicon-check"></span>  Completed
+            </button>
+        </div>
+        <br ng-show="task.editable"/>
+        <rating class="pull-left" value="task.rate" max="5" readonly="!task.editable"></rating>
+
+        <span class="text-muted pull-right">
+            <small>
+                {{task.dueDate}}
+            </small>
+        </span>
+        <ul class="task-menu">
+            <li ng-click="deleteTask($index)" ng-hide="task.editable"><a href="#"><span
+                    class="glyphicon glyphicon-trash"></span>Delete</a></li>
+            <li ng-click="editTask($index)" ng-hide="task.editable"><a href="#"><span
+                    class="glyphicon glyphicon-edit"></span>Edit</a></li>
+        </ul>
+
+        <div class="task-button">
+            <button class="btn btn-sm btn-primary" ng-disabled="!canUpdate($index)" ng-click="updateTask(task)" ng-show="task.editable">update</button>
+            <button class="btn btn-sm btn-default" ng-click="cancel($index)" ng-show="task.editable">cancel</button>
+        </div>
+    </div>
+
+</div>

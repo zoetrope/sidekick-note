@@ -21,6 +21,7 @@ module controllers {
         // output
         tasks: models.Task[];
 
+        original: models.Task;
         // state
         sending : Boolean;
         hasFocus : Boolean;
@@ -34,6 +35,11 @@ module controllers {
         addTask : Function;
         updateTask : Function;
         searchTask(page: number, words:string, tags:string) : void;
+
+        editTask : Function;
+        deleteTask : Function;
+        cancel : Function;
+        canUpdate : Function;
 
         // event
         keypress($event:ng.IAngularEvent) : void;
@@ -110,6 +116,10 @@ module controllers {
                 return rows;
             };
 
+            $scope.editTask = angular.bind(this, this.editTask)
+            $scope.deleteTask = angular.bind(this, this.deleteTask)
+            $scope.cancel = angular.bind(this, this.cancel)
+            $scope.canUpdate = angular.bind(this, this.canUpdate)
         }
 
         taskResource:services.IUpdatableResourceClass;
@@ -194,6 +204,25 @@ module controllers {
                 (reason)=> {
                     alert("search ng")
                 });
+        }
+
+
+        editTask(index: number) {
+            this.$scope.tasks[index].editable = true;
+            this.$scope.original = angular.copy(this.$scope.tasks[index]);
+        }
+
+        cancel(index: number) {
+            this.$scope.tasks[index] = angular.copy(this.$scope.original);
+            this.$scope.tasks[index].editable = false;
+        }
+
+        canUpdate(index: number) {
+            return !angular.equals(this.$scope.tasks[index], this.$scope.original);
+        }
+
+        deleteTask(index: number) {
+
         }
 
    }
