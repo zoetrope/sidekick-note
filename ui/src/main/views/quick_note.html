@@ -59,7 +59,7 @@
                 ></pagination>
         <pre>Page: {{currentPage}} / {{numPages}} ({{maxSize}}, {{totalItems}})</pre>
         <div class="list-group">
-            <div ng-repeat="item in quickNotes" class="list-group-item">
+            <div ng-repeat="item in quickNotes" class="list-group-item" ng-controller="QuickNoteItemController">
                 <kick-item item="item"></kick-item>
             </div>
         </div>

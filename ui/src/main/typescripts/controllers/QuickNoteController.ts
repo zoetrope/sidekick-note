@@ -27,7 +27,6 @@ module controllers {
 
         // action
         addQuickNote : Function;
-        updateQuickNote : Function;
         toMarkdown(input: string) : string;
 
         // event
@@ -38,7 +37,6 @@ module controllers {
 
     export class QuickNoteController {
 
-        quickNoteResource:services.IUpdatableResourceClass;
         quickNotesResource:ng.resource.IResourceClass;
         tagsResource:ng.resource.IResourceClass;
 
@@ -58,7 +56,6 @@ module controllers {
             };
 
             this.quickNotesResource = this.$resource("/api/quick_notes")
-            this.quickNoteResource = <services.IUpdatableResourceClass>this.$resource("/api/quick_notes/:itemId", {}, {update: {method: 'PUT'}})
             this.tagsResource = $resource("/api/tags")
 
             this.tagsResource.query(data => {
@@ -67,7 +64,6 @@ module controllers {
 
             $scope.toMarkdown = input => itemRenderService.render(input)
             $scope.addQuickNote = angular.bind(this, this.addQuickNote)
-            $scope.updateQuickNote = angular.bind(this, this.updateQuickNote)
 
 
             this.quickNotesResource.query(
@@ -124,8 +120,39 @@ module controllers {
                 })
         }
 
-        updateQuickNote(note: models.QuickNote) {
-            var index = this.$scope.quickNotes.indexOf(note)
+    }
+
+
+    export interface QuickNoteItemScope extends QuickNoteScope {
+
+        update : Function;
+        enableEditMode : Function;
+        delete : Function;
+        cancel : Function;
+        canUpdate : Function;
+
+        original: models.QuickNote;
+        //
+        item: models.QuickNote;
+    }
+    export class QuickNoteItemController {
+        constructor(public $scope:QuickNoteItemScope, public $resource:ng.resource.IResourceService){
+
+            $scope.update = angular.bind(this, this.update)
+            $scope.enableEditMode = angular.bind(this, this.enableEditMode)
+            $scope.delete = angular.bind(this, this.delete)
+            $scope.cancel = angular.bind(this, this.cancel)
+            $scope.canUpdate = angular.bind(this, this.canUpdate)
+
+            this.quickNoteResource = <services.IUpdatableResourceClass>this.$resource("/api/quick_notes/:itemId", {}, {update: {method: 'PUT'}})
+        }
+
+        quickNoteResource:services.IUpdatableResourceClass;
+
+        update(note: models.QuickNote) {
+            //alert("content:" + content + ",tags:" + tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
+
+            var index = this.$scope.quickNotes.indexOf(this.$scope.item)
             this.$scope.quickNotes[index].editable = false;
 
             this.quickNoteResource.update({itemId: this.$scope.quickNotes[index].itemId}, {
@@ -133,14 +160,34 @@ module controllers {
                 tags: this.$scope.quickNotes[index].tags,
                 rate: this.$scope.quickNotes[index].rate
             }, data=>{
-                var index = this.$scope.quickNotes.indexOf(note)
+                var index = this.$scope.quickNotes.indexOf(this.$scope.item)
                 this.$scope.quickNotes[index].renderedContent = this.$scope.toMarkdown(data.content)
             }, reason=>{
                 alert("update ng");
-                var index = this.$scope.quickNotes.indexOf(note) // 更新処理が返ってくるまでの間にindexが変わってしまう可能性を考慮
+                var index = this.$scope.quickNotes.indexOf(this.$scope.item) // 更新処理が返ってくるまでの間にindexが変わってしまう可能性を考慮
                 this.$scope.quickNotes[index].editable = true;
             })
         }
 
+        enableEditMode(note: models.QuickNote) {
+            var index = this.$scope.quickNotes.indexOf(this.$scope.item)
+            this.$scope.quickNotes[index].editable = true;
+            this.$scope.original = angular.copy(this.$scope.quickNotes[index]);
+        }
+
+        cancel(note: models.QuickNote) {
+            var index = this.$scope.quickNotes.indexOf(this.$scope.item)
+            this.$scope.quickNotes[index] = angular.copy(this.$scope.original);
+            this.$scope.quickNotes[index].editable = false;
+        }
+
+        canUpdate(note: models.QuickNote) {
+            var index = this.$scope.quickNotes.indexOf(this.$scope.item)
+            return !angular.equals(this.$scope.quickNotes[index], this.$scope.original);
+        }
+
+        delete(note: models.QuickNote) {
+            var index = this.$scope.quickNotes.indexOf(this.$scope.item)
+        }
     }
 }

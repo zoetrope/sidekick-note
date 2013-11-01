@@ -90,6 +90,10 @@ module App {
             ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.QuickNoteController => {
                 return new controllers.QuickNoteController($scope, $resource, itemRenderService)
             }])
+     .controller("QuickNoteItemController", ["$scope", "$resource",
+            ($scope:controllers.QuickNoteItemScope, $resource:ng.resource.IResourceService) : controllers.QuickNoteItemController => {
+                return new controllers.QuickNoteItemController($scope, $resource)
+            }])
      .controller("TaskController", ["$scope", "$resource", "$location", "itemRenderService",
             ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
                 return new controllers.TaskController($scope, $resource, $location, itemRenderService)

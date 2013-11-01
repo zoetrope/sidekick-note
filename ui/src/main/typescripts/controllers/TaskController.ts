@@ -116,7 +116,6 @@ module controllers {
                 }
                 return rows;
             };
-
         }
 
         tasksResource:ng.resource.IResourceClass;
@@ -183,7 +182,7 @@ module controllers {
     export interface TaskItemScope extends TaskScope {
 
         update : Function;
-        startEdit : Function;
+        enableEditMode : Function;
         delete : Function;
         cancel : Function;
         canUpdate : Function;
@@ -196,7 +195,7 @@ module controllers {
         constructor(public $scope:TaskItemScope, public $resource:ng.resource.IResourceService){
 
             $scope.update = angular.bind(this, this.update)
-            $scope.startEdit = angular.bind(this, this.startEdit)
+            $scope.enableEditMode = angular.bind(this, this.enableEditMode)
             $scope.delete = angular.bind(this, this.delete)
             $scope.cancel = angular.bind(this, this.cancel)
             $scope.canUpdate = angular.bind(this, this.canUpdate)
@@ -206,7 +205,7 @@ module controllers {
 
         taskResource:services.IUpdatableResourceClass;
 
-        update() {
+        update(task: models.Task) {
             //alert("content:" + content + ",tags:" + tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
 
             var index = this.$scope.tasks.indexOf(this.$scope.item)
@@ -229,24 +228,24 @@ module controllers {
             })
         }
 
-        startEdit() {
+        enableEditMode(task: models.Task) {
             var index = this.$scope.tasks.indexOf(this.$scope.item)
             this.$scope.tasks[index].editable = true;
             this.$scope.original = angular.copy(this.$scope.tasks[index]);
         }
 
-        cancel() {
+        cancel(task: models.Task) {
             var index = this.$scope.tasks.indexOf(this.$scope.item)
             this.$scope.tasks[index] = angular.copy(this.$scope.original);
             this.$scope.tasks[index].editable = false;
         }
 
-        canUpdate() {
+        canUpdate(task: models.Task) {
             var index = this.$scope.tasks.indexOf(this.$scope.item)
             return !angular.equals(this.$scope.tasks[index], this.$scope.original);
         }
 
-        delete() {
+        delete(task: models.Task) {
             var index = this.$scope.tasks.indexOf(this.$scope.item)
         }
     }
