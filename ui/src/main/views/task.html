@@ -54,7 +54,7 @@
                 ></pagination>
         <pre>Page: {{pagination.currentPage}} / {{pagination.numPages}} ({{pagination.maxSize}}, {{pagination.totalItems}})</pre>
         <div class="list-group">
-            <div ng-repeat="item in tasks" class="list-group-item">
+            <div ng-repeat="item in tasks" class="list-group-item" ng-controller="TaskItemController">
                 <kick-item item="item"></kick-item>
             </div>
         </div>

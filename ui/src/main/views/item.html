@@ -33,15 +33,15 @@
             </small>
         </span>
         <ul class="task-menu">
-            <li ng-click="deleteTask(item)" ng-hide="item.editable"><a href="#"><span
+            <li ng-click="delete()" ng-hide="item.editable"><a href="#"><span
                     class="glyphicon glyphicon-trash"></span>Delete</a></li>
-            <li ng-click="editTask(item)" ng-hide="item.editable"><a href="#"><span
+            <li ng-click="startEdit()" ng-hide="item.editable"><a href="#"><span
                     class="glyphicon glyphicon-edit"></span>Edit</a></li>
         </ul>
 
         <div class="task-button">
-            <button class="btn btn-sm btn-primary" ng-disabled="!canUpdate(item)" ng-click="updateTask(item)" ng-show="item.editable">update</button>
-            <button class="btn btn-sm btn-default" ng-click="cancel(item)" ng-show="item.editable">cancel</button>
+            <button class="btn btn-sm btn-primary" ng-disabled="!canUpdate()" ng-click="update()" ng-show="item.editable">update</button>
+            <button class="btn btn-sm btn-default" ng-click="cancel()" ng-show="item.editable">cancel</button>
         </div>
     </div>
 

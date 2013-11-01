@@ -94,6 +94,10 @@ module App {
             ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
                 return new controllers.TaskController($scope, $resource, $location, itemRenderService)
             }])
+     .controller("TaskItemController", ["$scope", "$resource",
+            ($scope:controllers.TaskItemScope, $resource:ng.resource.IResourceService) : controllers.TaskItemController => {
+                return new controllers.TaskItemController($scope, $resource)
+            }])
      .controller("ArticleController", ["$scope", "$resource", "itemRenderService",
             ($scope:controllers.ArticleScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.ArticleController => {
                 return new controllers.ArticleController($scope, $resource, itemRenderService)

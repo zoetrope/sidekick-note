@@ -25,34 +25,27 @@ module controllers {
 
     export interface TaskScope extends ng.IScope {
 
+        //TODO: 入力要素はまとめる
         // input
         inputContent: string;
         inputSelectedTags: string[];
         rate: number;
         dueDate: Date;
 
-        // output
-        tasks: models.Task[];
-
-        original: models.Task;
         // state
         sending : Boolean;
         hasFocus : Boolean;
         enablePreview : Boolean;
-
         inputSelectOptions : any;
         allTags : string[];
+
+        // output
+        tasks: models.Task[];
 
         // action
         toMarkdown(input:string) : string;
         addTask : Function;
-        updateTask : Function;
         searchTask(page: number, words:string, tags:string) : void;
-
-        editTask : Function;
-        deleteTask : Function;
-        cancel : Function;
-        canUpdate : Function;
 
         // event
         keypress($event:ng.IAngularEvent) : void;
@@ -60,11 +53,14 @@ module controllers {
         pagination: PaginationSetting
 
         changePage(page: number) : void;
+
+        //TODO: これはなくす
         currentKeywords : string;
         currentTags : string;
 
         getComfortableRowNumber(content:string) : number;
     }
+
 
     export class TaskController {
 
@@ -90,10 +86,8 @@ module controllers {
 
             $scope.toMarkdown = input => itemRenderService.render(input)
             $scope.addTask = angular.bind(this, this.addTask)
-            $scope.updateTask = angular.bind(this, this.updateTask)
 
             this.tasksResource = this.$resource("/api/tasks")
-            this.taskResource = <services.IUpdatableResourceClass>this.$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
             this.tagsResource = $resource("/api/tags")
             this.searchTasksResource = $resource("/api/tasks/search")
             this.countResource = $resource("/api/tasks/count")
@@ -123,13 +117,8 @@ module controllers {
                 return rows;
             };
 
-            $scope.editTask = angular.bind(this, this.editTask)
-            $scope.deleteTask = angular.bind(this, this.deleteTask)
-            $scope.cancel = angular.bind(this, this.cancel)
-            $scope.canUpdate = angular.bind(this, this.canUpdate)
         }
 
-        taskResource:services.IUpdatableResourceClass;
         tasksResource:ng.resource.IResourceClass;
         tagsResource:ng.resource.IResourceClass;
         searchTasksResource:ng.resource.IResourceClass;
@@ -163,29 +152,6 @@ module controllers {
                 })
         }
 
-        updateTask(task: models.Task) {
-            //alert("content:" + content + ",tags:" + tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
-
-            var index = this.$scope.tasks.indexOf(task)
-            this.$scope.tasks[index].editable = false;
-
-            this.taskResource.update({itemId: this.$scope.tasks[index].itemId}, {
-                content: this.$scope.tasks[index].content,
-                tags: this.$scope.tasks[index].tags,
-                rate: this.$scope.tasks[index].rate,
-                status: this.$scope.tasks[index].status,
-                dueDate: null
-                //dueDate: this.$scope.tasks[index].dueDate
-            }, data=>{
-                var index = this.$scope.tasks.indexOf(task)
-                this.$scope.tasks[index].renderedContent = this.$scope.toMarkdown(data.content)
-            }, reason=>{
-                alert("update ng");
-                var index = this.$scope.tasks.indexOf(task) // 更新処理が返ってくるまでの間にindexが変わってしまう可能性を考慮
-                this.$scope.tasks[index].editable = true;
-            })
-        }
-
         searchTask(page: number, words: string, tags: string) {
 
             if (page == null) page = 1
@@ -212,28 +178,76 @@ module controllers {
                     alert("search ng")
                 });
         }
+   }
 
+    export interface TaskItemScope extends TaskScope {
 
-        editTask(task: models.Task) {
-            var index = this.$scope.tasks.indexOf(task)
+        update : Function;
+        startEdit : Function;
+        delete : Function;
+        cancel : Function;
+        canUpdate : Function;
+
+        original: models.Task;
+        //
+        item: models.Task;
+    }
+    export class TaskItemController {
+        constructor(public $scope:TaskItemScope, public $resource:ng.resource.IResourceService){
+
+            $scope.update = angular.bind(this, this.update)
+            $scope.startEdit = angular.bind(this, this.startEdit)
+            $scope.delete = angular.bind(this, this.delete)
+            $scope.cancel = angular.bind(this, this.cancel)
+            $scope.canUpdate = angular.bind(this, this.canUpdate)
+
+            this.taskResource = <services.IUpdatableResourceClass>this.$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
+        }
+
+        taskResource:services.IUpdatableResourceClass;
+
+        update() {
+            //alert("content:" + content + ",tags:" + tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
+
+            var index = this.$scope.tasks.indexOf(this.$scope.item)
+            this.$scope.tasks[index].editable = false;
+
+            this.taskResource.update({itemId: this.$scope.tasks[index].itemId}, {
+                content: this.$scope.tasks[index].content,
+                tags: this.$scope.tasks[index].tags,
+                rate: this.$scope.tasks[index].rate,
+                status: this.$scope.tasks[index].status,
+                dueDate: null
+                //dueDate: this.$scope.tasks[index].dueDate
+            }, data=>{
+                var index = this.$scope.tasks.indexOf(this.$scope.item)
+                this.$scope.tasks[index].renderedContent = this.$scope.toMarkdown(data.content)
+            }, reason=>{
+                alert("update ng");
+                var index = this.$scope.tasks.indexOf(this.$scope.item) // 更新処理が返ってくるまでの間にindexが変わってしまう可能性を考慮
+                this.$scope.tasks[index].editable = true;
+            })
+        }
+
+        startEdit() {
+            var index = this.$scope.tasks.indexOf(this.$scope.item)
             this.$scope.tasks[index].editable = true;
             this.$scope.original = angular.copy(this.$scope.tasks[index]);
         }
 
-        cancel(task: models.Task) {
-            var index = this.$scope.tasks.indexOf(task)
+        cancel() {
+            var index = this.$scope.tasks.indexOf(this.$scope.item)
             this.$scope.tasks[index] = angular.copy(this.$scope.original);
             this.$scope.tasks[index].editable = false;
         }
 
-        canUpdate(task: models.Task) {
-            var index = this.$scope.tasks.indexOf(task)
+        canUpdate() {
+            var index = this.$scope.tasks.indexOf(this.$scope.item)
             return !angular.equals(this.$scope.tasks[index], this.$scope.original);
         }
 
-        deleteTask(task: models.Task) {
-            var index = this.$scope.tasks.indexOf(task)
+        delete() {
+            var index = this.$scope.tasks.indexOf(this.$scope.item)
         }
-
-   }
+    }
 }
