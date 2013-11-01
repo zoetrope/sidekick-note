@@ -136,7 +136,6 @@ module.exports = function (grunt) {
                         '<%= conf.dist.libs %>/angular/*.js',
                         '<%= conf.dist.libs %>/angular-resource/*.js',
                         '<%= conf.dist.libs %>/angular-ui-utils/*.js',
-                        '<%= conf.dist.libs %>/angular-ui-router/*.js',
                         '<%= conf.dist.libs %>/angular-ui-select2/*.js',
                         '<%= conf.dist.libs %>/angular-ui-date/*.js',
                         '<%= conf.dist.libs %>/angular-ui-bootstrap/*.js',

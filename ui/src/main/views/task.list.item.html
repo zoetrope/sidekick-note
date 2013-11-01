@@ -1,47 +1,47 @@
 <div class="clearfix">
     <div>
-        <div ng-bind-html-unsafe="task.renderedContent" ng-hide="task.editable"/>
-        <textarea rows="{{getComfortableRowNumber(task.content)}}" ng-model="task.content" class="form-control"
-                  ng-show="task.editable"/>
+        <div ng-bind-html-unsafe="item.renderedContent" ng-hide="item.editable"/>
+        <textarea rows="{{getComfortableRowNumber(item.content)}}" ng-model="item.content" class="form-control"
+                  ng-show="item.editable"/>
     </div>
 
     <div>
-        <div class="text-muted" ng-hide="task.editable">
-            {{task.tags.join(' ')}}
+        <div class="text-muted" ng-hide="item.editable">
+            {{item.tags.join(' ')}}
         </div>
-        <div ng-show="task.editable">
-            <input type="text" ui-select2="inputSelectOptions" ng-model="task.tags" style="width:100%"/>
+        <div ng-show="item.editable">
+            <input type="text" ui-select2="inputSelectOptions" ng-model="item.tags" style="width:100%"/>
         </div>
     </div>
 
     <div>
 
-        <div class="btn-group" ng-show="task.editable">
-            <button type="button" class="btn btn-sm btn-default" ng-model="task.status" btn-radio="'New'">
+        <div class="btn-group" ng-show="item.editable">
+            <button type="button" class="btn btn-sm btn-default" ng-model="item.status" btn-radio="'New'">
                 <span class="glyphicon glyphicon-unchecked"></span>  New
             </button>
-            <button type="button" class="btn btn-sm btn-default" ng-model="task.status" btn-radio="'Completed'">
+            <button type="button" class="btn btn-sm btn-default" ng-model="item.status" btn-radio="'Completed'">
                 <span class="glyphicon glyphicon-check"></span>  Completed
             </button>
         </div>
-        <br ng-show="task.editable"/>
-        <rating class="pull-left" value="task.rate" max="5" readonly="!task.editable"></rating>
+        <br ng-show="item.editable"/>
+        <rating class="pull-left" value="item.rate" max="5" readonly="!item.editable"></rating>
 
         <span class="text-muted pull-right">
             <small>
-                {{task.dueDate}}
+                {{item.dueDate}}
             </small>
         </span>
         <ul class="task-menu">
-            <li ng-click="deleteTask($index)" ng-hide="task.editable"><a href="#"><span
+            <li ng-click="deleteTask(item)" ng-hide="item.editable"><a href="#"><span
                     class="glyphicon glyphicon-trash"></span>Delete</a></li>
-            <li ng-click="editTask($index)" ng-hide="task.editable"><a href="#"><span
+            <li ng-click="editTask(item)" ng-hide="item.editable"><a href="#"><span
                     class="glyphicon glyphicon-edit"></span>Edit</a></li>
         </ul>
 
         <div class="task-button">
-            <button class="btn btn-sm btn-primary" ng-disabled="!canUpdate($index)" ng-click="updateTask(task)" ng-show="task.editable">update</button>
-            <button class="btn btn-sm btn-default" ng-click="cancel($index)" ng-show="task.editable">cancel</button>
+            <button class="btn btn-sm btn-primary" ng-disabled="!canUpdate(item)" ng-click="updateTask(item)" ng-show="item.editable">update</button>
+            <button class="btn btn-sm btn-default" ng-click="cancel(item)" ng-show="item.editable">cancel</button>
         </div>
     </div>
 

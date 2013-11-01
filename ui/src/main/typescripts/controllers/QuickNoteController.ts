@@ -11,7 +11,7 @@ module controllers {
     export interface QuickNoteScope extends ng.IScope {
         // input
         inputContent: string;
-        selectedTags: string[];
+        inputSelectedTags: string[];
         rate: number;
 
         // output
@@ -22,7 +22,7 @@ module controllers {
         hasFocus : Boolean;
         enablePreview : Boolean;
 
-        select2Options : any;
+        inputSelectOptions : any;
         allTags : string[];
 
         // action
@@ -48,8 +48,8 @@ module controllers {
             $scope.enablePreview = false
             $scope.rate = 1
 
-            $scope.selectedTags = []
-            $scope.select2Options = {
+            $scope.inputSelectedTags = []
+            $scope.inputSelectOptions = {
                 'multiple': true,
                 'simple_tags': true,
                 'tags': () => {
@@ -104,7 +104,7 @@ module controllers {
 
             this.quickNotesResource.save(null, {
                     content: this.$scope.inputContent,
-                    tags: this.$scope.selectedTags,
+                    tags: this.$scope.inputSelectedTags,
                     rate: this.$scope.rate
                 },
                 (data)=> {

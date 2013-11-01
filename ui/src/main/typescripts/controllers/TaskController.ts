@@ -10,6 +10,19 @@
 module controllers {
     'use strict';
 
+    export class PaginationSetting {
+        constructor(){
+            this.totalItems = 0;
+            this.currentPage = 1;
+            this.numPages = 10;
+            this.maxSize = 10;
+        }
+        totalItems : number;
+        currentPage : number;
+        numPages : number;
+        maxSize : number;
+    }
+
     export interface TaskScope extends ng.IScope {
 
         // input
@@ -44,10 +57,7 @@ module controllers {
         // event
         keypress($event:ng.IAngularEvent) : void;
 
-        totalItems : number;
-        currentPage : number;
-        numPages : number;
-        maxSize : number;
+        pagination: PaginationSetting
 
         changePage(page: number) : void;
         currentKeywords : string;
@@ -58,12 +68,9 @@ module controllers {
 
     export class TaskController {
 
-        constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public $location: ng.ILocationService, public $stateParams:SearchParam, public itemRenderService:services.ItemRenderService) {
+        constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public $location: ng.ILocationService, public itemRenderService:services.ItemRenderService) {
 
-            $scope.totalItems = 0;
-            $scope.currentPage = 1;
-            $scope.numPages = 10;
-            $scope.maxSize = 10;
+            $scope.pagination = new PaginationSetting()
             $scope.changePage = (page:number)=>{
                 this.searchTask(page, $scope.currentKeywords, $scope.currentTags)
             }
@@ -99,7 +106,7 @@ module controllers {
                 this.searchTask(1, words, tags)
             });
 
-            this.searchTask(1, $stateParams.words, $stateParams.tags)
+            //this.searchTask(1, $stateParams.words, $stateParams.tags)
 
             $scope.inputContent = ""
 
@@ -187,8 +194,8 @@ module controllers {
 
             this.countResource.get({words: words, tags: tags},
                 (data)=>{
-                    this.$scope.totalItems = data.count;
-                    this.$scope.numPages = Math.ceil(this.$scope.totalItems / 20)
+                    this.$scope.pagination.totalItems = data.count;
+                    this.$scope.pagination.numPages = Math.ceil(this.$scope.pagination.totalItems / 20)
                 },
                 (reason)=>{
 
@@ -207,22 +214,25 @@ module controllers {
         }
 
 
-        editTask(index: number) {
+        editTask(task: models.Task) {
+            var index = this.$scope.tasks.indexOf(task)
             this.$scope.tasks[index].editable = true;
             this.$scope.original = angular.copy(this.$scope.tasks[index]);
         }
 
-        cancel(index: number) {
+        cancel(task: models.Task) {
+            var index = this.$scope.tasks.indexOf(task)
             this.$scope.tasks[index] = angular.copy(this.$scope.original);
             this.$scope.tasks[index].editable = false;
         }
 
-        canUpdate(index: number) {
+        canUpdate(task: models.Task) {
+            var index = this.$scope.tasks.indexOf(task)
             return !angular.equals(this.$scope.tasks[index], this.$scope.original);
         }
 
-        deleteTask(index: number) {
-
+        deleteTask(task: models.Task) {
+            var index = this.$scope.tasks.indexOf(task)
         }
 
    }

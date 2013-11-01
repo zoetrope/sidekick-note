@@ -28,42 +28,18 @@ module App {
 
     angular.module(
         appName,
-        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress", 'ui.select2', 'ui.bootstrap', 'ui.date', 'ui.router'],
+        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress", 'ui.select2', 'ui.bootstrap', 'ui.date'],
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
+            $routeProvider
+                .when("/home", {templateUrl: "/assets/views/home.html"})
+                .when("/quick_note", {templateUrl: "/assets/views/quick_note.html"})
+                .when("/task", {templateUrl: "/assets/views/task.html"})
+                .when("/article", {templateUrl: "/assets/views/article.html"})
+                .when("/search", {templateUrl: "/assets/views/search.html"})
+                .when("/login", {templateUrl: "/assets/views/login.html"})
+                .otherwise({redirectTo: '/home'});
             $locationProvider.html5Mode(true);
-        })
-        .config(($stateProvider, $urlRouterProvider) =>{
-            $urlRouterProvider.otherwise("/home")
-            $stateProvider.state('home', {
-                url: "/home",
-                templateUrl: "/assets/views/home.html"
-            })
-                .state('quick_note', {
-                    url: "/quick_note",
-                    templateUrl: "/assets/views/quick_note.html"
-                })
-                .state('task', {
-                    url: "/task?page&words&tags",
-                    abstract: true,
-                    templateUrl: "/assets/views/task.html"
-                })
-                .state('task.list', {
-                    url: "",
-                    templateUrl: "/assets/views/task.list.html"
-                })
-                .state('article', {
-                    url: "/article",
-                    templateUrl: "/assets/views/article.html"
-                })
-                .state('search', {
-                    url: "/search?page&words&tags",
-                    templateUrl: "/assets/views/search.html"
-                })
-                .state('login', {
-                    url: "/login",
-                    templateUrl: "/assets/views/login.html"
-                })
         })
         .config($httpProvider => {
             var interceptor = ["$q", "$location", ($q, $location) => {
@@ -79,10 +55,7 @@ module App {
             }];
             $httpProvider.responseInterceptors.push(interceptor)
         })
-        .run(['$rootScope', '$state', '$stateParams',($rootScope, $state, $stateParams)=> {
-            $rootScope.$state = $state;
-            $rootScope.$stateParams = $stateParams;
-        }]);
+        .run(($rootScope:ng.IRootScopeService, $routeParams:ng.IRouteParamsService)=> {});
 
     angular.module(
         appName + ".directive",
@@ -117,9 +90,9 @@ module App {
             ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.QuickNoteController => {
                 return new controllers.QuickNoteController($scope, $resource, itemRenderService)
             }])
-     .controller("TaskController", ["$scope", "$resource", "$location", "$stateParams", "itemRenderService",
-            ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, $stateParams:controllers.SearchParam, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
-                return new controllers.TaskController($scope, $resource, $location, $stateParams, itemRenderService)
+     .controller("TaskController", ["$scope", "$resource", "$location", "itemRenderService",
+            ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
+                return new controllers.TaskController($scope, $resource, $location, itemRenderService)
             }])
      .controller("ArticleController", ["$scope", "$resource", "itemRenderService",
             ($scope:controllers.ArticleScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.ArticleController => {
