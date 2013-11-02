@@ -11,48 +11,61 @@ module controllers {
 
         loggedin: string;
 
-        login(): void
-        logout(): void
+        login: Function;
+        logout: Function;
+        isActive: Function;
     }
 
     export class ApplicationController {
 
         constructor(public $scope:AppScope, public $location:ng.ILocationService, public $resource:ng.resource.IResourceService, public $timeout:ng.ITimeoutService) {
 
-            var Auth = $resource("/api/login")
-            var LoggedIn = $resource("/api/loggedin")
-            var Logout = $resource("/api/logout")
+            this.Auth = $resource("/api/login")
+            this.LoggedIn = $resource("/api/loggedin")
+            this.Logout = $resource("/api/logout")
 
-            LoggedIn.get(x=>$scope.loggedin = x.name, reason => alert(reason))
+            this.LoggedIn.get(x=>$scope.loggedin = x.name, reason => alert(reason))
 
-            var tick = () => {
-                LoggedIn.get(data=>{
-                    $timeout(tick, 60000);
-                },reason => alert("error"));
-            };
-            tick();
+            this.tick();
 
-            $scope.login = () => {
-                var input = {name: $scope.input_name, password: $scope.input_password}
-                Auth.save(null, input, (data)=> {
-                    console.log(data.url);
-                    //alert(data);
-                    //$scope.loggedin = $scope.input_name
-                    $scope.loggedin = data.url
-                    window.location.href = data.url;
-
-                }, (reason)=> {
-                    alert("failed login." + reason)
-                });
-            };
-
-            $scope.logout = () => {
-                Logout.get(_=> {
-                    $scope.loggedin = ""
-                    window.location.href = "/login";
-                })
-            }
+            $scope.login = angular.bind(this, this.login)
+            $scope.logout = angular.bind(this, this.logout)
+            $scope.isActive = angular.bind(this, this.isActive)
         }
 
+        Auth:ng.resource.IResourceClass;
+        LoggedIn:ng.resource.IResourceClass;
+        Logout:ng.resource.IResourceClass;
+
+        isActive(path:string):boolean {
+            return this.$location.path() == path
+        }
+
+        tick() {
+            this.LoggedIn.get(data=>{
+                this.$timeout(this.tick, 60000);
+            },reason => alert("error"));
+        }
+
+        login() {
+            var input = {name: this.$scope.input_name, password: this.$scope.input_password}
+            this.Auth.save(null, input, (data)=> {
+                console.log(data.url);
+                //alert(data);
+                //$scope.loggedin = $scope.input_name
+                this.$scope.loggedin = data.url
+                window.location.href = data.url;
+
+            }, (reason)=> {
+                alert("failed login." + reason)
+            });
+        }
+
+        logout() {
+            this.Logout.get(_=> {
+                this.$scope.loggedin = ""
+                window.location.href = "/login";
+            })
+        }
     }
 }
