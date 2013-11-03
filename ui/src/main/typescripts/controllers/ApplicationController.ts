@@ -26,7 +26,12 @@ module controllers {
 
             this.LoggedIn.get(x=>$scope.loggedin = x.name, reason => alert(reason))
 
-            this.tick();
+            var tick = () => {
+                this.LoggedIn.get(data=>{
+                    this.$timeout(tick, 60000);
+                },reason => alert("error"));
+            }
+            tick();
 
             $scope.login = angular.bind(this, this.login)
             $scope.logout = angular.bind(this, this.logout)
@@ -41,11 +46,6 @@ module controllers {
             return this.$location.path() == path
         }
 
-        tick() {
-            this.LoggedIn.get(data=>{
-                this.$timeout(this.tick, 60000);
-            },reason => alert("error"));
-        }
 
         login() {
             var input = {name: this.$scope.input_name, password: this.$scope.input_password}
