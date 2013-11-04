@@ -5,6 +5,8 @@ import org.json4s.{Extraction, FieldSerializer, DefaultFormats}
 import org.json4s.ext.JodaTimeSerializers
 
 case class ItemForm(content: String)
+
+//TODO: 名前が微妙なので変える
 case class SearchCount(count: Long)
 
 object ItemController extends BaseController[ItemForm, Item] {

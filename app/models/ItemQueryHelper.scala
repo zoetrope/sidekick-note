@@ -6,14 +6,7 @@ import scala.Some
 import scalikejdbc.interpolation.SQLSyntax._
 import scala.Some
 
-trait ItemModel[T] {
-  /*
-  def find(itemId: Long)(implicit session: DBSession): Option[T]
-
-  def findByAccountId(accountId: Long, offset: Int, limit: Int)(implicit session: DBSession): List[T]
-
-  def findByTags(accountId: Long, offset: Int, limit: Int, tags: List[String])(implicit session: DBSession): List[T]
-  */
+trait ItemQueryHelper {
 
   def matchTagsQuery(tags: List[String]) : SQLBuilder[_]= {
     val (match_it, search_tg, except_it) = (ItemTag.syntax("match_it"), Tag.syntax("search_tg"), ItemTag.syntax("except_it"))

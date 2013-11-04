@@ -51,7 +51,7 @@ class Item
   override def hashCode(): Int = (itemId % Int.MaxValue).asInstanceOf[Int]
 }
 
-object Item extends SQLSyntaxSupport[Item] with ItemModel[Item] {
+object Item extends SQLSyntaxSupport[Item] with ItemQueryHelper {
 
   override val tableName = "items"
 
