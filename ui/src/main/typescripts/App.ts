@@ -86,9 +86,9 @@ module App {
             ($scope:controllers.HomeScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.HomeController => {
                 return new controllers.HomeController($scope, $resource, itemRenderService)
             }])
-     .controller("QuickNoteController", ["$scope", "$resource", "itemRenderService",
-            ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.QuickNoteController => {
-                return new controllers.QuickNoteController($scope, $resource, itemRenderService)
+     .controller("QuickNoteController", ["$scope", "$resource", "$location", "itemRenderService",
+            ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.QuickNoteController => {
+                return new controllers.QuickNoteController($scope, $resource, $location, itemRenderService)
             }])
      .controller("QuickNoteItemController", ["$scope", "$resource",
             ($scope:controllers.QuickNoteItemScope, $resource:ng.resource.IResourceService) : controllers.QuickNoteItemController => {

@@ -69,6 +69,15 @@ object QuickNoteController extends BaseController[QuickNoteForm, QuickNote] {
   }
 
   override def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String],  tags:List[String]) =
-    QuickNote.findByTags(accountId, offset, limit, tags)
+    QuickNote.findByKeywordsAndTags(accountId, offset, limit, generateKeywords(keywords), tags)
+
+
+  def count(words:String, tags:String) = StackAction(AuthorityKey -> Permission.NormalUser) {
+    implicit request =>
+      val user = loggedIn
+      val size = QuickNote.countByKeywordsAndTags(user.accountId, generateKeywords(words.split(" ").toList), tags.split(" ").toList)
+      play.Logger.info("count = " + size)
+      Ok(Extraction.decompose(SearchCount(size))).as("application/json")
+  }
 
 }

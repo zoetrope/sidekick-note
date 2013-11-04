@@ -8,14 +8,24 @@
 module controllers {
     'use strict';
 
+    export class PaginationSetting {
+        constructor(){
+            this.totalItems = 0;
+            this.currentPage = 1;
+            this.numPages = 10;
+            this.maxSize = 10;
+        }
+        totalItems : number;
+        currentPage : number;
+        numPages : number;
+        maxSize : number;
+    }
+
     export interface QuickNoteScope extends ng.IScope {
         // input
         inputContent: string;
         inputSelectedTags: string[];
         rate: number;
-
-        // output
-        quickNotes: models.QuickNote[];
 
         // state
         sending : Boolean;
@@ -25,22 +35,40 @@ module controllers {
         inputSelectOptions : any;
         allTags : string[];
 
+        // output
+        quickNotes: models.QuickNote[];
+
         // action
         addQuickNote : Function;
         toMarkdown(input: string) : string;
+        searchQuickNote(page: number, words:string, tags:string) : void;
 
         // event
         keypress($event : ng.IAngularEvent) : void;
 
         getComfortableRowNumber(content:string) : number;
+
+        pagination: PaginationSetting
+        changePage(page: number) : void;
     }
 
     export class QuickNoteController {
 
         quickNotesResource:ng.resource.IResourceClass;
         tagsResource:ng.resource.IResourceClass;
+        searchQuickNotesResource:ng.resource.IResourceClass;
+        countQuickNotesResource:ng.resource.IResourceClass;
 
-        constructor(public $scope:QuickNoteScope, public $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) {
+        constructor(public $scope:QuickNoteScope, public $resource:ng.resource.IResourceService, public $location:ng.ILocationService, itemRenderService:services.ItemRenderService) {
+
+            $scope.pagination = new PaginationSetting()
+            $scope.changePage = (page:number)=>{
+                //this.searchQuickNote(page, $location.search().words, $location.search().tagas)
+                $location.search("page", page)
+            }
+
+            //alert("page = " + $location.search().page + ", words = " + $location.search().words + "tags = " + $location.search().tagas)
+
             $scope.hasFocus = true
             $scope.sending = false
             $scope.enablePreview = false
@@ -57,6 +85,8 @@ module controllers {
 
             this.quickNotesResource = this.$resource("/api/quick_notes")
             this.tagsResource = $resource("/api/tags")
+            this.searchQuickNotesResource = $resource("/api/quick_notes/search")
+            this.countQuickNotesResource = $resource("/api/quick_notes/count")
 
             this.tagsResource.query(data => {
                 $scope.allTags = data.map(tag => tag.name)
@@ -65,14 +95,8 @@ module controllers {
             $scope.toMarkdown = input => itemRenderService.render(input)
             $scope.addQuickNote = angular.bind(this, this.addQuickNote)
 
+            this.searchQuickNote($location.search().page, $location.search().words, $location.search().tagas);
 
-            this.quickNotesResource.query(
-                (data)=> {
-                    $scope.quickNotes = data.map(x=>{x.renderedContent = $scope.toMarkdown(x.content); return x})
-                },
-                (reason)=> {
-                    alert("error get QuickNotes")
-                });
 
             $scope.keypress = ($event : ng.IAngularEvent) => {
                 $scope.addQuickNote()
@@ -82,12 +106,14 @@ module controllers {
             //TODO: Taskと共通化すべき
             $scope.getComfortableRowNumber = (content:string) => {
                 var rows = 3;
-                var match_str = content.match(/\n/g);
-                if (match_str) {
-                    rows += match_str.length;
-                }
-                if (rows > 40) {
-                    rows = 40;
+                if (content) {
+                    var match_str = content.match(/\n/g);
+                    if (match_str) {
+                        rows += match_str.length;
+                    }
+                    if (rows > 40) {
+                        rows = 40;
+                    }
                 }
                 return rows;
             };
@@ -118,6 +144,32 @@ module controllers {
                     this.$scope.sending = false
                     this.$scope.hasFocus = true
                 })
+        }
+
+
+        searchQuickNote(page: number, words: string, tags: string) {
+
+            if (!page) page = 1
+            if (!words) words = ""
+            if (!tags) tags = ""
+
+            this.countQuickNotesResource.get({words: words, tags: tags},
+                (data)=>{
+                    this.$scope.pagination.totalItems = data.count;
+                    this.$scope.pagination.numPages = Math.ceil(this.$scope.pagination.totalItems / 20)
+                },
+                (reason)=>{
+
+                });
+
+            this.searchQuickNotesResource.query({page: page, words: words, tags: tags},
+                (data)=> {
+                    this.$scope.quickNotes = data.map(x=>{x.renderedContent = this.$scope.toMarkdown(x.content); return x})
+                    this.$scope.pagination.currentPage = page
+                },
+                (reason)=> {
+                    alert("search ng")
+                });
         }
 
     }

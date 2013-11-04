@@ -15,6 +15,7 @@ GET         /api/items/count               controllers.ItemController.count(word
 GET         /api/quick_notes               controllers.QuickNoteController.all(page:Int ?=1)
 POST        /api/quick_notes               controllers.QuickNoteController.create
 GET         /api/quick_notes/search        controllers.QuickNoteController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
+GET         /api/quick_notes/count         controllers.QuickNoteController.count(words: String ?= "", tags: String ?= "")
 PUT         /api/quick_notes/:id           controllers.QuickNoteController.update(id:Int)
 
 GET         /api/tasks                     controllers.TaskController.all(page:Int ?=1)

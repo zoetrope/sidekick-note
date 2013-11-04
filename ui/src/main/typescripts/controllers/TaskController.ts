@@ -87,12 +87,14 @@ module controllers {
             //TODO: Directiveにできるんじゃないだろうか？
             $scope.getComfortableRowNumber = (content:string) => {
                 var rows = 3;
-                var match_str = content.match(/\n/g);
-                if (match_str) {
-                    rows += match_str.length;
-                }
-                if (rows > 40) {
-                    rows = 40;
+                if (content) {
+                    var match_str = content.match(/\n/g);
+                    if (match_str) {
+                        rows += match_str.length;
+                    }
+                    if (rows > 40) {
+                        rows = 40;
+                    }
                 }
                 return rows;
             };

@@ -5,16 +5,18 @@ import scalikejdbc.SQLInterpolation._
 import org.joda.time.DateTime
 import scala.collection.mutable
 
-class QuickNote(
-                 itemId: Long,
-                 content: String,
-                 words: String,
-                 rate: Int = 0,
-                 tags: mutable.ArrayBuffer[Tag] = new mutable.ArrayBuffer,
-                 createdAt: DateTime,
-                 modifiedAt: DateTime,
-                 deletedAt: Option[DateTime] = None,
-                 accountId: Long) extends Item(itemId, content, words, rate, tags, createdAt, modifiedAt, deletedAt, accountId) {
+class QuickNote
+(
+  itemId: Long,
+  content: String,
+  words: String,
+  rate: Int = 0,
+  tags: mutable.ArrayBuffer[Tag] = new mutable.ArrayBuffer,
+  createdAt: DateTime,
+  modifiedAt: DateTime,
+  deletedAt: Option[DateTime] = None,
+  accountId: Long)
+  extends Item(itemId, content, words, rate, tags, createdAt, modifiedAt, deletedAt, accountId) {
 
   override def save()(implicit session: DBSession = QuickNote.autoSession): QuickNote = {
     super.save()
@@ -26,9 +28,17 @@ class QuickNote(
     super.destroy()
   }
 
+  override def equals(obj: Any): Boolean = {
+    if (!obj.isInstanceOf[QuickNote]) false
+
+    val note = obj.asInstanceOf[QuickNote]
+
+    this.itemId == note.itemId
+  }
+
 }
 
-object QuickNote extends SQLSyntaxSupport[QuickNote] {
+object QuickNote extends SQLSyntaxSupport[QuickNote] with ItemQueryHelper {
 
   override val tableName = "quick_notes"
 
@@ -97,41 +107,42 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] {
       .list.apply()
   }
 
-  /*
+  def findByKeywordsAndTags(accountId: Long, offset: Int, limit: Int, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): List[QuickNote] = {
+    val x = SubQuery.syntax("x", i.resultName)
 
-    def countAll()(implicit session: DBSession = autoSession): Long = {
-      withSQL(select(sqls"count(1)").from(QuickNote as qn)).map(rs => rs.long(1)).single.apply().get
-    }
-    def findAllBy(where: SQLSyntax)(implicit session: DBSession = autoSession): List[QuickNote] = {
-      withSQL {
-        select.from(QuickNote as qn).where.append(sqls"${where}")
-      }.map(implicit rs => QuickNote(qn.resultName)).list.apply()
-    }
-
-    def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = {
-      withSQL {
-        select(sqls"count(1)").from(QuickNote as qn).where.append(sqls"${where}")
-      }.map(_.long(1)).single.apply().get
-    }
-    */
-
-
-  def findByTags(accountId: Long, offset: Int, limit: Int, tags: List[String])(implicit session: DBSession = autoSession): List[QuickNote] = {
     withSQL[QuickNote](
-      select.from(Item as i)
-        .join(QuickNote as qn).on(qn.itemId, i.itemId)
-        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+      select(sqls"${x(i).result.*}, ${x(qn).result.*}, ${tg.result.*}")
+        .from(
+        select(sqls"${i.result.*}, ${qn.result.*}").from(Item as i)
+          .join(QuickNote as qn).on(qn.itemId, i.itemId)
+          .where.eq(i.accountId, accountId)
+          .and(sqls.toAndConditionOpt(matchKeywordsQuery(keywords)))
+          .orderBy(i.rate).desc
+          .as(x))
+        .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
-        .where.eq(i.accountId, accountId)
-        .and.in(tg.name, tags)
-        .orderBy(i.createdAt).desc
-        .limit(limit).offset(offset)
-    ).one(implicit rs => QuickNote(i, qn))
+        .where.in(x(i).itemId, matchTagsQuery(tags))
+    ).one(implicit rs => QuickNote(x(i).resultName, x(qn).resultName))
       .toMany(Tag.opt(tg))
-      .map((quickNote, tags) => {
-      quickNote.tags ++= tags; quickNote
-    }).list.apply()
+      .map((note, tags) => {note.tags ++= tags; note})
+      .list.apply().drop(offset).take(limit)
   }
+
+  def countByKeywordsAndTags(accountId: Long, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): Long = {
+    val x = SubQuery.syntax("x", i.resultName)
+
+    withSQL(
+      select(sqls"count(1)")
+        .from(
+        select(sqls"${i.result.*}, ${qn.result.*}").from(Item as i)
+          .join(QuickNote as qn).on(qn.itemId, i.itemId)
+          .where.eq(i.accountId, accountId)
+          .and(sqls.toAndConditionOpt(matchKeywordsQuery(keywords)))
+          .as(x))
+        .where.in(x(i).itemId, matchTagsQuery(tags))
+    ).map(rs => rs.long(1)).single.apply().get
+  }
+
   def create
   (
     content: String,
