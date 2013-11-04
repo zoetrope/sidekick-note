@@ -10,23 +10,11 @@
 module controllers {
     'use strict';
 
-    export class PaginationSetting {
-        constructor(){
-            this.totalItems = 0;
-            this.currentPage = 1;
-            this.numPages = 10;
-            this.maxSize = 10;
-        }
-        totalItems : number;
-        currentPage : number;
-        numPages : number;
-        maxSize : number;
-    }
-
     export interface TaskScope extends ng.IScope {
 
         //TODO: 入力要素はまとめる
         // input
+        inputTitle: string;
         inputContent: string;
         inputSelectedTags: string[];
         rate: number;
@@ -50,26 +38,18 @@ module controllers {
         // event
         keypress($event:ng.IAngularEvent) : void;
 
-        pagination: PaginationSetting
-
-        changePage(page: number) : void;
-
-        //TODO: これはなくす
-        currentKeywords : string;
-        currentTags : string;
-
         getComfortableRowNumber(content:string) : number;
     }
 
 
     export class TaskController {
 
-        constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public $location: ng.ILocationService, public itemRenderService:services.ItemRenderService) {
+        tasksResource:ng.resource.IResourceClass;
+        tagsResource:ng.resource.IResourceClass;
+        searchTasksResource:ng.resource.IResourceClass;
+        countResource:ng.resource.IResourceClass;
 
-            $scope.pagination = new PaginationSetting()
-            $scope.changePage = (page:number)=>{
-                this.searchTask(page, $scope.currentKeywords, $scope.currentTags)
-            }
+        constructor(public $scope:TaskScope, public $resource:ng.resource.IResourceService, public $location: ng.ILocationService, public itemRenderService:services.ItemRenderService) {
 
             $scope.rate = 1
             $scope.dueDate = null
@@ -118,11 +98,6 @@ module controllers {
             };
         }
 
-        tasksResource:ng.resource.IResourceClass;
-        tagsResource:ng.resource.IResourceClass;
-        searchTasksResource:ng.resource.IResourceClass;
-        countResource:ng.resource.IResourceClass;
-
         addTask() {
             this.$scope.sending = true;
             this.$scope.hasFocus = false;
@@ -132,7 +107,8 @@ module controllers {
                     tags: this.$scope.inputSelectedTags,
                     rate: this.$scope.rate,
                     status: "New",
-                    dueDate: this.$scope.dueDate
+                    dueDate: this.$scope.dueDate,
+                    title: this.$scope.inputTitle
                 },
                 (data)=> {
                     data.renderedContent = this.$scope.toMarkdown(data.content)
@@ -157,21 +133,10 @@ module controllers {
             if (words == null) words = ""
             if (tags == null) tags = ""
 
-            this.countResource.get({words: words, tags: tags},
-                (data)=>{
-                    this.$scope.pagination.totalItems = data.count;
-                    this.$scope.pagination.numPages = Math.ceil(this.$scope.pagination.totalItems / 20)
-                },
-                (reason)=>{
-
-                });
-
             this.searchTasksResource.query({page: page, words: words, tags: tags},
                 (data)=> {
                     this.$scope.tasks = data.map(x=>{x.renderedContent = this.$scope.toMarkdown(x.content); return x})
                     //TODO: URLの変更
-                    this.$scope.currentKeywords = words
-                    this.$scope.currentTags = tags
                 },
                 (reason)=> {
                     alert("search ng")
@@ -216,6 +181,7 @@ module controllers {
                 tags: this.$scope.tasks[index].tags,
                 rate: this.$scope.tasks[index].rate,
                 status: this.$scope.tasks[index].status,
+                title: this.$scope.tasks[index].title,
                 dueDate: null
                 //dueDate: this.$scope.tasks[index].dueDate
             }, data=>{

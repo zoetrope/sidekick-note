@@ -6,6 +6,17 @@ import org.joda.time.DateTime
 import scala.collection.mutable
 import sqls.distinct
 
+case class SimpleTask
+(
+  itemId: Long,
+  rate: Int = 0,
+  createdAt: DateTime,
+  modifiedAt: DateTime,
+  status: TaskStatus,
+  dueDate: Option[DateTime],
+  completedAt: Option[DateTime],
+  title: String
+)
 
 class Task
 (
@@ -20,7 +31,8 @@ class Task
   accountId: Long,
   var status: TaskStatus,
   var dueDate: Option[DateTime],
-  var completedAt: Option[DateTime]) extends Item(itemId, content, words, rate, tags, createdAt, modifiedAt, deletedAt, accountId) {
+  var completedAt: Option[DateTime],
+  var title: String) extends Item(itemId, content, words, rate, tags, createdAt, modifiedAt, deletedAt, accountId) {
 
   override def save()(implicit session: DBSession = Task.autoSession): Task = {
     super.save()
@@ -42,11 +54,11 @@ class Task
 
 }
 
-object Task extends SQLSyntaxSupport[Task] with ItemModel[Task] {
+object Task extends SQLSyntaxSupport[Task] with ItemQueryHelper {
 
   override val tableName = "tasks"
 
-  override val columns = Seq("item_id", "status", "due_date", "completed_at")
+  override val columns = Seq("item_id", "status", "due_date", "completed_at", "title")
 
   def apply(i: SyntaxProvider[Item], t: SyntaxProvider[Task])(implicit rs: WrappedResultSet): Task = apply(i.resultName, t.resultName)(rs)
 
@@ -61,7 +73,8 @@ object Task extends SQLSyntaxSupport[Task] with ItemModel[Task] {
     accountId = rs.long(i.accountId),
     status = TaskStatus.valueOf(rs.string(t.status)),
     dueDate = rs.timestampOpt(t.dueDate).map(_.toDateTime),
-    completedAt = rs.timestampOpt(t.completedAt).map(_.toDateTime)
+    completedAt = rs.timestampOpt(t.completedAt).map(_.toDateTime),
+    title = rs.string(t.title)
   )
 
   val t = Task.syntax("t")
@@ -152,7 +165,10 @@ object Task extends SQLSyntaxSupport[Task] with ItemModel[Task] {
     accountId: Long,
     status: TaskStatus,
     dueDate: Option[DateTime],
-    completedAt: Option[DateTime])(implicit session: DBSession = autoSession): Task = {
+    completedAt: Option[DateTime],
+    title: String
+  )
+  (implicit session: DBSession = autoSession): Task = {
 
     val item = Item.create(content, words, rate, createdAt, modifiedAt, deletedAt, accountId)
     withSQL {
@@ -160,12 +176,14 @@ object Task extends SQLSyntaxSupport[Task] with ItemModel[Task] {
         column.itemId,
         column.status,
         column.dueDate,
-        column.completedAt
+        column.completedAt,
+        column.title
       ).values(
         item.itemId,
         status.toString,
         dueDate,
-        completedAt
+        completedAt,
+        title
       )
     }.update().apply()
 
@@ -180,7 +198,8 @@ object Task extends SQLSyntaxSupport[Task] with ItemModel[Task] {
       accountId = accountId,
       status = status,
       dueDate = dueDate,
-      completedAt = completedAt)
+      completedAt = completedAt,
+      title = title)
   }
 
   def save(entity: Task)(implicit session: DBSession = autoSession): Task = {
@@ -188,7 +207,8 @@ object Task extends SQLSyntaxSupport[Task] with ItemModel[Task] {
       update(Task as t).set(
         t.status -> entity.status.toString,
         t.dueDate -> entity.dueDate,
-        t.completedAt -> entity.completedAt
+        t.completedAt -> entity.completedAt,
+        t.title -> entity.title
       ).where.eq(t.itemId, entity.itemId)
     }.update.apply()
     entity

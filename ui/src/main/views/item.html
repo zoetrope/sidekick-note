@@ -1,5 +1,13 @@
 <div class="clearfix">
     <div>
+        <div ng-hide="item.editable">
+            {{item.title}}
+        </div>
+        <div ng-show="item.editable">
+            <input type="text" ng-model="item.title" class="form-control" />
+        </div>
+    </div>
+    <div>
         <div ng-bind-html-unsafe="item.renderedContent" ng-hide="item.editable"/>
         <textarea rows="{{getComfortableRowNumber(item.content)}}" ng-model="item.content" class="form-control"
                   ng-show="item.editable"/>

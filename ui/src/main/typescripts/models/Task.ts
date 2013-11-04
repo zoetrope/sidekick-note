@@ -15,6 +15,7 @@ module models {
         tags: string[];
         dueDate: Date;
         completedAt: Date;
+        title: string[];
 
         //
         editable: Boolean;

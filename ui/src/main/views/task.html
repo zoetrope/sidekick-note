@@ -33,6 +33,8 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <form ng-submit="addTask()" role="form" class="form">
+                    <input type="text" ng-model="inputTitle" class="form-control" placeholder="input task name here" ng-disabled="sending" />
+
                     <p>
                         <textarea rows="{{getComfortableRowNumber(inputContent)}}" ng-model="inputContent" class="form-control"
                                   placeholder="add new task here" ng-disabled="sending"

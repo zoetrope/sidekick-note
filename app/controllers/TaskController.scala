@@ -13,7 +13,8 @@ case class TaskForm
   tags: Seq[String],
   rate: Int,
   status: String,
-  dueDate: String
+  dueDate: String,
+  title: String
 )
 
 object TaskController extends BaseController[TaskForm, Task] {
@@ -34,7 +35,7 @@ object TaskController extends BaseController[TaskForm, Task] {
     play.Logger.info(words)
     val dueDate = parseDate(form.dueDate)
 
-    //DB localTx{
+    //TODO: DB localTx{
     val task = Task.create(
       form.content,
       words,
@@ -45,7 +46,9 @@ object TaskController extends BaseController[TaskForm, Task] {
       user.accountId,
       TaskStatus.valueOf(form.status),
       dueDate,
-      Option.empty[DateTime])
+      Option.empty[DateTime],
+      form.title
+    )
 
     form.tags.distinct.foreach(tagName => {
       task.addTag(tagName)
@@ -67,6 +70,7 @@ object TaskController extends BaseController[TaskForm, Task] {
     }
     task.status = status
     task.dueDate = parseDate(form.dueDate)
+    task.title = form.title
 
     //TODO: transaction
     //DB localTx{
