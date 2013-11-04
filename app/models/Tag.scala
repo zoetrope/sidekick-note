@@ -16,7 +16,7 @@ case class Tag(
 
 class SimpleTagSerializer extends CustomSerializer[Tag](format =>
   ( {
-    case x: JString => Tag(0,x.toString,0) //ここに入ることはないはず
+    case x: JString => Tag(0, x.toString, 0) //ここに入ることはないはず
   }, {
     case x: Tag => JString(x.name)
   })

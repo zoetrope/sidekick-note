@@ -117,7 +117,7 @@ object QuickNote extends SQLSyntaxSupport[QuickNote] with ItemQueryHelper {
           .join(QuickNote as qn).on(qn.itemId, i.itemId)
           .where.eq(i.accountId, accountId)
           .and(sqls.toAndConditionOpt(matchKeywordsQuery(keywords)))
-          .orderBy(i.rate).desc
+          .orderBy(i.createdAt).desc
           .as(x))
         .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)

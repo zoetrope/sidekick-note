@@ -53,11 +53,11 @@
                 <div ng-bind-html-unsafe="toMarkdown(inputContent)"/>
             </div>
         </div>
-        <pagination total-items="totalItems" current-page="currentPage" max-size="maxSize"
+        <pagination total-items="pagination.totalItems" current-page="pagination.currentPage" max-size="pagination.maxSize"
                     on-select-page="changePage(page)"
-                    class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"
+                    class="pagination-small" boundary-links="true" rotate="false" num-pages="pagination.numPages"
                 ></pagination>
-        <pre>Page: {{currentPage}} / {{numPages}} ({{maxSize}}, {{totalItems}})</pre>
+        <pre>Page: {{pagination.currentPage}} / {{pagination.numPages}} ({{pagination.maxSize}}, {{pagination.totalItems}})</pre>
         <div class="list-group">
             <div ng-repeat="item in quickNotes" class="list-group-item" ng-controller="QuickNoteItemController">
                 <kick-item item="item"></kick-item>

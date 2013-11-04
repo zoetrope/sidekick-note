@@ -4,7 +4,7 @@
         <form role="form">
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title"  ng-model="searchTitle">
+                <input type="text" class="form-control" id="title" ng-model="searchTitle">
             </div>
             <div class="form-group">
                 <label for="keywords">Keywords</label>
@@ -12,14 +12,16 @@
             </div>
             <div class="form-group">
                 <label for="tags">Tags</label>
-                <input type="text" id="tags" ui-select2="searchSelectOptions" ng-model="searchSelectedTags" style="width:100%"/>
+                <input type="text" id="tags" ui-select2="searchSelectOptions" ng-model="searchSelectedTags"
+                       style="width:100%"/>
             </div>
             <div class="form-group">
                 <label for="sortOrder">Sort Order</label>
                 <input type="number" class="form-control" id="sortOrder" ng-model="searchSortOrder">
             </div>
             <button class="btn btn-default" ng-click="addSearchCondition()">Add</button>
-            <button class="btn btn-default" ng-click="searchTask(searchText, searchSelectedTags.join(' '))">Search</button>
+            <button class="btn btn-default" ng-click="searchTask(searchText, searchSelectedTags.join(' '))">Search
+            </button>
         </form>
 
         <div class="list-group">
@@ -30,35 +32,38 @@
     </div>
 
     <div class="col-sm-8">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <form ng-submit="addTask()" role="form" class="form">
-                    <input type="text" ng-model="inputTitle" class="form-control" placeholder="input task name here" ng-disabled="sending" />
+        <tabset>
+            <tab heading="new task">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form ng-submit="addTask()" role="form" class="form">
+                            <input type="text" ng-model="inputTitle" class="form-control"
+                                   placeholder="input task name here" ng-disabled="sending"/>
 
-                    <p>
-                        <textarea rows="{{getComfortableRowNumber(inputContent)}}" ng-model="inputContent" class="form-control"
-                                  placeholder="add new task here" ng-disabled="sending"
-                                  kick-focus="hasFocus"
-                                  ui-keypress="{'ctrl-10':'keypress($event)'}"/>
-                    </p>
-                    <input type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
-                           style="width:100%"/>
-                    {{inputSelectedTags | json}}
-                    <rating value="rate" max="5" readonly="false"></rating>
-                    <input ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
-                    <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
-                </form>
-            </div>
-        </div>
-        <pagination total-items="pagination.totalItems" current-page="pagination.currentPage" max-size="pagination.maxSize"
-                    on-select-page="changePage(page)"
-                    class="pagination-small" boundary-links="true" rotate="false" num-pages="pagination.numPages"
-                ></pagination>
-        <pre>Page: {{pagination.currentPage}} / {{pagination.numPages}} ({{pagination.maxSize}}, {{pagination.totalItems}})</pre>
-        <div class="list-group">
-            <div ng-repeat="item in tasks" class="list-group-item" ng-controller="TaskItemController">
-                <kick-item item="item"></kick-item>
-            </div>
-        </div>
+                            <p>
+                                <textarea rows="{{getComfortableRowNumber(inputContent)}}" ng-model="inputContent"
+                                          class="form-control"
+                                          placeholder="add new task here" ng-disabled="sending"
+                                          kick-focus="hasFocus"
+                                          ui-keypress="{'ctrl-10':'keypress($event)'}"/>
+                            </p>
+                            <input type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
+                                   style="width:100%"/>
+                            {{inputSelectedTags | json}}
+                            <rating value="rate" max="5" readonly="false"></rating>
+                            <input ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
+                            <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
+                        </form>
+                    </div>
+                </div>
+            </tab>
+            <tab heading="all">
+                <div class="list-group">
+                    <div ng-repeat="item in tasks" class="list-group-item" ng-controller="TaskItemController">
+                        <kick-item item="item"></kick-item>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
     </div>
 </div>

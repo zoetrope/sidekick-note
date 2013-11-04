@@ -6,6 +6,9 @@ import org.joda.time._
 import org.json4s.ext.JodaTimeSerializers
 import org.joda.time.format.DateTimeFormat
 import scala.Some
+import play.api.mvc.Controller
+import jp.t2v.lab.play2.auth.AuthElement
+import com.github.tototoshi.play2.json4s.native.Json4s
 
 case class TaskForm
 (
@@ -96,6 +99,27 @@ object TaskController extends BaseController[TaskForm, Task] {
     } catch {
       case _: Throwable => defaultStatus
     }
+  }
+
+}
+
+object SearchTaskController extends Controller with AuthElement with AuthConfigImpl {
+
+  implicit val formats = DefaultFormats +
+    new SimpleTagSerializer +
+    new TaskStatusSerializer ++
+    JodaTimeSerializers.all
+
+  def search(page: Int, tags:String, status:String, dueDate:String) = StackAction(AuthorityKey -> Permission.NormalUser) {
+    implicit request =>
+      val limit = 20
+      val offset = (page - 1) * limit
+
+      val user = loggedIn
+      val tasks = SummarizedTask.findByKeywordsAndTags(user.accountId, offset, limit, tags.split(" ").toList, status, dueDate)
+
+      play.Logger.info("find item size = " + tasks.size)
+      Ok(Extraction.decompose(tasks)).as("application/json")
   }
 
 }

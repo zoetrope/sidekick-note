@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 import scala.collection.mutable
 import sqls.distinct
 
-case class SimpleTask
+case class SummarizedTask
 (
   itemId: Long,
   rate: Int = 0,
@@ -52,6 +52,56 @@ class Task
     this.itemId == t.itemId
   }
 
+}
+
+object SummarizedTask extends ItemQueryHelper {
+
+  def apply(i: SyntaxProvider[Item], t: SyntaxProvider[Task])(implicit rs: WrappedResultSet): SummarizedTask = apply(i.resultName, t.resultName)(rs)
+
+  def apply(i: ResultName[Item], t: ResultName[Task])(implicit rs: WrappedResultSet): SummarizedTask = new SummarizedTask(
+    itemId = rs.long(i.itemId),
+    rate = rs.int(i.rate),
+    createdAt = rs.timestamp(i.createdAt).toDateTime,
+    modifiedAt = rs.timestamp(i.modifiedAt).toDateTime,
+    status = TaskStatus.valueOf(rs.string(t.status)),
+    dueDate = rs.timestampOpt(t.dueDate).map(_.toDateTime),
+    completedAt = rs.timestampOpt(t.completedAt).map(_.toDateTime),
+    title = rs.string(t.title)
+  )
+
+  val t = Task.syntax("t")
+  private val (i, it, tg) = (Item.i, ItemTag.it, Tag.tg)
+
+
+  def findByKeywordsAndTags
+  (
+    accountId: Long,
+    offset: Int,
+    limit: Int,
+    tags: List[String],
+    keywords: String,
+    dueDate: String
+    )
+  (implicit session: DBSession = Task.autoSession): List[SummarizedTask] = {
+
+    val x = SubQuery.syntax("x", i.resultName)
+
+    withSQL[SummarizedTask](
+      select(sqls"${x(i).result.*}, ${x(t).result.*}, ${tg.result.*}")
+        .from(
+        select(sqls"${i.result.*}, ${t.result.*}").from(Item as i)
+          .join(Task as t).on(t.itemId, i.itemId)
+          .where.eq(i.accountId, accountId)
+          .and.not.eq(t.status, "Completed")
+          .and(sqls.toAndConditionOpt(matchKeywordsQuery(keywords)))
+          .orderBy(i.rate).desc
+          .as(x))
+        .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
+        .where.in(x(i).itemId, matchTagsQuery(tags))
+    ).map(implicit rs => SummarizedTask(x(i).resultName, x(t).resultName))
+      .list.apply().drop(offset).take(limit)
+  }
 }
 
 object Task extends SQLSyntaxSupport[Task] with ItemQueryHelper {
