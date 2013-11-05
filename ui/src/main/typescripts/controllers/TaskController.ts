@@ -121,6 +121,7 @@ module controllers {
                         //this.$scope.tasks.pop();
                     }
                     this.$scope.inputContent = "";
+                    this.$scope.inputTitle = "";
                     this.$scope.sending = false;
                     this.$scope.hasFocus = true;
                 },
