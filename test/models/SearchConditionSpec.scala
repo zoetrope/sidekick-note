@@ -6,42 +6,42 @@ import org.joda.time._
 import scalikejdbc.SQLInterpolation._
 
 class SearchConditionSpec extends Specification {
-  val sc = SearchCondition.syntax("sc")
+  val sc = SearchCriterion.syntax("sc")
 
-  "SearchCondition" should {
+  "SearchCriterion" should {
     "find by primary keys" in new AutoRollback {
-      val maybeFound = SearchCondition.find(1L)
+      val maybeFound = SearchCriterion.find(1L)
       maybeFound.isDefined should beTrue
     }
     "find all records" in new AutoRollback {
-      val allResults = SearchCondition.findAll()
+      val allResults = SearchCriterion.findAll()
       allResults.size should be_>(0)
     }
     "count all records" in new AutoRollback {
-      val count = SearchCondition.countAll()
+      val count = SearchCriterion.countAll()
       count should be_>(0L)
     }
     "find by where clauses" in new AutoRollback {
-      val results = SearchCondition.findAllBy(sqls.eq(sc.conditionId, 1L))
+      val results = SearchCriterion.findAllBy(sqls.eq(sc.conditionId, 1L))
       results.size should be_>(0)
     }
     "count by where clauses" in new AutoRollback {
-      val count = SearchCondition.countBy(sqls.eq(sc.conditionId, 1L))
+      val count = SearchCriterion.countBy(sqls.eq(sc.conditionId, 1L))
       count should be_>(0L)
     }
     "create new record" in new AutoRollback {
-      val created = SearchCondition.create(title = "MyString", targetType = "MyString", accountId = 1L, sortOrder = 123, createdAt = DateTime.now)
+      val created = SearchCriterion.create(title = "MyString", targetType = "MyString", accountId = 1L, sortOrder = 123, createdAt = DateTime.now)
       created should not beNull
     }
     "save a record" in new AutoRollback {
-      val entity = SearchCondition.findAll().head
-      val updated = SearchCondition.save(entity)
+      val entity = SearchCriterion.findAll().head
+      val updated = SearchCriterion.save(entity)
       updated should not equalTo(entity)
     }
     "destroy a record" in new AutoRollback {
-      val entity = SearchCondition.findAll().head
-      SearchCondition.destroy(entity)
-      val shouldBeNone = SearchCondition.find(1L)
+      val entity = SearchCriterion.findAll().head
+      SearchCriterion.destroy(entity)
+      val shouldBeNone = SearchCriterion.find(1L)
       shouldBeNone.isDefined should beFalse
     }
   }

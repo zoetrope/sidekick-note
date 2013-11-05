@@ -1,5 +1,5 @@
 <div ng-controller="QuickNoteController" class="row">
-    <div class="col-sm-4 well" ng-controller="SearchConditionController">
+    <div class="col-sm-4 well" ng-controller="SearchQuickNoteCriterionController">
 
         <form role="form">
             <div class="form-group">
@@ -18,12 +18,12 @@
                 <label for="sortOrder">Sort Order</label>
                 <input type="number" class="form-control" id="sortOrder" ng-model="searchSortOrder">
             </div>
-            <button class="btn btn-default" ng-click="addSearchCondition()">Add</button>
-            <button class="btn btn-default" ng-click="searchTask(searchText, searchSelectedTags.join(' '))">Search</button>
+            <button class="btn btn-default" ng-click="addSearchCriterion()">Add</button>
+            <button class="btn btn-default" ng-click="search()">Search</button>
         </form>
 
         <div class="list-group">
-            <div ng-repeat="cond in searchConditions | orderBy:'sortOrder':false" class="list-group-item">
+            <div ng-repeat="cond in searchCriteria | orderBy:'sortOrder':false" class="list-group-item">
                 <a href="#" ng-click="searchTask(cond.keywords, cond.tags)">{{cond.title}}</a>
             </div>
         </div>

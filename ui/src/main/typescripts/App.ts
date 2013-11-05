@@ -7,14 +7,16 @@
 ///<reference path='controllers/ArticleController.ts' />
 ///<reference path='controllers/SearchController.ts' />
 ///<reference path='controllers/UserController.ts' />
-///<reference path='controllers/SearchConditionController.ts' />
+///<reference path='controllers/SearchCriterionController.ts' />
+///<reference path='controllers/SearchTaskCriterionController.ts' />
+///<reference path='controllers/SearchQuickNoteCriterionController.ts' />
 ///<reference path='controllers/SearchParam.ts' />
 ///<reference path='models/Article.ts' />
 ///<reference path='models/Item.ts' />
 ///<reference path='models/QuickNote.ts' />
 ///<reference path='models/Tag.ts' />
 ///<reference path='models/Task.ts' />
-///<reference path='models/SearchCondition.ts' />
+///<reference path='models/SearchCriterion.ts' />
 ///<reference path='services/ItemRenderService.ts' />
 ///<reference path='directives/ItemDirective.ts' />
 ///<reference path='directives/EnableFocus.ts' />
@@ -114,9 +116,13 @@ module App {
             ($scope:controllers.UserScope, $resource:ng.resource.IResourceService) : controllers.UserController => {
                 return new controllers.UserController($scope, $resource)
             }])
-     .controller("SearchConditionController", ["$scope", "$resource",
-            ($scope:controllers.SearchConditionScope, $resource:ng.resource.IResourceService) : controllers.SearchConditionController => {
-                return new controllers.SearchConditionController($scope, $resource)
+     .controller("SearchTaskCriterionController", ["$scope", "$resource",
+            ($scope:controllers.SearchTaskCriterionScope, $resource:ng.resource.IResourceService) : controllers.SearchTaskCriterionController => {
+                return new controllers.SearchTaskCriterionController($scope, $resource)
+            }])
+     .controller("SearchQuickNoteCriterionController", ["$scope", "$resource",
+            ($scope:controllers.SearchQuickNoteCriterionScope, $resource:ng.resource.IResourceService) : controllers.SearchQuickNoteCriterionController => {
+                return new controllers.SearchQuickNoteCriterionController($scope, $resource)
             }])
 
 }

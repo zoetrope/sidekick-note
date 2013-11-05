@@ -112,7 +112,7 @@ object SearchTaskController extends Controller with AuthElement with AuthConfigI
 
   def search(page: Int, tags:String, status:String, dueDate:String) = StackAction(AuthorityKey -> Permission.NormalUser) {
     implicit request =>
-      val limit = 20
+      val limit = 200
       val offset = (page - 1) * limit
 
       val user = loggedIn

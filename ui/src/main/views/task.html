@@ -1,34 +1,37 @@
 <div ng-controller="TaskController" class="row">
-    <div class="col-sm-4 well" ng-controller="SearchConditionController">
-
-        <form role="form">
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" ng-model="searchTitle">
-            </div>
-            <div class="form-group">
-                <label for="keywords">Keywords</label>
-                <input type="text" class="form-control" id="keywords" ng-model="searchText">
-            </div>
-            <div class="form-group">
-                <label for="tags">Tags</label>
-                <input type="text" id="tags" ui-select2="searchSelectOptions" ng-model="searchSelectedTags"
-                       style="width:100%"/>
-            </div>
-            <div class="form-group">
-                <label for="sortOrder">Sort Order</label>
-                <input type="number" class="form-control" id="sortOrder" ng-model="searchSortOrder">
-            </div>
-            <button class="btn btn-default" ng-click="addSearchCondition()">Add</button>
-            <button class="btn btn-default" ng-click="searchTask(searchText, searchSelectedTags.join(' '))">Search
-            </button>
-        </form>
-
-        <div class="list-group">
-            <div ng-repeat="cond in searchConditions | orderBy:'sortOrder':false" class="list-group-item">
-                <a href="#" ng-click="searchTask(cond.keywords, cond.tags)">{{cond.title}}</a>
-            </div>
-        </div>
+    <div class="col-sm-4 well" ng-controller="SearchTaskCriterionController">
+        <tabset>
+            <tab heading="new criteria">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" ng-model="searchTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="keywords">Keywords</label>
+                        <input type="text" class="form-control" id="keywords" ng-model="searchText">
+                    </div>
+                    <div class="form-group">
+                        <label for="tags">Tags</label>
+                        <input type="text" id="tags" ui-select2="searchSelectOptions" ng-model="searchSelectedTags"
+                               style="width:100%"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="sortOrder">Sort Order</label>
+                        <input type="number" class="form-control" id="sortOrder" ng-model="searchSortOrder">
+                    </div>
+                    <button class="btn btn-default" ng-click="search(assemblyQuery())">Search</button>
+                    <button class="btn btn-default" ng-click="addSearchCriterion()">Add</button>
+                </form>
+            </tab>
+            <tab heading="criteria">
+                <div class="list-group">
+                    <div ng-repeat="cond in searchCriteria | orderBy:'sortOrder':false" class="list-group-item">
+                        <a href="#" ng-click="search(cond.query)">{{cond.title}}</a>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
     </div>
 
     <div class="col-sm-8">
@@ -57,11 +60,45 @@
                     </div>
                 </div>
             </tab>
-            <tab heading="all">
+            <tab>
+                <tab-heading>
+                    <span class="badge pull-right">{{todayCount}}</span>
+                    today
+                </tab-heading>
+            </tab>
+            <tab>
+                <tab-heading>
+                    <span class="badge pull-right">{{todayCount}}</span>
+                    this week
+                </tab-heading>
+            </tab>
+            <tab>
+                <tab-heading>
+                    <span class="badge pull-right">{{todayCount}}</span>
+                    someday
+                </tab-heading>
+            </tab>
+            <tab>
+                <tab-heading>
+                    <span class="badge pull-right">{{todayCount}}</span>
+                    completed
+                </tab-heading>
+            </tab>
+            <tab>
+                <tab-heading>
+                    <span class="badge pull-right">{{todayCount}}</span>
+                    all
+                </tab-heading>
+
                 <div class="list-group">
-                    <div ng-repeat="item in tasks" class="list-group-item" ng-controller="TaskItemController">
-                        <kick-item item="item"></kick-item>
-                    </div>
+                  <div ng-repeat="item in tasks" class="list-group-item" ng-controller="TaskItemController">
+                      <a href="#" ng-click="load(item)">
+                        {{item.title}} + {{isOpen}}
+                      </a>
+                      <div ng-show="isOpen">
+                          <kick-item item="item"></kick-item>
+                      </div>
+                  </div>
                 </div>
             </tab>
         </tabset>

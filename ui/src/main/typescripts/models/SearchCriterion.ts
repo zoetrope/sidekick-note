@@ -4,12 +4,11 @@
 module models {
     'use strict';
 
-    export class SearchCondition {
+    export class SearchCriterion {
         constructor(
             public title: string,
             public targetType: string,
-            public keywords: string,
-            public tags: string,
+            public query: string,
             public sortOrder: number
             )
         {

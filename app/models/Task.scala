@@ -99,7 +99,9 @@ object SummarizedTask extends ItemQueryHelper {
         .leftJoin(ItemTag as it).on(it.itemId, x(i).itemId)
         .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
         .where.in(x(i).itemId, matchTagsQuery(tags))
-    ).map(implicit rs => SummarizedTask(x(i).resultName, x(t).resultName))
+    ).one(implicit rs => SummarizedTask(x(i).resultName, x(t).resultName))
+      .toMany(Tag.opt(tg))
+      .map((task, tag) => task)
       .list.apply().drop(offset).take(limit)
   }
 }

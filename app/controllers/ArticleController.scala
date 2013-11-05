@@ -69,16 +69,6 @@ object ArticleController extends BaseController[ArticleForm, Article] {
   override def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String],  tags:List[String]) =
     Article.findByTags(accountId, offset, limit, tags)
 
-  def get(itemId: Long) = StackAction(AuthorityKey -> Permission.NormalUser) {
-    implicit request =>
-      play.Logger.info("get article id = " + itemId)
-      Article.find(itemId) match {
-        case Some(article) => Ok(Extraction.decompose(article)).as("application/json")
-        case None => BadRequest
-      }
-  }
-
-
   def allTitles = StackAction(AuthorityKey -> Permission.NormalUser) {
     implicit request =>
       val user = loggedIn

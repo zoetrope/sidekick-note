@@ -16,25 +16,28 @@ GET         /api/quick_notes               controllers.QuickNoteController.all(p
 POST        /api/quick_notes               controllers.QuickNoteController.create
 GET         /api/quick_notes/search        controllers.QuickNoteController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
 GET         /api/quick_notes/count         controllers.QuickNoteController.count(words: String ?= "", tags: String ?= "")
-PUT         /api/quick_notes/:id           controllers.QuickNoteController.update(id:Int)
+GET         /api/quick_notes/:id           controllers.QuickNoteController.get(id:Long)
+PUT         /api/quick_notes/:id           controllers.QuickNoteController.update(id:Long)
 
 GET         /api/tasks                     controllers.TaskController.all(page:Int ?=1)
 POST        /api/tasks                     controllers.TaskController.create
-GET         /api/tasks/search              controllers.TaskController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
+GET         /api/tasks/search              controllers.SearchTaskController.search(page: Int ?=1, tags: String ?= "", status: String ?= "", dueDate: String ?= "")
+GET         /api/tasks/fullsearch          controllers.TaskController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
 GET         /api/tasks/count               controllers.TaskController.count(words: String ?= "", tags: String ?= "")
-PUT         /api/tasks/:id                 controllers.TaskController.update(id:Int)
+GET         /api/tasks/:id                 controllers.TaskController.get(id:Long)
+PUT         /api/tasks/:id                 controllers.TaskController.update(id:Long)
 
 GET         /api/articles                  controllers.ArticleController.all(page:Int ?=1)
 POST        /api/articles                  controllers.ArticleController.create
 GET         /api/articles/search           controllers.ArticleController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
 GET         /api/articles/titles           controllers.ArticleController.allTitles
-GET         /api/articles/:id              controllers.ArticleController.get(id:Int)
-PUT         /api/articles/:id              controllers.ArticleController.update(id:Int)
+GET         /api/articles/:id              controllers.ArticleController.get(id:Long)
+PUT         /api/articles/:id              controllers.ArticleController.update(id:Long)
 
 GET         /api/tags                      controllers.TagController.getTags
 
-GET         /api/search_conditions         controllers.SearchConditionController.all
-POST        /api/search_conditions         controllers.SearchConditionController.create
+GET         /api/search_criteria/:target   controllers.SearchCriterionController.all(target: String)
+POST        /api/search_criteria/:target   controllers.SearchCriterionController.create(target: String)
 
 
 # Map static resources from the /public folder to the /assets URL path

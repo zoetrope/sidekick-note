@@ -33,7 +33,7 @@ module controllers {
         // action
         toMarkdown(input:string) : string;
         addTask : Function;
-        searchTask(page: number, words:string, tags:string) : void;
+        searchTask(page: number, tags:string, status:string, dueDate:string) : void;
 
         // event
         keypress($event:ng.IAngularEvent) : void;
@@ -76,8 +76,10 @@ module controllers {
                 $scope.allTags = data.map(tag => tag.name)
             });
 
-            $scope.$on("search", (ev, words, tags)=>{
-                this.searchTask(1, words, tags)
+            $scope.$on("search.tasks", (ev, query)=>{
+                var param = angular.fromJson(query);
+
+                this.searchTask(1, param.tags, param.status, param.dueDate)
             });
 
             //this.searchTask(1, $stateParams.words, $stateParams.tags)
@@ -129,13 +131,14 @@ module controllers {
                 })
         }
 
-        searchTask(page: number, words: string, tags: string) {
+        searchTask(page: number, tags: string, status: string, dueDate: string) {
 
             if (page == null) page = 1
-            if (words == null) words = ""
             if (tags == null) tags = ""
+            if (status == null) status = ""
+            if (dueDate == null) dueDate = ""
 
-            this.searchTasksResource.query({page: page, words: words, tags: tags},
+            this.searchTasksResource.query({page: page, tags: tags, status: status, dueDate: dueDate},
                 (data)=> {
                     this.$scope.tasks = data.map(x=>{x.renderedContent = this.$scope.toMarkdown(x.content); return x})
                     //TODO: URLの変更
@@ -154,9 +157,14 @@ module controllers {
         cancel : Function;
         canUpdate : Function;
 
+        load : Function;
+        isOpen : Boolean;
+
         original: models.Task;
         //
         item: models.Task;
+
+        loadedTask: models.Task;
     }
     export class TaskItemController {
         constructor(public $scope:TaskItemScope, public $resource:ng.resource.IResourceService){
@@ -166,6 +174,10 @@ module controllers {
             $scope.delete = angular.bind(this, this.delete)
             $scope.cancel = angular.bind(this, this.cancel)
             $scope.canUpdate = angular.bind(this, this.canUpdate)
+
+            $scope.load = angular.bind(this, this.load)
+
+            $scope.isOpen = false;
 
             this.taskResource = <services.IUpdatableResourceClass>this.$resource("/api/tasks/:itemId", {}, {update: {method: 'PUT'}})
         }
@@ -215,6 +227,22 @@ module controllers {
 
         delete(task: models.Task) {
             var index = this.$scope.tasks.indexOf(this.$scope.item)
+        }
+
+        load(task: models.Task) {
+            this.$scope.isOpen = !this.$scope.isOpen;
+
+            if(this.$scope.item.content) {return}
+
+            this.taskResource.get({itemId: task.itemId},
+                data=>{
+                    this.$scope.item.content = data.content;
+                    this.$scope.item.renderedContent = this.$scope.toMarkdown(data.content);
+                    this.$scope.item.tags = data.tags;
+                },
+                reason=>{
+
+                });
         }
     }
 }

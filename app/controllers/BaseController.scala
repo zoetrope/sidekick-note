@@ -22,6 +22,20 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
     new TaskStatusSerializer ++
     JodaTimeSerializers.all
 
+  def get(itemId: Long) = StackAction(AuthorityKey -> Permission.NormalUser) {
+    implicit request =>
+      findById(itemId) match {
+        case None => BadRequest
+        case Some(item) => {
+          val user = loggedIn
+          if (item.accountId != user.accountId) {
+            Forbidden
+          } else {
+            Ok(Extraction.decompose(item)).as("application/json")
+          }
+        }
+      }
+  }
   def all(page: Int) = StackAction(AuthorityKey -> Permission.NormalUser) {
     implicit request =>
 
@@ -51,7 +65,7 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
       Ok(Extraction.decompose(item)).as("application/json")
   }
 
-  def update(itemId: Int) = StackAction(json, AuthorityKey -> Permission.NormalUser) {
+  def update(itemId: Long) = StackAction(json, AuthorityKey -> Permission.NormalUser) {
     implicit request =>
 
       play.Logger.debug("update task itemId = " + itemId)
