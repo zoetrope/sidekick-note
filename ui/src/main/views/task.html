@@ -24,7 +24,7 @@
                     <button class="btn btn-default" ng-click="addSearchCriterion()">Add</button>
                 </form>
             </tab>
-            <tab heading="criteria">
+            <tab heading="criteria" active="listTabIsActive">
                 <div class="list-group">
                     <div ng-repeat="cond in searchCriteria | orderBy:'sortOrder':false" class="list-group-item">
                         <a href="#" ng-click="search(cond.query)">{{cond.title}}</a>
@@ -84,16 +84,22 @@
                     completed
                 </tab-heading>
             </tab>
-            <tab>
+            <tab active="allTabIsActive">
                 <tab-heading>
                     <span class="badge pull-right">{{todayCount}}</span>
                     all
                 </tab-heading>
 
                 <div class="list-group">
-                  <div ng-repeat="item in tasks" class="list-group-item" ng-controller="TaskItemController">
-                      <a href="#" ng-click="load(item)">
-                        {{item.title}} + {{isOpen}}
+                  <div ng-repeat="item in tasks" class="list-group-item clearfix" ng-controller="TaskItemController">
+                      <a href="#" ng-click="load(item)" ng-hide="item.editable">
+                          {{item.title}}
+                          <span class="badge pull-right" ng-hide="isOpen">{{item.rate}}</span><br/>
+                          <span class="text-muted pull-right" ng-hide="isOpen">
+                            <small>
+                                created: {{item.createdAt}}, due:{{item.dueDate}}
+                            </small>
+                          </span>
                       </a>
                       <div ng-show="isOpen">
                           <kick-item item="item"></kick-item>

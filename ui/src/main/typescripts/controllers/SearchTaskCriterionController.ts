@@ -12,6 +12,8 @@ module controllers {
     export interface SearchTaskCriterionScope extends controllers.SearchCriterionScope {
         status: String;
         dueDate: String;
+
+        listTabIsActive: Boolean;
     }
 
     export class SearchTaskCriterionController extends controllers.SearchCriterionController {
@@ -20,6 +22,8 @@ module controllers {
             super(<controllers.SearchCriterionScope>$scope, $resource)
             $scope.targetType = "tasks";
             this.updateCriteria();
+
+            $scope.listTabIsActive = true;
         }
 
         // overload

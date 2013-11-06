@@ -39,6 +39,8 @@ module controllers {
         keypress($event:ng.IAngularEvent) : void;
 
         getComfortableRowNumber(content:string) : number;
+
+        allTabIsActive: Boolean;
     }
 
 
@@ -100,6 +102,8 @@ module controllers {
                 }
                 return rows;
             };
+
+            $scope.allTabIsActive = true;
         }
 
         addTask() {
