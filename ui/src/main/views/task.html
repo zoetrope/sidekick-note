@@ -40,21 +40,39 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <form ng-submit="addTask()" role="form" class="form">
-                            <input type="text" ng-model="inputTitle" class="form-control"
-                                   placeholder="input task name here" ng-disabled="sending"/>
 
-                            <p>
-                                <textarea rows="{{getComfortableRowNumber(inputContent)}}" ng-model="inputContent"
-                                          class="form-control"
-                                          placeholder="add new task here" ng-disabled="sending"
-                                          kick-focus="hasFocus"
-                                          ui-keypress="{'ctrl-10':'keypress($event)'}"/>
-                            </p>
-                            <input type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
-                                   style="width:100%"/>
-                            {{inputSelectedTags | json}}
-                            <rating value="rate" max="5" readonly="false"></rating>
-                            <input ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
+                            <div class="form-group">
+                                <input type="text" ng-model="inputTitle" class="form-control"
+                                       placeholder="input task name here" ng-disabled="sending"/>
+                            </div>
+
+
+                            <div class="form-group">
+                                    <textarea rows="{{getComfortableRowNumber(inputContent)}}" ng-model="inputContent"
+                                              class="form-control"
+                                              placeholder="add new task here" ng-disabled="sending"
+                                              kick-focus="hasFocus"
+                                              ui-keypress="{'ctrl-10':'keypress($event)'}"/>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="inputTags">tags</label>
+                                <input id="inputTags" type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
+                                       style="width:100%"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label >rate</label>
+                                <rating value="rate" max="5" readonly="false"></rating>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="inputDueDate">due date</label>
+                                <input id="inputDueDate" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
+                            </div>
+
                             <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
                         </form>
                     </div>
