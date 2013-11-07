@@ -9,25 +9,12 @@ case class ItemForm(content: String)
 //TODO: 名前が微妙なので変える
 case class SearchCount(count: Long)
 
-object ItemController extends BaseController[ItemForm, Item] {
+object ItemController extends CrudController[ItemForm, Item] {
 
   override implicit val formats = DefaultFormats +
     FieldSerializer[Item](FieldSerializer.ignore("words")) +
     new SimpleTagSerializer ++
     JodaTimeSerializers.all
-
-  override def findByAccountId(accountId: Long, offset: Int, limit: Int) = {
-    null
-  }
-  override def createInstance(user: User, form : ItemForm) : Item = {
-    null
-  }
-  override def updateInstance(item: Item, form : ItemForm) = {
-
-  }
-  override def findById(itemId: Long): Option[Task] = {
-    null
-  }
 
   override def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String], tags:List[String]) : List[Item] =
     Item.findByKeywordsAndTags(accountId, offset, limit, generateKeywords(keywords), tags)

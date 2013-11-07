@@ -20,7 +20,7 @@ case class TaskForm
   title: String
 )
 
-object TaskController extends BaseController[TaskForm, Task] {
+object TaskController extends CrudController[TaskForm, Task] {
 
   override implicit val formats = DefaultFormats +
     FieldSerializer[Task](FieldSerializer.ignore("words")) +
@@ -59,9 +59,9 @@ object TaskController extends BaseController[TaskForm, Task] {
     //}
     task
   }
-  protected def findById(itemId: Long): Option[Task] = Task.find(itemId)
+  override def findById(itemId: Long): Option[Task] = Task.find(itemId)
 
-  protected def updateInstance(task: Task, form : TaskForm) = {
+  override def updateInstance(task: Task, form : TaskForm) = {
     task.content = form.content
     task.modifiedAt = DateTime.now()
     task.rate = form.rate

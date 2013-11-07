@@ -19,7 +19,7 @@ case class QuickNoteForm
   rate: Int
   )
 
-object QuickNoteController extends BaseController[QuickNoteForm, QuickNote] {
+object QuickNoteController extends CrudController[QuickNoteForm, QuickNote] {
 
   override implicit val formats = DefaultFormats +
     FieldSerializer[QuickNote](FieldSerializer.ignore("words")) +
@@ -52,9 +52,9 @@ object QuickNoteController extends BaseController[QuickNoteForm, QuickNote] {
     //}
     quickNote
   }
-  protected def findById(itemId: Long): Option[QuickNote] = QuickNote.find(itemId)
+  override def findById(itemId: Long): Option[QuickNote] = QuickNote.find(itemId)
 
-  protected def updateInstance(quickNote: QuickNote, form : QuickNoteForm) = {
+  override def updateInstance(quickNote: QuickNote, form : QuickNoteForm) = {
     quickNote.content = form.content
     quickNote.modifiedAt = DateTime.now()
     quickNote.rate = form.rate

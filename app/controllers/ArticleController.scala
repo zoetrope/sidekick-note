@@ -14,7 +14,7 @@ case class ArticleForm
   rate: Int,
   title: String)
 
-object ArticleController extends BaseController[ArticleForm, Article] {
+object ArticleController extends CrudController[ArticleForm, Article] {
 
   override implicit val formats = DefaultFormats +
     FieldSerializer[Article](FieldSerializer.ignore("words")) +
@@ -48,9 +48,9 @@ object ArticleController extends BaseController[ArticleForm, Article] {
     //}
     article
   }
-  protected def findById(itemId: Long): Option[Article] = Article.find(itemId)
+  override def findById(itemId: Long): Option[Article] = Article.find(itemId)
 
-  protected def updateInstance(article: Article, form : ArticleForm) = {
+  override def updateInstance(article: Article, form : ArticleForm) = {
     article.content = form.content
     article.modifiedAt = DateTime.now()
     article.rate = form.rate

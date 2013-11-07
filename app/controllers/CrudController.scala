@@ -15,7 +15,7 @@ import scala.collection.JavaConversions._
 import org.joda.time.format.DateTimeFormat
 import scala.Some
 
-abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Controller with AuthElement with AuthConfigImpl with Json4s {
+abstract class CrudController[TInput : Manifest, TOutput >: Null <: Item] extends Controller with AuthElement with AuthConfigImpl with Json4s {
 
   implicit val formats = DefaultFormats +
     new SimpleTagSerializer +
@@ -106,15 +106,25 @@ abstract class BaseController[TInput : Manifest, TOutput <: Item] extends Contro
       }
   }
 
-  protected def findByAccountId(accountId: Long, offset: Int, limit: Int): List[TOutput]
+  protected def findByAccountId(accountId: Long, offset: Int, limit: Int): List[TOutput] = {
+    List.empty
+  }
 
-  protected def createInstance(user: User, form : TInput) : TOutput
+  protected def createInstance(user: User, form : TInput) : TOutput = {
+    null
+  }
 
-  protected def findById(itemId: Long): Option[TOutput]
+  protected def findById(itemId: Long): Option[TOutput] = {
+    None
+  }
 
-  protected def updateInstance(item: TOutput, form : TInput) : Unit
+  protected def updateInstance(item: TOutput, form : TInput) : Unit = {
 
-  protected def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String], tags:List[String]) : List[TOutput]
+  }
+
+  protected def searchItem(accountId : Long, offset: Int, limit:Int, keywords:List[String], tags:List[String]) : List[TOutput] = {
+    List.empty
+  }
 
   protected def updateTags(item: TOutput, tags:Seq[String]) = {
     val formTags = tags.distinct
