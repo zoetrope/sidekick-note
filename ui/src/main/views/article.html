@@ -39,7 +39,7 @@
                         <h3>
                             {{title}}
                         </h3>
-                        <div ng-bind-html-unsafe="toMarkdown(content)" />
+                        <div ng-bind-html="toMarkdown(content)" />
 
                         <div class="text-muted">
                             {{tags.join(' ')}}

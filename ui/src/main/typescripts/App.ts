@@ -30,7 +30,7 @@ module App {
 
     angular.module(
         appName,
-        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress", 'ui.select2', 'ui.bootstrap', 'ui.date'],
+        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress", 'ui.select2', 'ui.bootstrap', 'ui.date', 'ngRoute'],
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
@@ -57,6 +57,9 @@ module App {
             }];
             $httpProvider.responseInterceptors.push(interceptor)
         })
+        .config(function($sceProvider) {
+            $sceProvider.enabled(true); //TODO: falseにしなくてすむ方法を調べる
+        })
         .run(($rootScope:ng.IRootScopeService, $routeParams:ng.IRouteParamsService)=> {});
 
     angular.module(
@@ -72,9 +75,9 @@ module App {
         [],
         ()=> {
         }
-    ).factory("itemRenderService", ():services.ItemRenderService=> {
-            return new services.ItemRenderService();
-        });
+    ).factory("itemRenderService", ["$sce", ($sce):services.ItemRenderService=> {
+            return new services.ItemRenderService($sce);
+        }]);
 
     angular.module(
         appName + ".controller",

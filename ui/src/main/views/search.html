@@ -17,7 +17,7 @@
     <div class="list-group">
         <div ng-repeat="item in items" class="list-group-item">
             <p class="list-group-item-text">
-            <div ng-bind-html-unsafe="item.content" />
+            <div ng-bind-html="item.content" />
             </p>
             <p class="list-group-item-text text-muted text-right">
                 <small>

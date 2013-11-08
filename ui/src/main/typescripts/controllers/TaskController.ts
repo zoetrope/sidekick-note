@@ -145,7 +145,12 @@ module controllers {
 
             this.searchTasksResource.query({page: page, tags: tags, status: status, dueDate: dueDate},
                 (data)=> {
-                    this.$scope.tasks = data.map(x=>{x.renderedContent = this.$scope.toMarkdown(x.content); return x})
+                    /*
+                    this.$scope.tasks = data.map(x=>{
+                        x.renderedContent = this.$scope.toMarkdown(x.content);
+                        return x;
+                    })*/
+                    this.$scope.tasks = data
                     //TODO: URLの変更
                 },
                 (reason)=> {
@@ -243,6 +248,8 @@ module controllers {
                 data=>{
                     this.$scope.item.content = data.content;
                     this.$scope.item.renderedContent = this.$scope.toMarkdown(data.content);
+                    console.log("data.content = " + data.content)
+                    console.log("data.renderedContent = " + this.$scope.item.renderedContent)
                     this.$scope.item.tags = data.tags;
                 },
                 reason=>{

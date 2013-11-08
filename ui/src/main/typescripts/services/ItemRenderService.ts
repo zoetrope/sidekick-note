@@ -8,7 +8,7 @@ module services {
 
     export class ItemRenderService {
 
-        constructor() {
+        constructor(public $sce : any) {
             marked.setOptions({
                 gfm: true,
                 tables: true,
@@ -28,7 +28,7 @@ module services {
         render(input:string):string {
             //console.log(input)
             if (input) {
-                return marked(input)
+                return this.$sce.trustAsHtml(marked(input))
             } else {
                 return ""
             }

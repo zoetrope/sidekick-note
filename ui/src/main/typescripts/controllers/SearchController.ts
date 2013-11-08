@@ -103,7 +103,7 @@ module controllers {
 
             this.itemsResource.query({page: page, words: words, tags: tags},
                 (data)=> {
-                    this.$scope.items = data.map(x=>{x.content = marked(x.content); return x})
+                    this.$scope.items = data.map(x=>{x.content = this.itemRenderService.render(x.content); return x})
                     this.$scope.searching = false
                     this.$scope.hasFocus = true;
                     //TODO: URLの変更

@@ -107,23 +107,7 @@
                     <span class="badge pull-right">{{todayCount}}</span>
                     all
                 </tab-heading>
-
-                <div class="list-group">
-                  <div ng-repeat="item in tasks" class="list-group-item clearfix" ng-controller="TaskItemController">
-                      <a href="#" ng-click="load(item)" ng-hide="item.editable">
-                          {{item.title}}
-                          <span class="badge pull-right" ng-hide="isOpen">{{item.rate}}</span><br/>
-                          <span class="text-muted pull-right" ng-hide="isOpen">
-                            <small>
-                                created: {{item.createdAt}}, due:{{item.dueDate}}
-                            </small>
-                          </span>
-                      </a>
-                      <div ng-show="isOpen">
-                          <kick-item item="item"></kick-item>
-                      </div>
-                  </div>
-                </div>
+                <div ng-include src="'/assets/views/task.list.html'" ></div>
             </tab>
         </tabset>
     </div>

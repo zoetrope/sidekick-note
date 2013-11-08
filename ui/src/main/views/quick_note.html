@@ -50,7 +50,7 @@
         <div class="panel panel-default" ng-show="enablePreview">
             <div class="panel-heading">Preview</div>
             <div class="panel-body">
-                <div ng-bind-html-unsafe="toMarkdown(inputContent)"/>
+                <div ng-bind-html="toMarkdown(inputContent)"/>
             </div>
         </div>
         <pagination total-items="pagination.totalItems" current-page="pagination.currentPage" max-size="pagination.maxSize"

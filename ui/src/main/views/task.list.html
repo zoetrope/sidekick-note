@@ -1,0 +1,19 @@
+<div class="list-group">
+    <div ng-repeat="item in tasks | limitTo:200" class="list-group-item clearfix" ng-controller="TaskItemController">
+        <a href="#" ng-click="load(item)" ng-hide="item.editable">
+            {{item.title}}
+            <span class="badge pull-right" ng-hide="isOpen">{{item.rate}}</span>
+            <!--
+              <span class="text-muted pull-right" ng-hide="isOpen">
+                <small>
+                    created: {{item.createdAt}}, due:{{item.dueDate}}
+                </small>
+              </span>
+            -->
+        </a>
+
+        <div ng-show="isOpen">
+            <kick-item item="item"></kick-item>
+        </div>
+    </div>
+</div>
