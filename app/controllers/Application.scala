@@ -5,6 +5,8 @@ import org.json4s.{Extraction, DefaultFormats}
 import play.api.mvc._
 import models.{PermissionSerializer, Account}
 import jp.t2v.lab.play2.auth.{LoginLogout, OptionalAuthElement}
+import scala.concurrent.{ExecutionContext, Future}
+import ExecutionContext.Implicits.global
 
 case class LoginForm(name: String, password: String)
 
@@ -17,13 +19,13 @@ object Application extends Controller with OptionalAuthElement with LoginLogout 
       Ok(views.html.main(title))
   }
 
-  def logout = Action {
+  def logout = Action.async {
     implicit request =>
       play.Logger.info("logout")
       gotoLogoutSucceeded
   }
 
-  def authenticate = Action(json) {
+  def authenticate = Action.async(json) {
     implicit request =>
       val login: LoginForm = request.body.extract[LoginForm]
 
@@ -36,7 +38,7 @@ object Application extends Controller with OptionalAuthElement with LoginLogout 
         }
         case None => {
           play.Logger.info("authenticate failed")
-          BadRequest
+          Future.successful(BadRequest)
         }
       }
   }

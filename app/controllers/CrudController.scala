@@ -14,6 +14,7 @@ import net.java.sen.dictionary.Token
 import scala.collection.JavaConversions._
 import org.joda.time.format.DateTimeFormat
 import scala.Some
+import scala.concurrent.ExecutionContext.Implicits.global
 
 abstract class CrudController[TInput : Manifest, TOutput >: Null <: Item] extends Controller with AuthElement with AuthConfigImpl with Json4s {
 

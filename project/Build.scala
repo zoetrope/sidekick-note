@@ -20,7 +20,8 @@ object ApplicationBuild extends Build {
     "com.github.tototoshi" %% "play-json4s-native" % "0.2.0",
     "org.json4s" % "json4s-ext_2.10" % "3.2.5",
     "com.github.tototoshi" %% "play-flyway" % "1.0.0",
-    "jp.t2v" %% "play2.auth" % "0.10.1" exclude("org.scala-stm", "scala-stm_2.10.0"),
+    "jp.t2v" %% "play2-auth" % "0.11.0",
+    "com.typesafe.play" %% "play-cache" % "2.2.0",
     "org.mindrot" % "jbcrypt" % "0.3m",
     "org.slf4j" % "slf4j-simple" % "1.7.5" % "provided"
   )
