@@ -4,6 +4,7 @@ import scalikejdbc.specs2.mutable.AutoRollback
 import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
+import task.Task
 
 class TaskSpec extends Specification with TestDB {
   val task = Task.syntax("t")

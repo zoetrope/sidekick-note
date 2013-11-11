@@ -4,6 +4,7 @@ import scalikejdbc.specs2.mutable.AutoRollback
 import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
+import article.Article
 
 class ArticleSpec extends Specification with TestDB {
   val a = Article.syntax("a")

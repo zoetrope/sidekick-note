@@ -3,43 +3,43 @@
 # ~~~~
 
 # Home page
-GET         /                              controllers.Application.main(title="")
+GET         /                              application.Application.main(title="")
 
-POST        /api/login                     controllers.Application.authenticate
-GET         /api/logout                    controllers.Application.logout
-GET         /api/loggedin                  controllers.Application.loggedin
+POST        /api/login                     application.Application.authenticate
+GET         /api/logout                    application.Application.logout
+GET         /api/loggedin                  application.Application.loggedin
 
-GET         /api/items/search              controllers.ItemController.search(page:Int ?=1, words: String ?= "", tags: String ?= "")
-GET         /api/items/count               controllers.ItemController.count(words: String ?= "", tags: String ?= "")
+GET         /api/items/search              item.ItemController.search(page:Int ?=1, words: String ?= "", tags: String ?= "")
+GET         /api/items/count               item.ItemController.count(words: String ?= "", tags: String ?= "")
 
-GET         /api/quick_notes               controllers.QuickNoteController.all(page:Int ?=1)
-POST        /api/quick_notes               controllers.QuickNoteController.create
-GET         /api/quick_notes/search        controllers.QuickNoteController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
-GET         /api/quick_notes/count         controllers.QuickNoteController.count(words: String ?= "", tags: String ?= "")
-GET         /api/quick_notes/:id           controllers.QuickNoteController.get(id:Long)
-PUT         /api/quick_notes/:id           controllers.QuickNoteController.update(id:Long)
+GET         /api/quick_notes               quick_note.QuickNoteController.all(page:Int ?=1)
+POST        /api/quick_notes               quick_note.QuickNoteController.create
+GET         /api/quick_notes/search        quick_note.QuickNoteController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
+GET         /api/quick_notes/count         quick_note.QuickNoteController.count(words: String ?= "", tags: String ?= "")
+GET         /api/quick_notes/:id           quick_note.QuickNoteController.get(id:Long)
+PUT         /api/quick_notes/:id           quick_note.QuickNoteController.update(id:Long)
 
-GET         /api/tasks                     controllers.TaskController.all(page:Int ?=1)
-POST        /api/tasks                     controllers.TaskController.create
-GET         /api/tasks/search              controllers.SearchTaskController.search(page: Int ?=1, tags: String ?= "", status: String ?= "", dueDate: String ?= "")
-GET         /api/tasks/fullsearch          controllers.TaskController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
-GET         /api/tasks/count               controllers.TaskController.count(words: String ?= "", tags: String ?= "")
-GET         /api/tasks/:id                 controllers.TaskController.get(id:Long)
-PUT         /api/tasks/:id                 controllers.TaskController.update(id:Long)
+GET         /api/tasks                     task.TaskController.all(page:Int ?=1)
+POST        /api/tasks                     task.TaskController.create
+GET         /api/tasks/search              task.SearchTaskController.search(page: Int ?=1, tags: String ?= "", status: String ?= "", dueDate: String ?= "")
+GET         /api/tasks/fullsearch          task.TaskController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
+GET         /api/tasks/count               task.TaskController.count(words: String ?= "", tags: String ?= "")
+GET         /api/tasks/:id                 task.TaskController.get(id:Long)
+PUT         /api/tasks/:id                 task.TaskController.update(id:Long)
 
-GET         /api/articles                  controllers.ArticleController.all(page:Int ?=1)
-POST        /api/articles                  controllers.ArticleController.create
-GET         /api/articles/search           controllers.ArticleController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
-GET         /api/articles/titles           controllers.ArticleController.allTitles
-GET         /api/articles/:id              controllers.ArticleController.get(id:Long)
-PUT         /api/articles/:id              controllers.ArticleController.update(id:Long)
+GET         /api/articles                  article.ArticleController.all(page:Int ?=1)
+POST        /api/articles                  article.ArticleController.create
+GET         /api/articles/search           article.ArticleController.search(page: Int ?=1, words: String ?= "", tags: String ?= "")
+GET         /api/articles/titles           article.ArticleController.allTitles
+GET         /api/articles/:id              article.ArticleController.get(id:Long)
+PUT         /api/articles/:id              article.ArticleController.update(id:Long)
 
-GET         /api/tags                      controllers.TagController.getTags
+GET         /api/tags                      tag.TagController.getTags
 
-GET         /api/search_criteria/:target   controllers.SearchCriterionController.all(target: String)
-POST        /api/search_criteria/:target   controllers.SearchCriterionController.create(target: String)
+GET         /api/search_criteria/:target   search_criterion.SearchCriterionController.all(target: String)
+POST        /api/search_criteria/:target   search_criterion.SearchCriterionController.create(target: String)
 
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                  controllers.Assets.at(path="/public", file)
-GET         /*any                          controllers.Application.main(any)
+GET         /*any                          application.Application.main(any)

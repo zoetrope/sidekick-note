@@ -5,6 +5,7 @@ import org.joda.time._
 import scalikejdbc.SQLInterpolation._
 import scalikejdbc.DBSession
 import org.specs2.mutable.Specification
+import user.Account
 
 class AccountSpec extends Specification with TestDB{
 

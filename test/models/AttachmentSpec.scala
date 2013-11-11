@@ -4,6 +4,7 @@ import scalikejdbc.specs2.mutable.AutoRollback
 import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
+import attachment.Attachment
 
 class AttachmentSpec extends Specification {
   val a = Attachment.syntax("a")

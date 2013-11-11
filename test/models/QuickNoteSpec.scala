@@ -5,6 +5,10 @@ import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
 import scalikejdbc.DBSession
+import tag.{ItemTag, Tag}
+import quick_note.QuickNote
+import user.Account
+import item.Item
 
 class QuickNoteSpec extends Specification with TestDB {
 

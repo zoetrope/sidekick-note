@@ -6,7 +6,7 @@ module directives {
     export class ItemDirective implements ng.IDirective {
         restrict: string = "E";
 
-        templateUrl: string = "/assets/views/item.html";
+        templateUrl: string = "/assets/views/item.tpl.html";
 
         transclude: any = false;
 

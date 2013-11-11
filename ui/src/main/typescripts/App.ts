@@ -1,22 +1,22 @@
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
-///<reference path='controllers/ApplicationController.ts' />
-///<reference path='controllers/HomeController.ts' />
-///<reference path='controllers/QuickNoteController.ts' />
-///<reference path='controllers/TaskController.ts' />
-///<reference path='controllers/ArticleController.ts' />
-///<reference path='controllers/SearchController.ts' />
-///<reference path='controllers/UserController.ts' />
-///<reference path='controllers/SearchCriterionController.ts' />
-///<reference path='controllers/SearchTaskCriterionController.ts' />
-///<reference path='controllers/SearchQuickNoteCriterionController.ts' />
-///<reference path='controllers/SearchParam.ts' />
-///<reference path='models/Article.ts' />
-///<reference path='models/Item.ts' />
-///<reference path='models/QuickNote.ts' />
-///<reference path='models/Tag.ts' />
-///<reference path='models/Task.ts' />
-///<reference path='models/SearchCriterion.ts' />
+///<reference path='application/ApplicationController.ts' />
+///<reference path='home/HomeController.ts' />
+///<reference path='quick_note/QuickNoteController.ts' />
+///<reference path='task/TaskController.ts' />
+///<reference path='article/ArticleController.ts' />
+///<reference path='search/SearchController.ts' />
+///<reference path='user/UserController.ts' />
+///<reference path='base/SearchCriterionController.ts' />
+///<reference path='task/SearchTaskCriterionController.ts' />
+///<reference path='quick_note/SearchQuickNoteCriterionController.ts' />
+///<reference path='common/SearchParam.ts' />
+///<reference path='article/Article.ts' />
+///<reference path='base/Item.ts' />
+///<reference path='quick_note/QuickNote.ts' />
+///<reference path='common/Tag.ts' />
+///<reference path='task/Task.ts' />
+///<reference path='base/SearchCriterion.ts' />
 ///<reference path='services/ItemRenderService.ts' />
 ///<reference path='directives/ItemDirective.ts' />
 ///<reference path='directives/EnableFocus.ts' />
@@ -34,12 +34,12 @@ module App {
         ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
-                .when("/home", {templateUrl: "/assets/views/home.html"})
-                .when("/quick_note", {templateUrl: "/assets/views/quick_note.html"})
-                .when("/task", {templateUrl: "/assets/views/task.html"})
-                .when("/article", {templateUrl: "/assets/views/article.html"})
-                .when("/search", {templateUrl: "/assets/views/search.html"})
-                .when("/login", {templateUrl: "/assets/views/login.html"})
+                .when("/home", {templateUrl: "/assets/views/home.tpl.html"})
+                .when("/quick_note", {templateUrl: "/assets/views/quick_note.tpl.html"})
+                .when("/task", {templateUrl: "/assets/views/task.tpl.html"})
+                .when("/article", {templateUrl: "/assets/views/article.tpl.html"})
+                .when("/search", {templateUrl: "/assets/views/search.tpl.html"})
+                .when("/login", {templateUrl: "/assets/views/login.tpl.html"})
                 .otherwise({redirectTo: '/home'});
             $locationProvider.html5Mode(true);
         })
@@ -58,7 +58,7 @@ module App {
             $httpProvider.responseInterceptors.push(interceptor)
         })
         .config(function($sceProvider) {
-            $sceProvider.enabled(true); //TODO: falseにしなくてすむ方法を調べる
+            $sceProvider.enabled(true);
         })
         .run(($rootScope:ng.IRootScopeService, $routeParams:ng.IRouteParamsService)=> {});
 

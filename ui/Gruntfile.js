@@ -12,7 +12,7 @@ module.exports = function (grunt) {
             typescripts: 'src/main/typescripts',
             stylesheets: 'src/main/stylesheets',
             libs: 'src/main/libs',
-            views: 'src/main/views',
+            views: 'src/main/typescripts',
             images: 'src/main/images'
         },
         test: {
@@ -65,7 +65,7 @@ module.exports = function (grunt) {
                 tasks: ['typescript']
             },
             views: {
-                files: ['<%= conf.app.views %>/**/*.html', '<%= conf.app.stylesheets %>/**/*.css'],
+                files: ['<%= conf.app.views %>/**/*.tpl.html', '<%= conf.app.stylesheets %>/**/*.css'],
                 tasks: ['copy:static']
             }
         },
@@ -84,7 +84,7 @@ module.exports = function (grunt) {
         copy: {
             static: {
                 files: [
-                    {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.views %>/*.html'], dest: '<%= conf.dist.views %>'},
+                    {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.views %>/**/*.tpl.html'], dest: '<%= conf.dist.views %>'},
                     {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.images %>/*.*'], dest: '<%= conf.dist.images %>'},
                     {expand: true, flatten: true, cwd: '', src: ['<%= conf.app.stylesheets %>/*.css'], dest: '<%= conf.dist.stylesheets %>'}
                 ]
@@ -144,10 +144,7 @@ module.exports = function (grunt) {
                         '<%= conf.dist.libs %>/bootstrap/*.js',
                         '<%= conf.dist.libs %>/highlightjs/*.js',
                         '<%= conf.dist.libs %>/marked/*.js',
-                        '<%= conf.dist.scripts %>/models/*.js',
-                        '<%= conf.dist.scripts %>/directives/*.js',
-                        '<%= conf.dist.scripts %>/services/*.js',
-                        '<%= conf.dist.scripts %>/controllers/*.js',
+                        '<%= conf.dist.scripts %>/**/*.js',
                         '<%= conf.dist.scripts %>/App.js'
                     ]
                 }

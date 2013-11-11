@@ -4,6 +4,7 @@ import scalikejdbc.specs2.mutable.AutoRollback
 import org.specs2.mutable._
 import org.joda.time._
 import scalikejdbc.SQLInterpolation._
+import tag.Tag
 
 class TagSpec extends Specification with TestDB {
   val tag = Tag.syntax("t")
