@@ -2,7 +2,7 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 
 ///<reference path='../services/ItemRenderService.ts' />
-///<reference path='../base/Item.ts' />
+///<reference path='Item.ts' />
 ///<reference path='../common/SearchParam.ts' />
 
 module controllers {

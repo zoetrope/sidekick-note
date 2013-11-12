@@ -12,7 +12,7 @@
 ///<reference path='quick_note/SearchQuickNoteCriterionController.ts' />
 ///<reference path='common/SearchParam.ts' />
 ///<reference path='article/Article.ts' />
-///<reference path='base/Item.ts' />
+///<reference path='search/Item.ts' />
 ///<reference path='quick_note/QuickNote.ts' />
 ///<reference path='common/Tag.ts' />
 ///<reference path='task/Task.ts' />

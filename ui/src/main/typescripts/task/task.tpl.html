@@ -35,80 +35,79 @@
     </div>
 
     <div class="col-sm-8">
-        <tabset>
-            <tab heading="new task">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <form ng-submit="addTask()" role="form" class="form">
+        <div class="row well" ng-hide="isEditing">
+            <button type="button" class="btn btn-primary col-sm-1" ng-model="isEditing" btn-checkbox>
+                +
+            </button>
+            <div class="col-sm-11">
+                <input type="text" ng-model="searchTitle" class="form-control" placeholder="search title">
+            </div>
+        </div>
 
-                            <div class="form-group">
-                                <input type="text" ng-model="inputTitle" class="form-control"
-                                       placeholder="input task name here" ng-disabled="sending"/>
-                            </div>
+        <div class="panel panel-default" ng-show="isEditing">
+            <div class="panel-body">
+                <form ng-submit="addTask()" role="form" class="form">
 
-
-                            <div class="form-group">
-                                    <textarea rows="{{getComfortableRowNumber(inputContent)}}" ng-model="inputContent"
-                                              class="form-control"
-                                              placeholder="add new task here" ng-disabled="sending"
-                                              kick-focus="hasFocus"
-                                              ui-keypress="{'ctrl-10':'keypress($event)'}"/>
-                            </div>
+                    <div class="form-group">
+                        <input type="text" ng-model="inputTitle" class="form-control"
+                               placeholder="input task name here" ng-disabled="sending"/>
+                    </div>
 
 
-                            <div class="form-group">
-                                <label for="inputTags">tags</label>
-                                <input id="inputTags" type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
-                                       style="width:100%"/>
-                            </div>
-
-                            <div class="form-group">
-                                <label >rate</label>
-                                <rating value="rate" max="5" readonly="false"></rating>
-                            </div>
+                    <div class="form-group">
+                        <textarea rows="{{getComfortableRowNumber(inputContent)}}" ng-model="inputContent"
+                                  class="form-control"
+                                  placeholder="add new task here" ng-disabled="sending"
+                                  kick-focus="hasFocus"
+                                  ui-keypress="{'ctrl-10':'keypress($event)'}"/>
+                    </div>
 
 
-                            <div class="form-group">
-                                <label for="inputDueDate">due date</label>
-                                <input id="inputDueDate" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
-                            </div>
+                    <div class="form-group">
+                        <label for="inputTags">tags</label>
+                        <input id="inputTags" type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
+                               style="width:100%"/>
+                    </div>
 
-                            <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
-                        </form>
+                    <div class="form-group">
+                        <label>rate</label>
+                        <rating value="rate" max="5" readonly="false"></rating>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="inputDueDate">due date</label>
+                        <input id="inputDueDate" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
+                    </div>
+
+                    <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
+                    <button type="button" class="btn btn-primary pull-right" ng-model="isEditing" btn-checkbox  btn-checkbox-true="false" btn-checkbox-false="true">
+                        Close
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div ng-hide="isEditing">
+            <div class="list-group">
+                <div ng-repeat="item in tasks | limitTo:200 | filter:{title:searchTitle}" class="list-group-item clearfix" ng-controller="TaskItemController">
+                    <a href="#" ng-click="load(item)" ng-hide="item.editable">
+                        {{item.title}}
+                        <span class="badge pull-right" ng-hide="isOpen">{{item.rate}}</span>
+                        <!--
+                          <span class="text-muted pull-right" ng-hide="isOpen">
+                            <small>
+                                created: {{item.createdAt}}, due:{{item.dueDate}}
+                            </small>
+                          </span>
+                        -->
+                    </a>
+
+                    <div ng-if="isOpen">
+                        <kick-item item="item"></kick-item>
                     </div>
                 </div>
-            </tab>
-            <tab>
-                <tab-heading>
-                    <span class="badge pull-right">{{todayCount}}</span>
-                    today
-                </tab-heading>
-            </tab>
-            <tab>
-                <tab-heading>
-                    <span class="badge pull-right">{{todayCount}}</span>
-                    this week
-                </tab-heading>
-            </tab>
-            <tab>
-                <tab-heading>
-                    <span class="badge pull-right">{{todayCount}}</span>
-                    someday
-                </tab-heading>
-            </tab>
-            <tab>
-                <tab-heading>
-                    <span class="badge pull-right">{{todayCount}}</span>
-                    completed
-                </tab-heading>
-            </tab>
-            <tab active="allTabIsActive">
-                <tab-heading>
-                    <span class="badge pull-right">{{todayCount}}</span>
-                    all
-                </tab-heading>
-                <div ng-include src="'/assets/views/task.list.tpl.html'" ></div>
-            </tab>
-        </tabset>
+            </div>
+        </div>
     </div>
 </div>

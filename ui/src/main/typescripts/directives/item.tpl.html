@@ -16,7 +16,7 @@
     </div>
 
     <div>
-        <div class="text-muted">
+        <div class="text-muted" ng-hide="item.editable">
             {{item.tags.join(' ')}}
         </div>
         <div ng-show="item.editable">
