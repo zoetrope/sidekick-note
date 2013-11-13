@@ -196,6 +196,7 @@ module controllers {
 
         update(task: models.Task) {
             //alert("content:" + content + ",tags:" + tags + ",rate:" + rate + ",status:" + status + ",dueDate:" + dueDate)
+            //alert(angular.toJson(task));
 
             var index = this.$scope.tasks.indexOf(this.$scope.item)
             this.$scope.tasks[index].editable = false;
@@ -206,8 +207,7 @@ module controllers {
                 rate: this.$scope.tasks[index].rate,
                 status: this.$scope.tasks[index].status,
                 title: this.$scope.tasks[index].title,
-                dueDate: null
-                //dueDate: this.$scope.tasks[index].dueDate
+                dueDate: this.$scope.tasks[index].dueDate
             }, data=>{
                 var index = this.$scope.tasks.indexOf(this.$scope.item)
                 this.$scope.tasks[index].renderedContent = this.$scope.toMarkdown(data.content)
