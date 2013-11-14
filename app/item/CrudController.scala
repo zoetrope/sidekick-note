@@ -137,9 +137,9 @@ abstract class CrudController[TInput : Manifest, TOutput >: Null <: Item] extend
     remTags.foreach(tag => item.deleteTag(tag))
   }
 
-  protected def parseDate(input: String) : Option[DateTime] = {
+  protected def parseDate(input: Option[String]) : Option[DateTime] = {
     try {
-      Some(DateTime.parse(input))
+      Some(DateTime.parse(input.get)) //TODO: もう少しマシな実装に・・・
     } catch {
       case _: Throwable => Option.empty[DateTime]
     }

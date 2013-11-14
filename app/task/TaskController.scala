@@ -16,7 +16,7 @@ case class TaskForm
   tags: Seq[String],
   rate: Int,
   status: String,
-  dueDate: String,
+  dueDate: Option[String],
   title: String
 )
 
