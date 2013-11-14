@@ -37,10 +37,14 @@
         <br ng-show="item.editable"/>
         <rating class="pull-left" value="item.rate" max="5" readonly="!item.editable"></rating>
 
-        <span class="text-muted pull-right">
+        <span ng-hide="item.editable" class="text-muted pull-right">
             <small>
                 {{item.dueDate}}
             </small>
+        </span>
+        <span ng-show="item.editable">
+            {{item.dueDate}}
+            <input ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="item.dueDate" >
         </span>
         <ul class="task-menu">
             <li ng-click="delete(item)" ng-hide="item.editable"><a href="#"><span

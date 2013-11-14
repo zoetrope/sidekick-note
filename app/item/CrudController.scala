@@ -139,7 +139,7 @@ abstract class CrudController[TInput : Manifest, TOutput >: Null <: Item] extend
 
   protected def parseDate(input: String) : Option[DateTime] = {
     try {
-      Some(DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z").parseDateTime(input))
+      Some(DateTime.parse(input))
     } catch {
       case _: Throwable => Option.empty[DateTime]
     }

@@ -59,7 +59,11 @@ object TaskController extends CrudController[TaskForm, Task] {
     //}
     task
   }
-  override def findById(itemId: Long): Option[Task] = Task.find(itemId)
+  override def findById(itemId: Long): Option[Task] = {
+    val task = Task.find(itemId)
+    task.map(t => play.Logger.info("task due date = " + t.dueDate));
+    return task
+  }
 
   override def updateInstance(task: Task, form : TaskForm) = {
     task.content = form.content
@@ -73,6 +77,7 @@ object TaskController extends CrudController[TaskForm, Task] {
     }
     task.status = status
     task.dueDate = parseDate(form.dueDate)
+    play.Logger.info("updated task due date = " + form.dueDate + " -> " + task.dueDate);
     task.title = form.title
 
     //TODO: transaction

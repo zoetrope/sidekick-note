@@ -77,7 +77,8 @@
 
                     <div class="form-group">
                         <label for="inputDueDate">due date</label>
-                        <input id="inputDueDate" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate">
+                        {{dueDate | date:'yyyy/MM/dd' }}
+                        <div id="inputDueDate" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate"></div>
                     </div>
 
                     <input type="submit" value="add" class="btn btn-default pull-right" ng-disabled="sending"/>
