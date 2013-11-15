@@ -1,5 +1,7 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
+///<reference path='../../../d.ts/DefinitelyTyped/rx.js/rx.js.d.ts' />
+///<reference path='../../../d.ts/DefinitelyTyped/rx.js/rx.js.async.d.ts' />
 
 ///<reference path='Task.ts' />
 ///<reference path='../common/Tag.ts' />
@@ -143,19 +145,19 @@ module controllers {
             if (status == null) status = ""
             if (dueDate == null) dueDate = ""
 
+            var p = (<any>this.searchTasksResource.query({page: page, tags: tags, status: status, dueDate: dueDate})).$promise;
+            Rx.Observable.fromPromise(p).subscribe(data => this.$scope.tasks = data);
+
+/*
             this.searchTasksResource.query({page: page, tags: tags, status: status, dueDate: dueDate},
                 (data)=> {
-                    /*
-                    this.$scope.tasks = data.map(x=>{
-                        x.renderedContent = this.$scope.toMarkdown(x.content);
-                        return x;
-                    })*/
                     this.$scope.tasks = data
                     //TODO: URLの変更
                 },
                 (reason)=> {
                     alert("search ng")
                 });
+    */
         }
    }
 

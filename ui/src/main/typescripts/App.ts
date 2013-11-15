@@ -1,5 +1,6 @@
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
+///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-route.d.ts' />
 ///<reference path='application/ApplicationController.ts' />
 ///<reference path='home/HomeController.ts' />
 ///<reference path='quick_note/QuickNoteController.ts' />
@@ -31,7 +32,7 @@ module App {
     angular.module(
         appName,
         [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress", 'ui.select2', 'ui.bootstrap', 'ui.date', 'ngRoute'],
-        ($routeProvider:ng.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
+        ($routeProvider:ng.route.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
                 .when("/home", {templateUrl: "/assets/views/home.tpl.html"})
@@ -60,7 +61,7 @@ module App {
         .config(function($sceProvider) {
             $sceProvider.enabled(true);
         })
-        .run(($rootScope:ng.IRootScopeService, $routeParams:ng.IRouteParamsService)=> {});
+        .run(($rootScope:ng.IRootScopeService, $routeParams:ng.route.IRouteParamsService)=> {});
 
     angular.module(
         appName + ".directive",

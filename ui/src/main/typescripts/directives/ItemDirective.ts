@@ -14,6 +14,5 @@ module directives {
 
         scope: any = false;
 
-        link: Function = function(scope, element, attr, ngModel) {};
     }
 }

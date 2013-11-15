@@ -5,6 +5,6 @@ module services {
     'use strict';
 
     export interface IUpdatableResourceClass extends ng.resource.IResourceClass  {
-        update: ng.resource.IActionCall;
+        update(params: any, data: any, success?: Function, error?: Function): ng.resource.IResource;
     }
 }

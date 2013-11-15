@@ -5,14 +5,15 @@ module directives {
 
     export class EnableFocus implements ng.IDirective {
         restrict:string = "A";
-        link: Function = function(scope, element, attrs) {
-            scope.$watch(attrs.kickFocus, autofocus => {
+
+        link(scope: ng.IScope, element: any, attrs: ng.IAttributes, controller: any) {
+            scope.$watch(attrs["kickFocus"], autofocus => {
                 if (autofocus) {
                     setTimeout(function () {
                         element[0].focus()
                     }, 0)
                 }
             })
-        };
+        }
     }
 }

@@ -144,6 +144,8 @@ module.exports = function (grunt) {
                         '<%= conf.dist.libs %>/bootstrap/*.js',
                         '<%= conf.dist.libs %>/highlightjs/*.js',
                         '<%= conf.dist.libs %>/marked/*.js',
+                        '<%= conf.dist.libs %>/rxjs/rx.js',
+                        '<%= conf.dist.libs %>/rxjs/rx.async.js',
                         '<%= conf.dist.scripts %>/**/*.js',
                         '<%= conf.dist.scripts %>/App.js'
                     ]
@@ -192,7 +194,7 @@ module.exports = function (grunt) {
         exec: {
             tsd: {
                 cmd: function () {
-                    return "tsd install jquery angular angular-resource marked jasmine angular-mocks";
+                    return "tsd install jquery angular angular-resource angular-route marked jasmine angular-mocks rx.js";
                 }
             }
         }
