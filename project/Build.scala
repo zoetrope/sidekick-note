@@ -35,8 +35,8 @@ object ApplicationBuild extends Build {
   val main = play.Project(appName, appVersion, appDependencies)
     .settings(
     // Add your own project settings here
-    resolvers += "org.sedis" at "http://pk11-scratch.googlecode.com/svn/trunk",
-
+    resolvers += "org.sedis" at "http://pk11-scratch.googlecode.com/svn/trunk"
+/*,
     uiDirectory <<= (baseDirectory in Compile) { _ / "ui" },
 
     playOnStarted <+= uiDirectory { base =>
@@ -51,6 +51,7 @@ object ApplicationBuild extends Build {
         Grunt.process = None
       }: Unit
     }
+*/
   )
 
   object Grunt {
