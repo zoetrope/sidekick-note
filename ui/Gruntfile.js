@@ -58,7 +58,7 @@ module.exports = function (grunt) {
         watch: {
             "typescript-main": {
                 files: ['<%= conf.app.typescripts %>/**/*.ts'],
-                tasks: ['typescript:main', 'uglify:dev']
+                tasks: ['clean:mainjs', 'typescript:main', 'uglify:dev']
             },
             "typescript-test": {
                 files: [ '<%= conf.test.typescripts %>/**/*.ts'],
@@ -177,6 +177,14 @@ module.exports = function (grunt) {
                 src: [
                     'bower_components'
                 ]
+            },
+            mainjs: {
+                src: [
+                    '<%= conf.dist.scripts %>/main.min.js'
+                ],
+                options: {
+                    force: true
+                }
             }
         },
         karma: {
