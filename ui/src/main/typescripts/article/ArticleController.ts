@@ -40,11 +40,15 @@ module controllers {
 
         // event
         keypress($event:ng.IAngularEvent) : void;
+
+        isCollapsed: Boolean;
     }
 
     export class ArticleController {
 
         constructor(public $scope:ArticleScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
+
+            $scope.isCollapsed = false
 
             $scope.rate = 1
             $scope.title = ""

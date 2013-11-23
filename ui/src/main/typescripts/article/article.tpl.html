@@ -1,5 +1,6 @@
 <div ng-controller="ArticleController" class="row">
-    <div class="col-sm-4 well">
+
+    <div ng-class="{'col-sm-4':!isCollapsed}" ng-hide="isCollapsed">
         <input type="text" ui-select2="searchSelectOptions" ng-model="searchSelectedTags" style="width:100%"/>
         <button ng-click="searchTask()">search</button>
         {{searchSelectedTags | json}}
@@ -14,7 +15,8 @@
 
     </div>
 
-    <div class="col-sm-8">
+    <div ng-class="{'col-sm-12':isCollapsed, 'col-sm-8':!isCollapsed}">
+        <input type="checkbox" ng-model="isCollapsed">collapse<br>
         <div class="panel panel-default">
             <div class="panel-body">
 
