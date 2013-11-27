@@ -62,7 +62,7 @@ module controllers {
             this.searchCriteriaResource.query({target: this.$scope.targetType},
                 data => {
                     this.$scope.searchCriteria = data
-                }, reason => alert(reason));
+                }, reason => console.log(reason));
         }
 
         search(query: string) {
@@ -79,7 +79,7 @@ module controllers {
                     this.$scope.searchCriteria.push(data)
                 },
                 (reason)=> {
-                    alert("error addSearchCriterion");
+                    console.log("error addSearchCriterion");
                 })
         }
 

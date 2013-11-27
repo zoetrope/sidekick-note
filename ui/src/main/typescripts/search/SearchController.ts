@@ -110,7 +110,7 @@ module controllers {
 
                 },
                 (reason)=> {
-                    alert("error get items : " + reason)
+                    console.log("error get items : " + reason)
                     this.$scope.searching = false
                     this.$scope.hasFocus = true;
                 });

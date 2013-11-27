@@ -23,12 +23,12 @@ module controllers {
             this.LoggedIn = $resource("/api/loggedin")
             this.Logout = $resource("/api/logout")
 
-            this.LoggedIn.get(x=>$scope.loggedin = x.name, reason => alert(reason))
+            this.LoggedIn.get(x=>$scope.loggedin = x.name, reason => console.log(reason))
 
             var tick = () => {
                 this.LoggedIn.get(data=>{
                     this.$timeout(tick, 60000);
-                },reason => alert("error"));
+                },reason => console.log(reason));
             }
             tick();
 
@@ -56,7 +56,7 @@ module controllers {
                 window.location.href = data.url;
 
             }, (reason)=> {
-                alert("failed login." + reason)
+                console.log("failed login." + reason)
             });
         }
 

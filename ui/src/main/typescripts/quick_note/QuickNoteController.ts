@@ -140,7 +140,7 @@ module controllers {
                     this.$scope.hasFocus = true
                 },
                 (reason)=> {
-                    alert("error add QuickNote")
+                    console.log("error add QuickNote: " + reason)
                     this.$scope.sending = false
                     this.$scope.hasFocus = true
                 })
@@ -168,7 +168,7 @@ module controllers {
                     this.$scope.pagination.currentPage = page
                 },
                 (reason)=> {
-                    alert("search ng")
+                    console.log("search ng: " + reason)
                 });
         }
 
@@ -215,7 +215,7 @@ module controllers {
                 var index = this.$scope.quickNotes.indexOf(this.$scope.item)
                 this.$scope.quickNotes[index].renderedContent = this.$scope.toMarkdown(data.content)
             }, reason=>{
-                alert("update ng");
+                console.log("update ng: " + reason);
                 var index = this.$scope.quickNotes.indexOf(this.$scope.item) // 更新処理が返ってくるまでの間にindexが変わってしまう可能性を考慮
                 this.$scope.quickNotes[index].editable = true;
             })

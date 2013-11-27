@@ -95,7 +95,7 @@ module controllers {
                     $scope.titles = data
                 },
                 (reason)=> {
-                    alert("error get articles")
+                    console.log("error get articles: " + reason)
                 });
         }
 
@@ -122,14 +122,13 @@ module controllers {
                     this.$scope.title = data.title
                 },
                 (reason)=> {
-                    alert("error add QuickNote");
+                    console.log("error add Article: " + reason);
                     this.$scope.sending = false;
                     this.$scope.hasFocus = true;
                 })
         }
 
         loadArticle(id: number) {
-            alert("loadArticle(" + id );
             this.articleResource.get({itemId: id}, {},
                 (data)=> {
                     this.$scope.itemId = data.itemId
@@ -139,7 +138,7 @@ module controllers {
                     this.$scope.tags = data.tags
                 },
                 (reason)=> {
-                    alert("error load article")
+                    console.log("error load article: " + reason)
                 });
         }
 
@@ -150,21 +149,19 @@ module controllers {
                 rate: this.$scope.rate,
                 title: this.$scope.title
             }, data=>{}, reason=>{
-                alert("update ng");
+                console.log("update ng: " + reason);
             })
         }
 
         searchArticle() {
             var tags = this.$scope.searchSelectedTags.join(" ")
             if (tags) {
-                alert("tags = " + tags)
                 this.searchArticlesResource.query({tags: tags},
                     (data)=> {
-                        alert("search ok")
                         this.$scope.titles = data
                     },
                     (reason)=> {
-                        alert("search ng")
+                        console.log("search ng: " + reason)
                     });
             }
         }

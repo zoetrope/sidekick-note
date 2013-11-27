@@ -132,7 +132,7 @@ module controllers {
                     this.$scope.hasFocus = true;
                 },
                 (reason)=> {
-                    alert("error add QuickNote");
+                    console.log("error add Task: " + reason);
                     this.$scope.sending = false;
                     this.$scope.hasFocus = true;
                 })
@@ -214,7 +214,7 @@ module controllers {
                 var index = this.$scope.tasks.indexOf(this.$scope.item)
                 this.$scope.tasks[index].renderedContent = this.$scope.toMarkdown(data.content)
             }, reason=>{
-                alert("update ng");
+                console.log("update ng: " + reason);
                 var index = this.$scope.tasks.indexOf(this.$scope.item) // 更新処理が返ってくるまでの間にindexが変わってしまう可能性を考慮
                 this.$scope.tasks[index].editable = true;
             })
