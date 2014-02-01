@@ -14,6 +14,7 @@ ui/src/test/scripts
 ui/src/test/libs
 ui/src/test/stylesheets
 ui/src/d.ts
+backend/node_modules
 target
 tmp
 .history
