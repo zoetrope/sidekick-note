@@ -168,6 +168,20 @@ object Task extends SQLSyntaxSupport[Task] with ItemQueryHelper {
       .list.apply()
   }
 
+
+  def findAll()(implicit session: DBSession = autoSession): List[Task] = {
+    withSQL[Task](
+      select.from(Item as i)
+        .join(Task as t).on(t.itemId, i.itemId)
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
+    ).one(implicit rs => Task(i, t))
+      .toMany(Tag.opt(tg))
+      .map((article, tags) => {
+      article.tags ++= tags; article
+    }).list.apply()
+  }
+
   def findByKeywordsAndTags(accountId: Long, offset: Int, limit: Int, keywords: String, tags: List[String])(implicit session: DBSession = autoSession): List[Task] = {
     val x = SubQuery.syntax("x", i.resultName)
 

@@ -97,6 +97,19 @@ object Article extends SQLSyntaxSupport[Article] {
     }).list.apply()
   }
 
+  def findAll()(implicit session: DBSession = autoSession): List[Article] = {
+    withSQL[Article](
+      select.from(Item as i)
+        .join(Article as a).on(a.itemId, i.itemId)
+        .leftJoin(ItemTag as it).on(it.itemId, i.itemId)
+        .leftJoin(Tag as tg).on(it.tagId, tg.tagId)
+    ).one(implicit rs => Article(i, a))
+      .toMany(Tag.opt(tg))
+      .map((article, tags) => {
+      article.tags ++= tags; article
+    }).list.apply()
+  }
+
   def findByTags(accountId: Long, offset: Int, limit: Int, tags: List[String])(implicit session: DBSession = autoSession): List[Article] = {
     withSQL[Article](
       select.from(Item as i)

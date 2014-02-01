@@ -36,6 +36,10 @@ PUT         /api/articles/:id              article.ArticleController.update(id:L
 
 GET         /api/tags                      tag.TagController.getTags
 
+GET         /api/migration/quick_notes     migration.MigrationController.getQuickNotes
+GET         /api/migration/tasks           migration.MigrationController.getTasks
+GET         /api/migration/articles        migration.MigrationController.getArticles
+
 GET         /api/search_criteria/:target   search_criterion.SearchCriterionController.all(target: String)
 POST        /api/search_criteria/:target   search_criterion.SearchCriterionController.create(target: String)
 

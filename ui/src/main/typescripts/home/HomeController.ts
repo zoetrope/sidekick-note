@@ -6,24 +6,42 @@
 module controllers {
     'use strict';
 
-    export class Tab {
-        constructor(public title: String, public active: Boolean){
-
-        }
-    }
     export interface HomeScope extends ng.IScope {
-        tabs: Tab[];
-        addTab(): void;
+        tasks: string[];
+        quick_notes: string[];
+        articles: string[];
     }
 
     export class HomeController {
 
         constructor(public $scope:HomeScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
-            $scope.tabs = [new Tab("test1",true),new Tab("test2",false),new Tab("hoge",false)]
-
-            $scope.addTab = () =>{
-                $scope.tabs.push(new Tab("abc", false))
-            }
+            $resource("/api/migration/tasks").query(data => {
+                $scope.tasks = data.map(d=>{
+                    d.createdAt = {"$date": Date.parse(d.createdAt)};
+                    d.modifiedAt = {"$date":Date.parse(d.modifiedAt)};
+                    if(d.dueDate){
+                        d.dueDate = {"$date":Date.parse(d.dueDate)};
+                    }
+                    if(d.completedAt){
+                        d.completedAt = {"$date":Date.parse(d.completedAt)};
+                    }
+                    return JSON.stringify(d);
+                })
+            });
+            $resource("/api/migration/quick_notes").query(data => {
+                $scope.quick_notes = data.map(d=>{
+                    d.createdAt = {"$date":Date.parse(d.createdAt)};
+                    d.modifiedAt = {"$date":Date.parse(d.modifiedAt)};
+                    return JSON.stringify(d);
+                })
+            });
+            $resource("/api/migration/articles").query(data => {
+                $scope.articles = data.map(d=>{
+                    d.createdAt = {"$date":Date.parse(d.createdAt)};
+                    d.modifiedAt = {"$date":Date.parse(d.modifiedAt)};
+                    return JSON.stringify(d);
+                })
+            });
         }
 
     }
