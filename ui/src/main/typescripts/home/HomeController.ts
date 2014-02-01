@@ -25,6 +25,8 @@ module controllers {
                     if(d.completedAt){
                         d.completedAt = {"$date":Date.parse(d.completedAt)};
                     }
+                    d.type = "Task";
+                    delete d.itemId;
                     return JSON.stringify(d);
                 })
             });
@@ -32,6 +34,9 @@ module controllers {
                 $scope.quick_notes = data.map(d=>{
                     d.createdAt = {"$date":Date.parse(d.createdAt)};
                     d.modifiedAt = {"$date":Date.parse(d.modifiedAt)};
+                    d.type = "QuickNote";
+                    d.status = "Flowing";
+                    delete d.itemId;
                     return JSON.stringify(d);
                 })
             });
@@ -39,6 +44,9 @@ module controllers {
                 $scope.articles = data.map(d=>{
                     d.createdAt = {"$date":Date.parse(d.createdAt)};
                     d.modifiedAt = {"$date":Date.parse(d.modifiedAt)};
+                    d.type = "Article";
+                    d.status = "Viewing";
+                    delete d.itemId;
                     return JSON.stringify(d);
                 })
             });
