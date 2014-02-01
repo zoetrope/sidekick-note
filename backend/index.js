@@ -3,6 +3,7 @@ var mongojs = require('mongojs');
 var app = koa();
 var router = require('koa-router')(app)
 var Rx = require('rx');
+var thunkify = require("thunkify");
 
 app.use(router);
 
@@ -34,9 +35,17 @@ function observableToThunk(observable) {
     }
 }
 
+function cursorToThunk(cursor) {
+    return function(cb){
+        cursor.toArray(cb);
+    }
+}
+
 app.resource("api/tasks", {
     index: function *(next) {
-        var tasks = yield observableToThunk(toArrayAsObservable(db.items.find({type: "Article"})));
+        //var tasks = yield db.items.find({type: "Article"}).toArray; //なぜこれがダメなのか
+        var tasks = yield cursorToThunk(db.items.find({type: "Article"}));
+        //var tasks = yield observableToThunk(toArrayAsObservable(db.items.find({type: "Article"})));
         this.body = tasks;
     }
 });
