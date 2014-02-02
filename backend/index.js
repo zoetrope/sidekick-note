@@ -1,10 +1,14 @@
 var koa = require('koa');
 var mongojs = require('mongojs');
-var app = koa();
-var router = require('koa-router')(app)
 var Rx = require('rx');
-var thunkify = require("thunkify");
+var parse = require('co-body');
 
+var app = koa();
+
+var static = require('koa-static');
+app.use(static("client"));
+
+var router = require('koa-router')(app)
 app.use(router);
 
 var db = mongojs("sidekicknote", ["items"]);
@@ -48,10 +52,6 @@ app.resource("api/tasks", {
         //var tasks = yield observableToThunk(toArrayAsObservable(db.items.find({type: "Article"})));
         this.body = tasks;
     }
-});
-
-app.use(function *() {
-    this.body = 'Hello World';
 });
 
 app.listen(3000);
