@@ -6,37 +6,7 @@ var Resource = require('koa-resource-router');
 
 var db = mongojs("sidekicknote", ["items"]);
 var items = db.collection("items");
-
-function toArrayAsObservable(cursor) {
-    return Rx.Observable.create(function(observer){
-        cursor.toArray(function(err,doc){
-            if(err){
-                observer.onError(err);
-            } else {
-                observer.onNext(doc);
-            }
-        });
-    })
-}
-
-function observableToThunk(observable) {
-    return function(fn){
-        var d = observable.subscribe(function(res) {
-                d.dispose();
-                fn(null, res);
-            },
-            function(err) {
-                d.dispose();
-                fn(err);
-            });
-    }
-}
-
-function cursorToThunk(cursor) {
-    return function(cb){
-        cursor.toArray(cb);
-    }
-}
+var cursorToThunk = require("./thunkify").cursorToThunk;
 
 var tasks = new Resource('api/tasks', {
     // GET /api/tasks
