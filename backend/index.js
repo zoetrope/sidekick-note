@@ -3,6 +3,7 @@ var app = koa();
 
 var static = require('koa-static');
 app.use(static("client"));
+app.use(static("../public"));
 
 app.use(require('./task').middleware());
 

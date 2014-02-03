@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="app">
+<html ng-app="sidekick-note">
 
 <head>
     <meta charset="utf-8">
@@ -8,14 +8,57 @@
     <script type="text/javascript" src="bower_components/angular/angular.js" charset="utf-8"></script>
     <script type="text/javascript" src="bower_components/angular-resource/angular-resource.js" charset="utf-8"></script>
 
-    <script type="text/javascript" src="app.js" charset="utf-8"></script>
+    <link rel="stylesheet" media="screen" href="stylesheets/bootstrap/bootstrap.css">
+    <link rel="stylesheet" media="screen" href="stylesheets/bootstrap/bootstrap-theme.css">
+    <link rel="stylesheet" media="screen" href="stylesheets/highlightjs/default.css">
+    <link rel="stylesheet" media="screen" href="stylesheets/select2/select2.css">
+    <link rel="stylesheet" media="screen" href="stylesheets/jquery-ui/jquery-ui.css">
+    <link rel="stylesheet" media="screen" href="stylesheets/main.css">
+
+    <script type="text/javascript" src="scripts/main.min.js"></script>
 </head>
 
+
 <body>
-<div ng-controller="MainController">
-    <div ng-repeat="task in tasks">
-        {{task}}
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container" ng-controller="ApplicationController">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Sidekick Note</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-left">
+                <li ng-class="{ active: isActive('/home') }"><a href="/home">Home</a></li>
+                <li ng-class="{ active: isActive('/quick_note') }"><a href="/quick_note">QuickNote</a></li>
+                <li ng-class="{ active: isActive('/task') }"><a href="/task">Task</a></li>
+                <li ng-class="{ active: isActive('/article') }"><a href="/article">Article</a></li>
+                <li ng-class="{ active: isActive('/search') }"><a href="/search">Search</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ng-hide="loggedin">
+                <li><a href="/login">login</a></li>
+                <li><a href="/register">register</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ng-show="loggedin">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        {{loggedin}} <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="" ng-click="logout()">logout</a></li>
+                        <li><a href="/setting">setting</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
     </div>
+</div>
+<div class="container">
+    <div ng-view></div>
 </div>
 </body>
 
