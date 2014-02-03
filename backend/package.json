@@ -16,7 +16,9 @@
     "co": "https://github.com/zoetrope/co/archive/v3.0.2-withrx.tar.gz",
     "co-body": "0.0.1",
     "koa-static": "~1.4.2",
-    "koa-resource-router": "~0.1.0"
+    "koa-resource-router": "~0.1.0",
+    "koa-logger": "~1.1.1",
+    "koa-mount": "~1.2.3"
   },
   "engines": {
     "node": "0.11.9"
