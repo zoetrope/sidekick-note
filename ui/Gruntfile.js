@@ -36,8 +36,8 @@ module.exports = function (grunt) {
         conf: appConfig,
         typescript: {
             main: {
-                src: ['<%= conf.app.typescripts %>/App.ts'],
-                dest: '<%= conf.dist.scripts %>',
+                src: ['<%= conf.app.typescripts %>/**/*.ts'],
+                dest: '<%= conf.dist.scripts %>/App.js',
                 options: {
                     target: 'es5',
                     base_path: '<%= conf.app.typescripts %>',
@@ -58,7 +58,7 @@ module.exports = function (grunt) {
         watch: {
             "typescript-main": {
                 files: ['<%= conf.app.typescripts %>/**/*.ts'],
-                tasks: ['clean:mainjs', 'typescript:main', 'uglify:dev']
+                tasks: ['clean:mainjs', 'typescript:main']
             },
             "typescript-test": {
                 files: [ '<%= conf.test.typescripts %>/**/*.ts'],
@@ -129,7 +129,7 @@ module.exports = function (grunt) {
                     sourceMappingURL: 'source.js.map'
                 },
                 files: {
-                    '<%= conf.dist.scripts %>/main.min.js': [
+                    '<%= conf.dist.scripts %>/alllib.js': [
                         /* 依存関係の順に並べること */
                         '<%= conf.dist.libs %>/jquery/*.js',
                         '<%= conf.dist.libs %>/jquery-ui/*.js',
@@ -145,9 +145,7 @@ module.exports = function (grunt) {
                         '<%= conf.dist.libs %>/highlightjs/*.js',
                         '<%= conf.dist.libs %>/marked/*.js',
                         '<%= conf.dist.libs %>/rxjs/rx.js',
-                        '<%= conf.dist.libs %>/rxjs/rx.async.js',
-                        '<%= conf.dist.scripts %>/**/*.js',
-                        '<%= conf.dist.scripts %>/App.js'
+                        '<%= conf.dist.libs %>/rxjs/rx.async.js'
                     ]
                 }
             }

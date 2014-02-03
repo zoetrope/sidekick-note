@@ -58,9 +58,6 @@ module App {
             }];
             $httpProvider.responseInterceptors.push(interceptor)
         })
-        .config(function($sceProvider) {
-            $sceProvider.enabled(true);
-        })
         .run(($rootScope:ng.IRootScopeService, $routeParams:ng.route.IRouteParamsService)=> {});
 
     angular.module(
