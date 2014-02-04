@@ -16,6 +16,7 @@ ui/src/test/stylesheets
 ui/src/d.ts
 backend/node_modules
 backend/client/bower_components
+backend/lib
 target
 tmp
 .history

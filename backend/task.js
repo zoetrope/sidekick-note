@@ -6,13 +6,13 @@ var Resource = require('koa-resource-router');
 
 var db = mongojs("sidekicknote", ["items"]);
 var items = db.collection("items");
-var cursorToThunk = require("./thunkify").cursorToThunk;
+var monToThunk = require("./thunkify").monToThunk;
 
 var tasks = new Resource('api/tasks', {
     // GET /api/tasks
     index: function *(next) {
-        //var tasks = yield db.items.find({type: "Article"}).toArray; //なぜこれがダメなのか
-        var tasks = yield cursorToThunk(db.items.find({type: "Article"}));
+        var thunk = monToThunk(items, items.find);
+        var tasks = yield thunk({type: "Article"});
         //var tasks = yield observableToThunk(toArrayAsObservable(db.items.find({type: "Article"})));
         this.body = tasks;
     },

@@ -3,6 +3,7 @@ var mongojs = require('mongojs');
 var db = mongojs("sidekicknote", ["items"]);
 var items = db.collection("items");
 var monToThunk = require("./thunkify").monToThunk;
+var Enumerable = require("./lib/linqjs/linq");
 
 module.exports = function *(next) {
     console.log("api/tags");
@@ -24,7 +25,10 @@ module.exports = function *(next) {
 
     var thunk = monToThunk(items, items.mapReduce);
     var a = yield thunk(map, reduce, { out: { inline: 1 }});
-    this.body = a[0];
+    this.body = Enumerable.from(a[0])
+        .select(function(item){return {name: item._id, refCount: item.value}})
+        .orderByDescending(function(item){return  item.refCount;})
+        .toArray();
 
     //var thunk = thunkify(db.items, db.items.distinct);
     //this.body = yield thunk("tags");
