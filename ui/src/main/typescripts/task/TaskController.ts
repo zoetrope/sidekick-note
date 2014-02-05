@@ -68,6 +68,8 @@ module controllers {
                 }
             };
 
+            $scope.tasks = [];
+
             $scope.toMarkdown = input => itemRenderService.render(input)
             $scope.addTask = angular.bind(this, this.addTask)
 

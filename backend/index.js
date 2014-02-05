@@ -4,13 +4,15 @@ var router = require("koa-router");
 var logger = require("koa-logger");
 var mount = require("koa-mount");
 
-//app.use(logger());
+app.use(logger());
 
 var static = require('koa-static');
 app.use(static("client"));
 app.use(mount("/assets", static("../public")));
 
 app.use(require('./task').middleware());
+app.use(require('./article').middleware());
+app.use(require('./quick_note').middleware());
 
 app.use(router(app));
 

@@ -8,36 +8,36 @@ var db = mongojs("sidekicknote", ["items"]);
 var items = db.collection("items");
 var monToThunk = require("./thunkify").monToThunk;
 
-var tasks = new Resource('api/tasks', {
-    // GET /api/tasks
+var articles = new Resource('api/articles', {
+    // GET /api/articles
     index: function *(next) {
         var find = monToThunk(items, items.find);
-        var tasks = yield find({type: "Task"});
+        var articles = yield find({type: "Article"});
 
-        this.body = tasks;
+        this.body = articles;
     },
-    // GET /api/tasks/new
+    // GET /api/articles/new
     new: function *(next) {
 
     },
-    // POST /api/tasks
+    // POST /api/articles
     create: function *(next) {
         var param = yield parse(this);
         console.log(param);
         this.body = param;
     },
-    // GET /api/tasks/:id
+    // GET /api/articles/:id
     show: function *(next) {
     },
-    // GET /api/tasks/:id/edit
+    // GET /api/articles/:id/edit
     edit: function *(next) {
     },
-    // PUT /api/tasks/:id
+    // PUT /api/articles/:id
     update: function *(next) {
     },
-    // DELETE /api/tasks/:id
+    // DELETE /api/articles/:id
     destroy: function *(next) {
     }
 });
 
-module.exports = tasks;
+module.exports = articles;
