@@ -261,6 +261,8 @@ module controllers {
     }
 }
 
+
+
 angular.module('sidekick-note.controller')
     .controller("TaskController", ["$scope", "$resource", "$location", "itemRenderService",
         ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.TaskController => {

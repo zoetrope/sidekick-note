@@ -56,7 +56,7 @@
 <div class="row" kick-resize>
     <div class="sidebar" ng-hide="showSidebar" ng-style="{height: windowHeight-70}" ng-controller="SidebarController">
         <tabset>
-            <tab heading="new criteria">
+            <tab heading="new criteria" active="active.one">
                 <form role="form">
                     <div class="form-group">
                         <label for="name">Search Name</label>
@@ -83,16 +83,16 @@
                         <label for="sortOrder">Sort Order</label>
                         <input type="number" class="form-control" id="sortOrder" ng-model="current.sortOrder">
                     </div>
-                    <button class="btn btn-default" ng-click="search(assemblyQuery())">Search</button>
-                    <button class="btn btn-default" ng-click="addSearchCriterion()">Add</button>
+                    <button class="btn btn-default" ng-click="search()">Search</button>
                 </form>
             </tab>
-            <tab heading="criteria" active="listTabIsActive">
+            <tab heading="criteria" active="active.two">
                 <div class="list-group">
                     <div ng-repeat="cond in searchCriteria | orderBy:'sortOrder':false" class="list-group-item">
                         <a href="#" ng-click="search(cond.query)">{{cond.title}}</a>
                     </div>
                 </div>
+
             </tab>
         </tabset>
     </div>

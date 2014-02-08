@@ -25,12 +25,13 @@ module controllers {
         search : Function;
         addSearchCriterion : Function;
 
+        active: any;
 
     }
 
     export class SidebarController {
 
-        constructor(private $scope:controllers.SidebarScope, apiService:services.ApiService) {
+        constructor(public $scope:controllers.SidebarScope, apiService:services.ApiService) {
 
             $scope.current = new models.SearchCondition();
             $scope.current.name = "";
@@ -64,9 +65,14 @@ module controllers {
                 $scope.allTags = data.map(tag => tag.name)
             });
 
-            $scope.search = angular.bind(this, this.search)
-            $scope.addSearchCriterion = angular.bind(this, this.addSearchCriterion)
+            $scope.search = angular.bind(this, this.search);
 
+            $scope.addSearchCriterion = angular.bind(this, this.addSearchCriterion);
+
+            $scope.active = {
+                one: true,
+                two: false
+            };
         }
 
 
@@ -79,8 +85,11 @@ module controllers {
              */
         }
 
-        search(query:string) {
-            this.$scope.$emit("search." + this.$scope.current.type, query);
+        search() {
+            this.$scope.active.two = true;
+            //this.$scope.$emit("search." + this.$scope.current.type, query);
+
+
         }
 
         addSearchCriterion() {
@@ -104,7 +113,7 @@ module controllers {
 
 
 angular.module('sidekick-note.controller')
-    .controller("SidebarController", ["$scope", "apiService", "$location", "itemRenderService",
-        ($scope:controllers.SidebarScope, apiService:services.ApiService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService):controllers.SidebarController => {
+    .controller("SidebarController", ["$scope", "apiService",
+        ($scope:controllers.SidebarScope, apiService:services.ApiService):controllers.SidebarController => {
             return new controllers.SidebarController($scope, apiService);
         }]);
