@@ -1,5 +1,17 @@
 <div ng-controller="HomeController" class="row">
-    <div class="col-sm-12">
 
+    <div class="sidebar" ng-hide="isCollapsed">
+
+            ああああああああああああああああああああああああああああああああああ
+
+    </div>
+
+    <div class="content-space" ng-style="{'left':(isCollapsed?'20px':'320px')}">
+        <!-- サイドバー切り替えボタンは上部のナビゲーションバーに -->
+        <input type="checkbox" ng-model="isCollapsed">sidebar toggle<br>
+
+        <textarea>
+
+        </textarea>
     </div>
 </div>
