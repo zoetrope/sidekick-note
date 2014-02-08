@@ -3,7 +3,7 @@ var Resource = require('koa-resource-router');
 var criteria = require("./repository").criteria;
 var monToThunk = require("./thunkify").monToThunk;
 
-var criteriaResource = new Resource('api/criteria', {
+var criteriaResource = new Resource('criteria', {
     // GET /api/criteria
     index: function *(next) {
         console.log(this.query);

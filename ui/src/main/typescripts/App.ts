@@ -10,7 +10,7 @@ module App {
 
     angular.module(appName + ".directive",[]);
     angular.module(appName + ".service",[]);
-    angular.module(appName + ".controller",[appName + ".service", "ngResource"]);
+    angular.module(appName + ".controller",[appName + ".service", "ngResource", "ui.bootstrap.accordion"]);
 
     angular.module(
         appName,
@@ -25,7 +25,8 @@ module App {
                 .when("/search", {templateUrl: "/assets/views/search.tpl.html"})
                 .when("/migration", {templateUrl: "/assets/views/migration.tpl.html"})
                 .when("/login", {templateUrl: "/assets/views/login.tpl.html"})
-                .when("/new_item", {templateUrl: "/assets/views/new_item.tpl.html"})
+                .when("/new_item", {templateUrl: "/assets/views/item.tpl.html"})
+                .when("/items/:id", {templateUrl: "/assets/views/item.tpl.html"})
                 .otherwise({redirectTo: '/home'});
             $locationProvider.html5Mode(true);
         })

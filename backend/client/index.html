@@ -55,8 +55,12 @@
 </div>
 <div class="row" kick-resize>
     <div class="sidebar" ng-hide="showSidebar" ng-style="{height: windowHeight-70}" ng-controller="SidebarController">
-        <tabset>
-            <tab heading="new criteria" active="activeTab.one">
+        <accordion close-others="true">
+            <accordion-group is-open="activeAccordion.one">
+                <accordion-heading>
+                    new criterion<i class="pull-right glyphicon"
+                             ng-class="{'glyphicon-chevron-down': activeAccordion.one, 'glyphicon-chevron-right': !activeAccordion.one}"></i>
+                </accordion-heading>
                 <form role="form">
                     <div class="form-group">
                         <label for="name">Search Name</label>
@@ -68,11 +72,13 @@
                     </div>
                     <div class="form-group">
                         <label for="itemType">Type</label>
-                        <select class="form-control" id="itemType" ng-model="current.param.type" ng-options="t for t in types"></select>
+                        <select class="form-control" id="itemType" ng-model="current.param.type"
+                                ng-options="t for t in types"></select>
                     </div>
                     <div class="form-group">
                         <label for="itemStatus">Status</label>
-                        <select class="form-control" id="itemStatus" ng-model="current.param.status" ng-options="s for s in statuses[current.param.type]"></select>
+                        <select class="form-control" id="itemStatus" ng-model="current.param.status"
+                                ng-options="s for s in statuses[current.param.type]"></select>
                     </div>
                     <div class="form-group">
                         <label for="tags">Tags</label>
@@ -86,22 +92,35 @@
                     <button class="btn btn-default" ng-click="search(current)">Search</button>
                     <button class="btn btn-default" ng-click="addCriterion(current)">add</button>
                 </form>
-            </tab>
-            <tab heading="criteria" active="activeTab.two">
+            </accordion-group>
+            <accordion-group is-open="activeAccordion.two">
+                <accordion-heading>
+                    menu! <i class="pull-right glyphicon"
+                             ng-class="{'glyphicon-chevron-down': activeAccordion.two, 'glyphicon-chevron-right': !activeAccordion.two}"></i>
+                </accordion-heading>
                 <div class="list-group">
                     <div ng-repeat="criterion in criteria | orderBy:'sortOrder':false" class="list-group-item">
                         <a href="#" ng-click="search(criterion)">{{cond.title}}</a>
                     </div>
                 </div>
-                <div class="list-group">
+                表示件数
+                並び順
+
+            </accordion-group>
+            <accordion-group is-open="activeAccordion.three">
+                <accordion-heading>
+                    result<i class="pull-right glyphicon"
+                             ng-class="{'glyphicon-chevron-down': activeAccordion.three, 'glyphicon-chevron-right': !activeAccordion.three}"></i>
+                </accordion-heading>
+                <div class="list-group search-result" ng-style="{height: windowHeight-250}" >
                     <div ng-repeat="item in items" class="list-group-item">
-                        <ul>
-                        <li>{{item.title}}</li>
-                        </ul>
+                        <a href="/items/{{item._id}}" >{{item.title}}</a>
                     </div>
                 </div>
-            </tab>
-        </tabset>
+            </accordion-group>
+        </accordion>
+
+
     </div>
     <div class="content-space" ng-style="{'left':(showSidebar?'20px':'320px'), height: windowHeight-70}">
         <div ng-view></div>

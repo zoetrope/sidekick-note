@@ -10,8 +10,8 @@ var static = require('koa-static');
 app.use(static("client"));
 app.use(mount("/assets", static("../public")));
 
-app.use(require('./items').middleware());
-app.use(require('./criteria').middleware());
+app.use(mount("/api", require('./items').middleware()));
+app.use(mount("/api", require('./criteria').middleware()));
 
 app.use(router(app));
 
@@ -29,10 +29,10 @@ app.get("/api/loggedin", function *(next){
 
 app.get("/api/tags", require("./tag"));
 
-
 app.use(function *(next){
     yield next;
     this.redirect('/index.html');
 });
+
 
 app.listen(3000);

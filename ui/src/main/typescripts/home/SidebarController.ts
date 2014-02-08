@@ -26,7 +26,7 @@ module controllers {
         search : Function;
         addCriterion : Function;
 
-        activeTab: any;
+        activeAccordion: any;
 
         items: any[];
     }
@@ -72,9 +72,10 @@ module controllers {
 
             $scope.addCriterion = angular.bind(this, this.addCriterion);
 
-            $scope.activeTab = {
-                one: true,
-                two: false
+            $scope.activeAccordion = {
+                one: false,
+                two: false,
+                three: true
             };
         }
 
@@ -90,7 +91,6 @@ module controllers {
 
         search(criterion: models.Criterion) {
 
-            this.$scope.activeTab.two = true;
             //this.$scope.$emit("search." + this.$scope.current.type, query);
 
             var param = criterion.param;
@@ -110,6 +110,7 @@ module controllers {
             this.apiService.Items.query(param,
                 (data)=>{
                     this.$scope.items = data;
+                    this.$scope.activeAccordion.three = true;
                 },
                 (err)=>{
 

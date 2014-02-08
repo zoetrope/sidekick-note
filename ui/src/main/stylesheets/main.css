@@ -57,3 +57,7 @@ ul.task-menu > li {float:right; margin-left: 10px;}
 .form-group {
     margin-bottom: 5px;
 }
+
+.search-result {
+    overflow-y:auto;
+}
