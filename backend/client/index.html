@@ -56,7 +56,7 @@
 <div class="row" kick-resize>
     <div class="sidebar" ng-hide="showSidebar" ng-style="{height: windowHeight-70}" ng-controller="SidebarController">
         <tabset>
-            <tab heading="new criteria" active="active.one">
+            <tab heading="new criteria" active="activeTab.one">
                 <form role="form">
                     <div class="form-group">
                         <label for="name">Search Name</label>
@@ -64,35 +64,42 @@
                     </div>
                     <div class="form-group">
                         <label for="keywords">Keywords</label>
-                        <input type="text" class="form-control" id="keywords" ng-model="current.keywords">
+                        <input type="text" class="form-control" id="keywords" ng-model="current.param.keywords">
                     </div>
                     <div class="form-group">
                         <label for="itemType">Type</label>
-                        <select class="form-control" id="itemType" ng-model="current.type" ng-options="t for t in types"></select>
+                        <select class="form-control" id="itemType" ng-model="current.param.type" ng-options="t for t in types"></select>
                     </div>
                     <div class="form-group">
                         <label for="itemStatus">Status</label>
-                        <select class="form-control" id="itemStatus" ng-model="current.status" ng-options="s for s in statuses[current.type]"></select>
+                        <select class="form-control" id="itemStatus" ng-model="current.param.status" ng-options="s for s in statuses[current.param.type]"></select>
                     </div>
                     <div class="form-group">
                         <label for="tags">Tags</label>
-                        <input type="text" id="tags" ui-select2="searchSelectOptions" ng-model="current.tags"
+                        <input type="text" id="tags" ui-select2="searchSelectOptions" ng-model="current.param.tags"
                                style="width:100%"/>
                     </div>
                     <div class="form-group">
                         <label for="sortOrder">Sort Order</label>
                         <input type="number" class="form-control" id="sortOrder" ng-model="current.sortOrder">
                     </div>
-                    <button class="btn btn-default" ng-click="search()">Search</button>
+                    <button class="btn btn-default" ng-click="search(current)">Search</button>
+                    <button class="btn btn-default" ng-click="addCriterion(current)">add</button>
                 </form>
             </tab>
-            <tab heading="criteria" active="active.two">
+            <tab heading="criteria" active="activeTab.two">
                 <div class="list-group">
-                    <div ng-repeat="cond in searchCriteria | orderBy:'sortOrder':false" class="list-group-item">
-                        <a href="#" ng-click="search(cond.query)">{{cond.title}}</a>
+                    <div ng-repeat="criterion in criteria | orderBy:'sortOrder':false" class="list-group-item">
+                        <a href="#" ng-click="search(criterion)">{{cond.title}}</a>
                     </div>
                 </div>
-
+                <div class="list-group">
+                    <div ng-repeat="item in items" class="list-group-item">
+                        <ul>
+                        <li>{{item.title}}</li>
+                        </ul>
+                    </div>
+                </div>
             </tab>
         </tabset>
     </div>

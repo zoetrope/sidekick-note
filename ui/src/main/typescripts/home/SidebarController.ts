@@ -12,33 +12,36 @@ module controllers {
     export interface SidebarScope extends ng.IScope {
 
 
-        current : models.SearchCondition;
+        current : models.Criterion;
 
         searchSelectOptions : any;
         allTags : string[];
         types: string[];
-        statuses: {key?: string[]};
+        statuses: {key?: string[]
+        };
 
 
-        searchCriteria : models.SearchCondition[];
+        criteria : models.Criterion[];
 
         search : Function;
-        addSearchCriterion : Function;
+        addCriterion : Function;
 
-        active: any;
+        activeTab: any;
 
+        items: any[];
     }
 
     export class SidebarController {
 
-        constructor(public $scope:controllers.SidebarScope, apiService:services.ApiService) {
+        constructor(private $scope:controllers.SidebarScope, private apiService:services.ApiService) {
 
-            $scope.current = new models.SearchCondition();
+            $scope.current = new models.Criterion();
             $scope.current.name = "";
-            $scope.current.keywords = "";
-            $scope.current.tags = [];
-            $scope.current.type = "All";
-            $scope.current.status = "All";
+            $scope.current.param = new models.CriterionParam();
+            $scope.current.param.keywords = "";
+            $scope.current.param.tags = [];
+            $scope.current.param.type = "All";
+            $scope.current.param.status = "All";
             $scope.current.sortOrder = 0;
 
             $scope.types = ["All", "Task", "Article", "QuickNote"];
@@ -67,9 +70,9 @@ module controllers {
 
             $scope.search = angular.bind(this, this.search);
 
-            $scope.addSearchCriterion = angular.bind(this, this.addSearchCriterion);
+            $scope.addCriterion = angular.bind(this, this.addCriterion);
 
-            $scope.active = {
+            $scope.activeTab = {
                 one: true,
                 two: false
             };
@@ -85,27 +88,44 @@ module controllers {
              */
         }
 
-        search() {
-            this.$scope.active.two = true;
+        search(criterion: models.Criterion) {
+
+            this.$scope.activeTab.two = true;
             //this.$scope.$emit("search." + this.$scope.current.type, query);
 
+            var param = criterion.param;
+            if(param.status === "All" || param.status === "") {
+                delete param.status;
+            }
+            if(param.type === "All" || param.type === "") {
+                delete param.type;
+            }
+            if(param.keywords === "") {
+                delete param.keywords;
+            }
+            if(param.tags === []) {
+                delete param.tags;
+            }
+
+            this.apiService.Items.query(param,
+                (data)=>{
+                    this.$scope.items = data;
+                },
+                (err)=>{
+
+                });
 
         }
 
-        addSearchCriterion() {
-            /*
-             this.searchCriteriaResource.save({target: this.$scope.targetType}, {
-             title: this.$scope.searchTitle,
-             query: this.assembleQuery(),
-             sortOrder: this.$scope.searchSortOrder
-             },
-             (data)=> {
-             this.$scope.searchCriteria.push(data)
-             },
-             (reason)=> {
-             console.log("error addSearchCriterion");
-             })
-             */
+        addCriterion(criterion) {
+            this.apiService.Criterion.save(null, criterion,
+                (data)=> {
+                    this.$scope.criteria.push(data)
+                },
+                (reason)=> {
+                    console.log("error addSearchCriterion");
+                });
+
         }
 
     }

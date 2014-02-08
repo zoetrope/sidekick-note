@@ -1,7 +1,5 @@
+var items = require("./repository").items;
 
-var mongojs = require('mongojs');
-var db = mongojs("sidekicknote", ["items"]);
-var items = db.collection("items");
 var monToThunk = require("./thunkify").monToThunk;
 var Enumerable = require("./lib/linqjs/linq");
 

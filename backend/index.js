@@ -10,7 +10,8 @@ var static = require('koa-static');
 app.use(static("client"));
 app.use(mount("/assets", static("../public")));
 
-app.use(require('./task').middleware());
+app.use(require('./items').middleware());
+app.use(require('./criteria').middleware());
 
 app.use(router(app));
 

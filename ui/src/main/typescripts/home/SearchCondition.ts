@@ -3,12 +3,16 @@
 module models {
     'use strict';
 
-    export class SearchCondition {
-        name:string;
+    export class CriterionParam {
         type:string;
         keywords:string;
         status:string;
         tags:string[];
+    }
+
+    export class Criterion {
+        name:string;
+        param: CriterionParam;
         sortOrder:number;
     }
 }

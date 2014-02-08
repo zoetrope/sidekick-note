@@ -12,18 +12,21 @@ module services {
 
         Tags:ng.resource.IResourceClass;
 
-        SearchCondition:services.IUpdatableResourceClass;
+        Criteria:ng.resource.IResourceClass;
+        Criterion:services.IUpdatableResourceClass;
 
         constructor($resource:ng.resource.IResourceService) {
             this.Items = $resource("/api/items");
 
             this.Item = <services.IUpdatableResourceClass>
-                $resource("/api/items/:itemId", {}, {update: {method: 'PUT'}});
+                $resource("/api/items/:id", {}, {update: {method: 'PUT'}});
 
             this.Tags = $resource("/api/tags");
 
-            this.SearchCondition = <services.IUpdatableResourceClass>
-                $resource("/api/search_condition/:condId", {}, {update: {method: 'PUT'}});
+            this.Criteria = $resource("/api/criteria");
+
+            this.Criterion = <services.IUpdatableResourceClass>
+                $resource("/api/criteria/:id", {}, {update: {method: 'PUT'}});
         }
 
     }
