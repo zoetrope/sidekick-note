@@ -32,7 +32,17 @@
             <ul class="nav navbar-nav navbar-left">
                 <li ng-class="{ active: isActive('/home') }"><a href="/home">Home</a></li>
                 <li ng-class="{ active: isActive('/new_item') }"><a href="/new_item">new</a></li>
-                <li><input type="checkbox" ng-model="showSidebar">show sidebar</li>
+
+
+                <li>
+                    <div class="navbar-item">
+                        <label>
+                    <input type="checkbox" ng-model="showSidebar"> show sidebar
+                        </label>
+                    </div>
+                </li>
+                <li class="navbar-item">検索ボックス</li>
+                <li class="navbar-item">表示モード</li>
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-hide="loggedin">
                 <li><a href="/login">login</a></li>
@@ -54,11 +64,11 @@
     </div>
 </div>
 <div class="row" kick-resize>
-    <div class="sidebar" ng-hide="showSidebar" ng-style="{height: windowHeight-70}" ng-controller="SidebarController">
+    <div class="sidebar" ng-show="showSidebar" ng-style="{height: windowHeight-70}" ng-controller="SidebarController">
         <accordion close-others="true">
             <accordion-group is-open="activeAccordion.one">
                 <accordion-heading>
-                    new criterion<i class="pull-right glyphicon"
+                    criterion<i class="pull-right glyphicon"
                              ng-class="{'glyphicon-chevron-down': activeAccordion.one, 'glyphicon-chevron-right': !activeAccordion.one}"></i>
                 </accordion-heading>
                 <form role="form">
@@ -95,7 +105,7 @@
             </accordion-group>
             <accordion-group is-open="activeAccordion.two">
                 <accordion-heading>
-                    menu! <i class="pull-right glyphicon"
+                    menu<i class="pull-right glyphicon"
                              ng-class="{'glyphicon-chevron-down': activeAccordion.two, 'glyphicon-chevron-right': !activeAccordion.two}"></i>
                 </accordion-heading>
                 <div class="list-group">
@@ -103,8 +113,15 @@
                         <a href="#" ng-click="search(criterion)">{{cond.title}}</a>
                     </div>
                 </div>
+                最近開いた
+                編集回数の多い？
+
                 表示件数
                 並び順
+                  更新日時
+                  rate
+                  タイトル名
+                  期日
 
             </accordion-group>
             <accordion-group is-open="activeAccordion.three">
@@ -122,7 +139,7 @@
 
 
     </div>
-    <div class="content-space" ng-style="{'left':(showSidebar?'20px':'320px'), height: windowHeight-70}">
+    <div class="content-space" ng-style="{'left':(showSidebar?'320px':'20px'), height: windowHeight-70}">
         <div ng-view></div>
     </div>
 </div>

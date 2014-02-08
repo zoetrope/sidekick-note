@@ -42,7 +42,6 @@ ul.task-menu > li {float:right; margin-left: 10px;}
     width: 300px;
     height: 100%;
 
-    background: #add8e6
 }
 
 .content-space {
@@ -51,7 +50,6 @@ ul.task-menu > li {float:right; margin-left: 10px;}
     left: 320px;
     right: 10px;
 
-    background: lightgoldenrodyellow
 }
 
 .form-group {
@@ -60,4 +58,9 @@ ul.task-menu > li {float:right; margin-left: 10px;}
 
 .search-result {
     overflow-y:auto;
+}
+
+.navbar-item {
+    padding: 15px;
+    color: #fff;
 }

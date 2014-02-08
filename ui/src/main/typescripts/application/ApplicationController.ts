@@ -13,6 +13,8 @@ module controllers {
         login: Function;
         logout: Function;
         isActive: Function;
+
+        showSidebar: boolean;
     }
 
     export class ApplicationController {
@@ -35,6 +37,8 @@ module controllers {
             $scope.login = angular.bind(this, this.login);
             $scope.logout = angular.bind(this, this.logout);
             $scope.isActive = angular.bind(this, this.isActive)
+
+            $scope.showSidebar = true;
         }
 
         Auth:ng.resource.IResourceClass;
