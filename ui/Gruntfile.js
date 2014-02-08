@@ -114,6 +114,18 @@ module.exports = function (grunt) {
                 options: {
                     stdout: true
                 }
+            },
+            mkdir_rxprop_ts: {
+                command: 'mkdir <%= conf.tsd %>/ReactivePropertyAngular',
+                options: {
+                    stdout: true
+                }
+            },
+            move_rxprop_ts: {
+                command: 'mv bower_components/reactiveproperty-angular/typescript/* <%= conf.tsd %>/ReactivePropertyAngular',
+                options: {
+                    stdout: true
+                }
             }
         },
         uglify: {

@@ -30,7 +30,8 @@
     "select2": "3.4.5",
     "marked": "~0.3.1",
     "highlightjs": "~8.0.0",
-    "rxjs": "~2.2.13"
+    "rxjs": "~2.2.13",
+    "reactiveproperty-angular": "~0.2.0"
   },
   "devDependencies": {
     "jasmine": "~1.3.1",
@@ -105,6 +106,11 @@
       "public/scripts/libs": [
         "rx.js",
         "rx.async.js"
+      ]
+    },
+    "reactiveproperty-angular": {
+      "public/scripts/libs": [
+        "reactiveproperty-angular.js"
       ]
     },
     "angular-mocks": {
