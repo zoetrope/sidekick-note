@@ -260,3 +260,14 @@ module controllers {
         }
     }
 }
+
+angular.module('sidekick-note.controller')
+    .controller("TaskController", ["$scope", "$resource", "$location", "itemRenderService",
+        ($scope:controllers.TaskScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.TaskController => {
+            return new controllers.TaskController($scope, $resource, $location, itemRenderService)
+        }])
+    .controller("TaskItemController", ["$scope", "$resource",
+        ($scope:controllers.TaskItemScope, $resource:ng.resource.IResourceService) : controllers.TaskItemController => {
+            return new controllers.TaskItemController($scope, $resource)
+        }]);
+

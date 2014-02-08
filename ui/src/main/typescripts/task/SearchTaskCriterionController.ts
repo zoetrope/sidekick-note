@@ -37,3 +37,10 @@ module controllers {
         }
     }
 }
+
+
+angular.module('sidekick-note.controller')
+    .controller("SearchTaskCriterionController", ["$scope", "$resource",
+        ($scope:controllers.SearchTaskCriterionScope, $resource:ng.resource.IResourceService) : controllers.SearchTaskCriterionController => {
+            return new controllers.SearchTaskCriterionController($scope, $resource)
+        }]);

@@ -243,3 +243,14 @@ module controllers {
         }
     }
 }
+
+
+angular.module('sidekick-note.controller')
+    .controller("QuickNoteController", ["$scope", "$resource", "$location", "itemRenderService",
+        ($scope:controllers.QuickNoteScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.QuickNoteController => {
+            return new controllers.QuickNoteController($scope, $resource, $location, itemRenderService)
+        }])
+    .controller("QuickNoteItemController", ["$scope", "$resource",
+        ($scope:controllers.QuickNoteItemScope, $resource:ng.resource.IResourceService) : controllers.QuickNoteItemController => {
+            return new controllers.QuickNoteItemController($scope, $resource)
+        }]);

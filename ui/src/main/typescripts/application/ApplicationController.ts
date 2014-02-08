@@ -29,11 +29,11 @@ module controllers {
                 this.LoggedIn.get(data=>{
                     this.$timeout(tick, 60000);
                 },reason => console.log(reason));
-            }
+            };
             tick();
 
-            $scope.login = angular.bind(this, this.login)
-            $scope.logout = angular.bind(this, this.logout)
+            $scope.login = angular.bind(this, this.login);
+            $scope.logout = angular.bind(this, this.logout);
             $scope.isActive = angular.bind(this, this.isActive)
         }
 
@@ -47,12 +47,12 @@ module controllers {
 
 
         login() {
-            var input = {name: this.$scope.input_name, password: this.$scope.input_password}
+            var input = {name: this.$scope.input_name, password: this.$scope.input_password};
             this.Auth.save(null, input, (data)=> {
                 console.log(data.url);
                 //alert(data);
                 //$scope.loggedin = $scope.input_name
-                this.$scope.loggedin = data.url
+                this.$scope.loggedin = data.url;
                 window.location.href = data.url;
 
             }, (reason)=> {
@@ -62,9 +62,15 @@ module controllers {
 
         logout() {
             this.Logout.get(_=> {
-                this.$scope.loggedin = ""
+                this.$scope.loggedin = "";
                 window.location.href = "/login";
             })
         }
     }
 }
+
+angular.module('sidekick-note.controller')
+    .controller("ApplicationController", ["$scope", "$location", "$resource", "$timeout",
+        ($scope:controllers.AppScope, $location:ng.ILocationService, $resource:ng.resource.IResourceService, $timeout:ng.ITimeoutService):controllers.ApplicationController => {
+            return new controllers.ApplicationController($scope, $location, $resource, $timeout)
+        }]);

@@ -54,3 +54,9 @@ module controllers {
 
     }
 }
+
+angular.module('sidekick-note.controller')
+    .controller("HomeController", ["$scope", "$resource", "itemRenderService",
+        ($scope:controllers.HomeScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.HomeController => {
+            return new controllers.HomeController($scope, $resource, itemRenderService)
+        }]);

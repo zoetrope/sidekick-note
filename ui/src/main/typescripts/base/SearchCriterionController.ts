@@ -94,3 +94,6 @@ module controllers {
 
     }
 }
+
+
+angular.module('sidekick-note.controller')

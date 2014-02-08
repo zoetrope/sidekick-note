@@ -30,3 +30,10 @@ module controllers {
         }
     }
 }
+
+
+angular.module('sidekick-note.controller')
+    .controller("SearchQuickNoteCriterionController", ["$scope", "$resource",
+        ($scope:controllers.SearchQuickNoteCriterionScope, $resource:ng.resource.IResourceService) : controllers.SearchQuickNoteCriterionController => {
+            return new controllers.SearchQuickNoteCriterionController($scope, $resource)
+        }]);

@@ -18,3 +18,10 @@ module controllers {
 
     }
 }
+
+
+angular.module('sidekick-note.controller')
+    .controller("UserController", ["$scope", "$resource",
+        ($scope:controllers.UserScope, $resource:ng.resource.IResourceService) : controllers.UserController => {
+            return new controllers.UserController($scope, $resource)
+        }]);

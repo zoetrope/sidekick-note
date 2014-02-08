@@ -118,3 +118,10 @@ module controllers {
 
     }
 }
+
+
+angular.module('sidekick-note.controller')
+    .controller("SearchController", ["$scope", "$resource", "$location", "itemRenderService",
+        ($scope:controllers.SearchScope, $resource:ng.resource.IResourceService, $location:ng.ILocationService, itemRenderService:services.ItemRenderService) : controllers.SearchController => {
+            return new controllers.SearchController($scope, $resource, $location, itemRenderService)
+        }]);

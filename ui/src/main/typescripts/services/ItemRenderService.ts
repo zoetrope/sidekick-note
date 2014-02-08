@@ -35,3 +35,8 @@ module services {
         }
     }
 }
+
+angular.module("sidekick-note.service")
+    .factory("itemRenderService", ["$sce", ($sce):services.ItemRenderService=> {
+        return new services.ItemRenderService($sce);
+    }]);

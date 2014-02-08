@@ -16,3 +16,5 @@ module directives {
 
     }
 }
+angular.module('sidekick-note.directive')
+    .directive('kickItem', () => new directives.ItemDirective());

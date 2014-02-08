@@ -17,3 +17,6 @@ module directives {
         }
     }
 }
+
+angular.module('sidekick-note.directive')
+    .directive('kickFocus', () => new directives.EnableFocus());

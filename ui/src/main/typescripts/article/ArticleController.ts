@@ -168,3 +168,9 @@ module controllers {
 
     }
 }
+
+angular.module('sidekick-note.controller')
+    .controller("ArticleController", ["$scope", "$resource", "itemRenderService",
+        ($scope:controllers.ArticleScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.ArticleController => {
+            return new controllers.ArticleController($scope, $resource, itemRenderService)
+        }]);
