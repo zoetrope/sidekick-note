@@ -17,9 +17,9 @@
 </head>
 
 
-<body>
+<body ng-controller="ApplicationController">
 <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container" ng-controller="ApplicationController">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="icon-bar"></span>
@@ -57,7 +57,17 @@
     </div>
 </div>
 <div class="row">
-    <div ng-view></div>
+    <div class="sidebar" ng-hide="isCollapsed">
+
+        ああああああああああああああああああああああああああああああああああ
+
+    </div>
+    <div class="content-space" ng-style="{'left':(isCollapsed?'20px':'320px')}">
+        <!-- サイドバー切り替えボタンは上部のナビゲーションバーに -->
+        <input type="checkbox" ng-model="isCollapsed">sidebar toggle<br>
+
+        <div ng-view></div>
+    </div>
 </div>
 </body>
 
