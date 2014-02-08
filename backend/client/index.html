@@ -68,11 +68,11 @@
                     </div>
                     <div class="form-group">
                         <label for="itemType">Type</label>
-                        <select class="form-control" id="itemType" ng-model="current.type" ng-options="t.name for t in types"></select>
+                        <select class="form-control" id="itemType" ng-model="current.type" ng-options="t for t in types"></select>
                     </div>
                     <div class="form-group">
                         <label for="itemStatus">Status</label>
-                        <select class="form-control" id="itemStatus" ng-model="current.status" ng-options="s.name for s in statuses[current.type.name]"></select>
+                        <select class="form-control" id="itemStatus" ng-model="current.status" ng-options="s for s in statuses[current.type]"></select>
                     </div>
                     <div class="form-group">
                         <label for="tags">Tags</label>

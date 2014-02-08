@@ -16,11 +16,8 @@ module controllers {
 
         searchSelectOptions : any;
         allTags : string[];
-        types: {name: string; value:string
-        }[];
-        statuses: {key?: {name: string; value:string
-        }[]
-        };
+        types: string[];
+        statuses: {key?: string[]};
 
 
         searchCriteria : models.SearchCondition[];
@@ -39,31 +36,17 @@ module controllers {
             $scope.current.name = "";
             $scope.current.keywords = "";
             $scope.current.tags = [];
-            $scope.current.status = "";
-            $scope.current.type = "";
+            $scope.current.type = "All";
+            $scope.current.status = "All";
             $scope.current.sortOrder = 0;
 
-            $scope.types = [
-                {name: "Task", value: "Task"},
-                {name: "Article", value: "Article"},
-                {name: "QuickNote", value: "QuickNote"}
-            ];
+            $scope.types = ["All", "Task", "Article", "QuickNote"];
 
             $scope.statuses = {
-                "Task": [
-                    {name: "New", value: "New"},
-                    {name: "Accepted", value: "Accepted"},
-                    {name: "Completed", value: "Completed"}
-                ],
-                "Article": [
-                    {name: "Writing", value: "Writing"},
-                    {name: "Viewing", value: "Viewing"},
-                    {name: "Archived", value: "Archived"}
-                ],
-                "QuickNote": [
-                    {name: "Flowing", value: "Flowing"},
-                    {name: "Archived", value: "Archived"}
-                ]
+                "All": ["All", "New", "Accepted", "Completed", "Writing", "Viewing", "Archived", "Flowing"],
+                "Task": ["All", "New", "Accepted", "Completed"],
+                "Article": ["All", "Writing", "Viewing", "Archived"],
+                "QuickNote": ["All", "Flowing", "Archived"]
             };
 
             $scope.searchSelectOptions = {
