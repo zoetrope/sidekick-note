@@ -52,13 +52,13 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="sidebar" ng-hide="isCollapsed">
+<div class="row" kick-resize>
+    <div class="sidebar" ng-hide="isCollapsed" ng-style="{height: windowHeight-70}">
 
         ああああああああああああああああああああああああああああああああああ
 
     </div>
-    <div class="content-space" ng-style="{'left':(isCollapsed?'20px':'320px')}">
+    <div class="content-space" ng-style="{'left':(isCollapsed?'20px':'320px'), height: windowHeight-70}">
         <!-- サイドバー切り替えボタンは上部のナビゲーションバーに -->
         <input type="checkbox" ng-model="isCollapsed">sidebar toggle<br>
 

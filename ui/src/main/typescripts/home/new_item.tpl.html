@@ -1,45 +1,41 @@
-<form ng-submit="addTask()" role="form" class="form"kick-resize>
+<div>
+    <form ng-submit="addTask()" role="form" class="form">
 
-    <div class="form-group">
-        <input type="text" ng-model="inputTitle" class="form-control"
-               placeholder="input task name here" ng-disabled="sending"/>
-    </div>
-    <pre>
-    height:{{windowHeight}}
-    width:{{windowWidth}}:
-    </pre>
+        <div class="form-group">
+            <input type="text" ng-model="inputTitle" class="form-control"
+                   placeholder="input task name here" ng-disabled="sending"/>
+        </div>
 
-    <div class="form-group" >
-        <textarea ng-model="inputContent"
-                  class="form-control"
-                  placeholder="add new task here" ng-disabled="sending"
-                  kick-focus="hasFocus"
-                  ui-keypress="{'ctrl-10':'keypress($event)'}" >
+        <div class="form-group">
+            <textarea ng-model="inputContent"
+                      class="form-control"
+                      placeholder="add new task here" ng-disabled="sending"
+                      ng-style="{height:windowHeight-216}"
+                      >
 
-                  </textarea>
-    </div>
+            </textarea>
+        </div>
 
 
-    <div class="form-group">
-        <label for="inputTags">tags</label>
-        <input id="inputTags" type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"
-               style="width:100%"/>
-    </div>
+        <div class="form-group">
+            <label for="inputTags">tags:
+            <input id="inputTags" type="text" ui-select2="inputSelectOptions" ng-model="inputSelectedTags"/>
+            </label>
 
-    <div class="form-group">
-        <label>rate</label>
-        <rating value="rate" max="5" readonly="false"></rating>
-    </div>
+            <label>rate: <rating value="rate" max="5" readonly="false"></rating></label>
+
+            <label>due date: <input type="text" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate"></label>
+        </div>
 
 
-    <div class="form-group">
-        <label for="inputDueDate">due date</label>
-        {{dueDate | date:'yyyy/MM/dd' }}
-        <div id="inputDueDate" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="dueDate"></div>
-    </div>
+        <div class="form-group">
 
-    <input type="submit" value="add" class="btn btn-primary pull-right" ng-disabled="sending"/>
-    <button type="button" class="btn btn-default pull-right" ng-model="isEditing" btn-checkbox  btn-checkbox-true="false" btn-checkbox-false="true">
-        Close
-    </button>
-</form>
+        </div>
+
+        <input type="submit" value="add" class="btn btn-primary pull-right" ng-disabled="sending"/>
+        <button type="button" class="btn btn-default pull-right" ng-model="isEditing" btn-checkbox
+                btn-checkbox-true="false" btn-checkbox-false="true">
+            Close
+        </button>
+    </form>
+</div>
