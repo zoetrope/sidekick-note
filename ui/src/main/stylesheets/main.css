@@ -35,6 +35,10 @@ ul.task-menu > li {float:right; margin-left: 10px;}
     margin-right: -10px;
     margin-left: -10px;
 }
+.header {
+    margin-right: 0px;
+    margin-left: 0px;
+}
 .sidebar {
     position: absolute;
     left: 10px;
