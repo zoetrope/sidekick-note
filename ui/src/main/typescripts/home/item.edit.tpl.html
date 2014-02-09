@@ -16,19 +16,17 @@
     </div>
 
     <div class="form-group">
-        <label for="inputTags">tags:
-            <input id="inputTags" type="text" ui-select2="tagsSelectOption" ng-model="item.tags"/>
-        </label>
 
-        <label>rate: <rating value="item.rate" max="5" readonly="false"></rating></label>
+            <input id="inputTags" type="text" ui-select2="tagsSelectOption" ng-model="item.tags" style="width:100%"/>
 
-        <label>due date: <input type="text" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="item.dueDate"></label>
+
+    </div>
+
+    <div class="form-group">
+        <input type="text" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="item.dueDate">
+        <rating value="item.rate" max="5" readonly="false"></rating>
+        <input type="submit" value="add" class="btn btn-primary pull-right" ng-disabled="sending"/>
     </div>
 
 
-    <input type="submit" value="add" class="btn btn-primary pull-right" ng-disabled="sending"/>
-    <button type="button" class="btn btn-default pull-right" ng-model="isEditing" btn-checkbox
-            btn-checkbox-true="false" btn-checkbox-false="true">
-        Close
-    </button>
 </form>
