@@ -40,7 +40,10 @@
                     </div>
                 </li>
                 <li class="navbar-item">検索ボックス</li>
-                <li class="navbar-item">表示モード</li>
+                <li class="navbar-select">
+                    <select class="form-control" ng-model="showMode"
+                            ng-options="s for s in ['view', 'edit', 'both']"></select>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-hide="loggedin">
                 <li><a href="/login">login</a></li>
@@ -62,7 +65,7 @@
     </div>
 </div>
 <div class="row" kick-resize>
-    <div ng-include="'assets/views/sidebar.tpl.html'"></div>
+    <div ng-include="'/assets/views/sidebar.tpl.html'"></div>
     <div class="content-space" ng-style="{'left':(showSidebar?'320px':'20px'), height: windowHeight-70}">
         <div ng-view></div>
     </div>

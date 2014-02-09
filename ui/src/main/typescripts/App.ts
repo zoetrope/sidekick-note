@@ -10,11 +10,12 @@ module App {
 
     angular.module(appName + ".directive",[]);
     angular.module(appName + ".service",[]);
+    angular.module(appName + ".filter",[]);
     angular.module(appName + ".controller",[appName + ".service", "ngResource", "ui.bootstrap.accordion"]);
 
     angular.module(
         appName,
-        [appName + ".controller", appName + ".service", appName + ".directive", "ui.keypress", 'ui.select2', 'ui.bootstrap', 'ui.date', 'ngRoute'],
+        [appName + ".controller", appName + ".service", appName + ".directive", appName + ".filter", "ui.keypress", 'ui.select2', 'ui.bootstrap', 'ui.date', 'ngRoute'],
         ($routeProvider:ng.route.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider

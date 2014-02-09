@@ -1,0 +1,18 @@
+<div>
+    <h3>
+        {{item.title}}
+    </h3>
+
+    <div ng-bind-html="item.content | markdown"/>
+
+    <div class="text-muted">
+        {{item.tags.join(' ')}}
+    </div>
+    <rating class="pull-left" value="item.rate" max="5" readonly="true"></rating>
+
+    <span class="text-muted pull-right">
+        <small>
+            {{item.dueDate}}
+        </small>
+    </span>
+</div>

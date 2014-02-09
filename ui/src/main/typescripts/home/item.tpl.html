@@ -1,40 +1,18 @@
 <div ng-controller="ItemController">
-    <form ng-submit="addTask()" role="form" class="form">
 
-        <div class="form-group">
-            <input type="text" ng-model="item.title" class="form-control"
-                   placeholder="input title here" ng-disabled="sending"/>
+    <div ng-switch="showMode">
+        <div ng-switch-when="view">
+            <div ng-include="'/assets/views/item.view.tpl.html'"></div>
         </div>
-
-        <div class="form-group">
-            <textarea ng-model="item.content"
-                      class="form-control"
-                      placeholder="input content here" ng-disabled="sending"
-                      ng-style="{height:windowHeight-196}"
-                      >
-
-            </textarea>
+        <div ng-switch-when="edit">
+            <div ng-include="'/assets/views/item.edit.tpl.html'"></div>
         </div>
-
-        <div class="form-group">
-            <label for="inputTags">tags:
-            <input id="inputTags" type="text" ui-select2="inputSelectOptions" ng-model="item.tags"/>
-            </label>
-
-            <label>rate: <rating value="rate" max="5" readonly="false"></rating></label>
-
-            <label>due date: <input type="text" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="item.dueDate"></label>
+        <div ng-switch-when="both">
+            <div ng-include="'/assets/views/item.edit.tpl.html'"></div>
         </div>
-
-
-        <div class="form-group">
-
+        <div ng-switch-default>
+            <div ng-include="'/assets/views/item.edit.tpl.html'"></div>
         </div>
+    </div>
 
-        <input type="submit" value="add" class="btn btn-primary pull-right" ng-disabled="sending"/>
-        <button type="button" class="btn btn-default pull-right" ng-model="isEditing" btn-checkbox
-                btn-checkbox-true="false" btn-checkbox-false="true">
-            Close
-        </button>
-    </form>
 </div>
