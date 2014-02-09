@@ -20,8 +20,7 @@ module App {
             console.log("rootProvider!");
             $routeProvider
                 .when("/", {redirectTo: '/home'})
-                //.when("/index.html", {redirectTo: '/home'})
-                .when("/index.html", {templateUrl: "/assets/views/home.tpl.html"})
+                .when("/index.html", {redirectTo: '/home'})
                 .when("/home", {templateUrl: "/assets/views/home.tpl.html"})
                 .when("/quick_note", {templateUrl: "/assets/views/quick_note.tpl.html"})
                 .when("/task", {templateUrl: "/assets/views/task.tpl.html"})
@@ -30,7 +29,7 @@ module App {
                 .when("/migration", {templateUrl: "/assets/views/migration.tpl.html"})
                 .when("/login", {templateUrl: "/assets/views/login.tpl.html"})
                 .when("/new_item", {templateUrl: "/assets/views/item.tpl.html"})
-                .when("/items/:id", {templateUrl: "/assets/views/item.tpl.html"})
+                .when("/items/:id", {templateUrl: "/assets/views/item.base.tpl.html"})
                 .otherwise({redirectTo: '/home'});
             $locationProvider.html5Mode(true);
         })

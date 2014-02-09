@@ -1,6 +1,6 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
-
+///<reference path='../home/ApiService.ts' />
 module controllers {
     'use strict';
 
@@ -14,22 +14,25 @@ module controllers {
         logout: Function;
         isActive: Function;
 
+        tagsSelectOption : any;
+        allTags : string[];
+        types: string[];
+        statuses: {key?: string[]};
+
+        updateTags : Function;
+
         showSidebar: boolean;
         showMode: string;
     }
 
     export class ApplicationController {
 
-        constructor(public $scope:AppScope, public $location:ng.ILocationService, public $resource:ng.resource.IResourceService, public $timeout:ng.ITimeoutService) {
+        constructor(public $scope:AppScope, public $location:ng.ILocationService, public apiService:services.ApiService, public $timeout:ng.ITimeoutService) {
 
-            this.Auth = $resource("/api/login")
-            this.LoggedIn = $resource("/api/loggedin")
-            this.Logout = $resource("/api/logout")
-
-            this.LoggedIn.get(x=>$scope.loggedin = x.name, reason => console.log(reason))
+            this.apiService.LoggedIn.get(x=>$scope.loggedin = x.name, reason => console.log(reason))
 
             var tick = () => {
-                this.LoggedIn.get(data=>{
+                this.apiService.LoggedIn.get(data=>{
                     this.$timeout(tick, 60000);
                 },reason => console.log(reason));
             };
@@ -41,11 +44,37 @@ module controllers {
 
             $scope.showSidebar = true;
             $scope.showMode = "view";
+
+
+            $scope.types = ["All", "Task", "Article", "QuickNote"];
+
+            $scope.statuses = {
+                "All": ["All", "New", "Accepted", "Completed", "Writing", "Viewing", "Archived", "Flowing"],
+                "Task": ["All", "New", "Accepted", "Completed"],
+                "Article": ["All", "Writing", "Viewing", "Archived"],
+                "QuickNote": ["All", "Flowing", "Archived"]
+            };
+
+            $scope.tagsSelectOption = {
+                'multiple': true,
+                'simple_tags': true,
+                'allowClear': true,
+                'closeOniSelect': true,
+                'createSearchChoice': null,
+                'tags': () => {
+                    return $scope.allTags;
+                }
+            };
+
+            $scope.updateTags = angular.bind(this, this.updateTags);
+            this.updateTags();
         }
 
-        Auth:ng.resource.IResourceClass;
-        LoggedIn:ng.resource.IResourceClass;
-        Logout:ng.resource.IResourceClass;
+        updateTags(){
+            this.apiService.Tags.query(data => {
+                this.$scope.allTags = data.map(tag => tag.name)
+            });
+        }
 
         isActive(path:string):boolean {
             return this.$location.path() == path
@@ -54,7 +83,7 @@ module controllers {
 
         login() {
             var input = {name: this.$scope.input_name, password: this.$scope.input_password};
-            this.Auth.save(null, input, (data)=> {
+            this.apiService.Auth.save(null, input, (data)=> {
                 console.log(data.url);
                 //alert(data);
                 //$scope.loggedin = $scope.input_name
@@ -67,7 +96,7 @@ module controllers {
         }
 
         logout() {
-            this.Logout.get(_=> {
+            this.apiService.Logout.get(_=> {
                 this.$scope.loggedin = "";
                 window.location.href = "/login";
             })
@@ -76,7 +105,7 @@ module controllers {
 }
 
 angular.module('sidekick-note.controller')
-    .controller("ApplicationController", ["$scope", "$location", "$resource", "$timeout",
-        ($scope:controllers.AppScope, $location:ng.ILocationService, $resource:ng.resource.IResourceService, $timeout:ng.ITimeoutService):controllers.ApplicationController => {
-            return new controllers.ApplicationController($scope, $location, $resource, $timeout)
+    .controller("ApplicationController", ["$scope", "$location", "apiService", "$timeout",
+        ($scope:controllers.AppScope, $location:ng.ILocationService, apiService:services.ApiService, $timeout:ng.ITimeoutService):controllers.ApplicationController => {
+            return new controllers.ApplicationController($scope, $location, apiService, $timeout)
         }]);

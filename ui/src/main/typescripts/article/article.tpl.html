@@ -1,7 +1,7 @@
 <div ng-controller="ArticleController" class="row">
 
     <div ng-class="{'col-sm-4':!isCollapsed}" ng-hide="isCollapsed">
-        <input type="text" ui-select2="searchSelectOptions" ng-model="searchSelectedTags" style="width:100%"/>
+        <input type="text" ui-select2="tagsSelectOption" ng-model="searchSelectedTags" style="width:100%"/>
         <button ng-click="searchTask()">search</button>
         {{searchSelectedTags | json}}
         <input ng-model="searchText">

@@ -15,6 +15,10 @@ module services {
         Criteria:ng.resource.IResourceClass;
         Criterion:services.IUpdatableResourceClass;
 
+        Auth:ng.resource.IResourceClass;
+        LoggedIn:ng.resource.IResourceClass;
+        Logout:ng.resource.IResourceClass;
+
         constructor($resource:ng.resource.IResourceService) {
             this.Items = $resource("/api/items");
 
@@ -27,6 +31,12 @@ module services {
 
             this.Criterion = <services.IUpdatableResourceClass>
                 $resource("/api/criteria/:id", {}, {update: {method: 'PUT'}});
+
+
+            this.Auth = $resource("/api/login")
+            this.LoggedIn = $resource("/api/loggedin")
+            this.Logout = $resource("/api/logout")
+
         }
 
     }

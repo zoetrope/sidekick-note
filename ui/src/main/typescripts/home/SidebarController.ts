@@ -10,17 +10,7 @@ module controllers {
     'use strict';
 
     export interface SidebarScope extends ng.IScope {
-
-
         current : models.Criterion;
-
-        searchSelectOptions : any;
-        allTags : string[];
-        types: string[];
-        statuses: {key?: string[]
-        };
-
-
         criteria : models.Criterion[];
 
         search : Function;
@@ -43,30 +33,6 @@ module controllers {
             $scope.current.param.type = "All";
             $scope.current.param.status = "All";
             $scope.current.sortOrder = 0;
-
-            $scope.types = ["All", "Task", "Article", "QuickNote"];
-
-            $scope.statuses = {
-                "All": ["All", "New", "Accepted", "Completed", "Writing", "Viewing", "Archived", "Flowing"],
-                "Task": ["All", "New", "Accepted", "Completed"],
-                "Article": ["All", "Writing", "Viewing", "Archived"],
-                "QuickNote": ["All", "Flowing", "Archived"]
-            };
-
-            $scope.searchSelectOptions = {
-                'multiple': true,
-                'simple_tags': true,
-                'allowClear': true,
-                'closeOnSelect': false,
-                'createSearchChoice': null,
-                'tags': () => {
-                    return $scope.allTags;
-                }
-            };
-
-            apiService.Tags.query(data => {
-                $scope.allTags = data.map(tag => tag.name)
-            });
 
             $scope.search = angular.bind(this, this.search);
 
