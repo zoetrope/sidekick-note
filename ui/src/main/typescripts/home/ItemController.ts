@@ -2,7 +2,6 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-route.d.ts' />
 
-///<reference path='../services/ItemRenderService.ts' />
 ///<reference path='./ApiService.ts' />
 
 module controllers {
@@ -16,29 +15,27 @@ module controllers {
         item: any;
 
         showMode: string;
+        updateItem: Function;
+        addItem: Function;
     }
 
     export class ItemController {
-        constructor(private $scope:ItemScope, $routeParams:ItemParam, private $location:ng.ILocationService, private apiService:services.ApiService) {
+        constructor(private $scope:ItemScope, $routeParams:ItemParam, private apiService:services.ApiService) {
 
             if ($routeParams.id) {
                 apiService.Item.get({id: $routeParams.id},
                     (data)=> {
+                        console.log("item loaded : " + angular.toJson(data));
                         $scope.item = data;
                     },
                     (err)=> {
 
                     });
+            } else {
+                console.log("new item");
             }
 
-            $scope.showMode = "edit";
-        }
-
-        addItem(item){
-            this.apiService.Items.save(null, item, data=>{
-                this.$location.path()
-            });
-
+            $scope.updateItem = angular.bind(this, this.updateItem);
         }
 
         updateItem(item){
@@ -51,7 +48,7 @@ module controllers {
 }
 
 angular.module('sidekick-note.controller')
-    .controller("ItemController", ["$scope", '$routeParams', "$location", "apiService",
-        ($scope:controllers.ItemScope, $routeParams:controllers.ItemParam, $location:ng.ILocationService, apiService:services.ApiService):controllers.ItemController => {
-            return new controllers.ItemController($scope, $routeParams, $location, apiService)
+    .controller("ItemController", ["$scope", '$routeParams', "apiService",
+        ($scope:controllers.ItemScope, $routeParams:controllers.ItemParam, apiService:services.ApiService):controllers.ItemController => {
+            return new controllers.ItemController($scope, $routeParams, apiService)
         }]);

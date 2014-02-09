@@ -14,6 +14,10 @@ var itemsResource = new Resource('items', {
     },
     // POST /api/items
     create: function *(next) {
+        var item = yield parse(this);
+        var thunk = monToThunk(itemsRepo, itemsRepo.insert);
+        var newItem = yield thunk(item);
+        this.body = newItem[0];
     },
     // GET /api/items/:id
     show: function *(next) {

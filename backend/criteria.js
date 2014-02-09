@@ -17,8 +17,8 @@ var criteriaResource = new Resource('criteria', {
     create: function *(next) {
         var criterion = yield parse(this);
         var thunk = monToThunk(criteriaRepo, criteriaRepo.insert);
-        yield thunk(criterion);
-        this.status = 200;
+        var newCriterion = yield thunk(criterion);
+        this.body = newCriterion[0];
     },
     // GET /api/criteria/:id
     show: function *(next) {

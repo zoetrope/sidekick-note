@@ -1,4 +1,4 @@
-<form ng-submit="addTask()" role="form" class="form">
+<form role="form" class="form">
 
     <div class="form-group">
         <input type="text" ng-model="item.title" class="form-control"
@@ -25,7 +25,8 @@
     <div class="form-group">
         <input type="text" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="item.dueDate">
         <rating value="item.rate" max="5" readonly="false"></rating>
-        <input type="submit" value="add" class="btn btn-primary pull-right" ng-disabled="sending"/>
+        <button ng-click="addItem(item)" class="btn btn-primary pull-right" ng-disabled="sending">add</button>
+        <button ng-click="updateItem(item)" class="btn btn-primary pull-right" ng-disabled="sending">save</button>
     </div>
 
 
