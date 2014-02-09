@@ -1,9 +1,9 @@
-<div>
+<div style="padding: 10px">
     <h3>
         {{item.title}}
     </h3>
 
-    <div ng-bind-html="item.content | markdown"/>
+    <div ng-bind-html="item.content | markdown" ng-style="{'height':windowHeight-196, 'overflow-y': 'auto'}"/>
 
     <div class="text-muted">
         {{item.tags.join(' ')}}

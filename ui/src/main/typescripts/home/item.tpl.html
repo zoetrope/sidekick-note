@@ -8,7 +8,8 @@
             <div ng-include="'/assets/views/item.edit.tpl.html'"></div>
         </div>
         <div ng-switch-when="both">
-            <div ng-include="'/assets/views/item.edit.tpl.html'"></div>
+            <div ng-include="'/assets/views/item.edit.tpl.html'" style="width:50%"></div>
+            <div ng-include="'/assets/views/item.view.tpl.html'" ng-style="{'left':(windowWidth-(showSidebar?320:20))/2, 'top': '0px', 'width': '50%', 'position': 'absolute'}"></div>
         </div>
         <div ng-switch-default>
             <div ng-include="'/assets/views/item.edit.tpl.html'"></div>

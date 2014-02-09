@@ -15,6 +15,7 @@ module controllers {
         isActive: Function;
 
         showSidebar: boolean;
+        showMode: string;
     }
 
     export class ApplicationController {
@@ -39,6 +40,7 @@ module controllers {
             $scope.isActive = angular.bind(this, this.isActive)
 
             $scope.showSidebar = true;
+            $scope.showMode = "view";
         }
 
         Auth:ng.resource.IResourceClass;
