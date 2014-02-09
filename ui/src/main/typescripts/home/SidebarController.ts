@@ -34,25 +34,28 @@ module controllers {
             $scope.current.param.status = "All";
             $scope.current.sortOrder = 0;
 
+            $scope.criteria = [];
+
             $scope.search = angular.bind(this, this.search);
 
             $scope.addCriterion = angular.bind(this, this.addCriterion);
 
             $scope.activeAccordion = {
-                one: false,
-                two: false,
-                three: true
+                menu: true,
+                list: false,
+                criterion: false
             };
+
+            this.updateCriteria();
         }
 
-
         updateCriteria() {
-            /*
-             this.searchCriteriaResource.query({target: this.$scope.targetType},
-             data => {
-             this.$scope.searchCriteria = data
-             }, reason => console.log(reason));
-             */
+            this.apiService.Criterion.query(null,
+                data => {
+                    console.log("updateCriteria = " + angular.toJson(data));
+                    this.$scope.criteria = data;
+                }, reason => console.log(reason));
+
         }
 
         search(criterion: models.Criterion) {
@@ -76,7 +79,7 @@ module controllers {
             this.apiService.Items.query(param,
                 (data)=>{
                     this.$scope.items = data;
-                    this.$scope.activeAccordion.three = true;
+                    this.$scope.activeAccordion.list = true;
                 },
                 (err)=>{
 
@@ -85,9 +88,10 @@ module controllers {
         }
 
         addCriterion(criterion) {
-            this.apiService.Criterion.save(null, criterion,
+            console.log("add criterion");
+            this.apiService.Criteria.save(null, criterion,
                 (data)=> {
-                    this.$scope.criteria.push(data)
+                    this.updateCriteria();
                 },
                 (reason)=> {
                     console.log("error addSearchCriterion");

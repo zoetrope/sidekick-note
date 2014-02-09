@@ -1,25 +1,24 @@
 var parse = require('co-body');
 var Resource = require('koa-resource-router');
-var criteria = require("./repository").criteria;
+var criteriaRepo = require("./repository").criteria;
 var monToThunk = require("./thunkify").monToThunk;
 
 var criteriaResource = new Resource('criteria', {
     // GET /api/criteria
     index: function *(next) {
-        console.log(this.query);
-
-        var thunk = monToThunk(criteria, criteria.find);
-        this.body = yield thunk({});
-
+        var thunk = monToThunk(criteriaRepo, criteriaRepo.find);
+        var criteria = yield thunk({});
+        this.body = criteria;
     },
     // GET /api/criteria/new
     new: function *(next) {
     },
     // POST /api/criteria
     create: function *(next) {
-        var param = yield parse(this);
-        console.log(param);
-        this.body = param;
+        var criterion = yield parse(this);
+        var thunk = monToThunk(criteriaRepo, criteriaRepo.insert);
+        yield thunk(criterion);
+        this.status = 200;
     },
     // GET /api/criteria/:id
     show: function *(next) {
