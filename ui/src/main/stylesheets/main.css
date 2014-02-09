@@ -52,6 +52,32 @@ ul.task-menu > li {float:right; margin-left: 10px;}
 
 }
 
+.content-space h1{
+    border-top: 1px solid #008ee1;
+    border-left: 7px solid #008ee1;
+    border-bottom: 1px solid #008ee1;
+    padding: .6em .8em;
+    font-size: 22px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.content-space h2{
+    border-left: 7px solid #008ee1;
+    border-bottom: 1px solid #008ee1;
+    padding: .4em .6em;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.content-space h3{
+    border-bottom: 1px solid #008ee1;
+    padding: .2em .4em;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
 .form-group {
     margin-bottom: 5px;
 }

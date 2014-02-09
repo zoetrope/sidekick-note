@@ -28,7 +28,9 @@ module directives {
                 }, true);
 
                 window.bind("resize", ()=> {
-                    scope.$apply();
+                    if(!scope.$$phase){
+                        scope.$apply();
+                    }
                 })
             }
         }
