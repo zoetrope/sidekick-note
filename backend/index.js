@@ -32,7 +32,11 @@ app.get("/api/tags", require("./tag"));
 
 app.use(function *(next){
     yield next;
-    this.redirect('/index.html');
+
+    // サーバサイドが知らないURLでアクセスされたら、URLをパラメータで渡してクライアントサイドで解決させる
+    // TODO: 何でもリダイレクトするのではなく、ある程度はフィルタリングが必要。
+    console.log("redirect to " + encodeURIComponent(this.url));
+    this.redirect('/index.html?url=' + encodeURIComponent(this.url));
 });
 
 

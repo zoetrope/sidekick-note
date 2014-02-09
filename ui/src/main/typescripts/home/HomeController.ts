@@ -1,10 +1,15 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
+///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-route.d.ts' />
 
 ///<reference path='../services/ItemRenderService.ts' />
 
 module controllers {
     'use strict';
+
+    export interface HomeParam extends ng.route.IRouteParamsService {
+        url: string;
+    }
 
     export interface HomeScope extends ng.IScope {
 
@@ -12,15 +17,19 @@ module controllers {
 
     export class HomeController {
 
-        constructor(public $scope:HomeScope, public $resource:ng.resource.IResourceService, public itemRenderService:services.ItemRenderService) {
-
+        constructor($scope:HomeScope, $routeParams:controllers.HomeParam, $location:ng.ILocationService) {
+            console.log($routeParams);
+            // クライアントサイドでルーティングすべきURLがサーバーに渡ったら、ここにリダイレクトされてURLがパラメータで渡される。
+            if($routeParams.url) {
+                $location.url(decodeURIComponent($routeParams.url));
+            }
         }
 
     }
 }
 
 angular.module('sidekick-note.controller')
-    .controller("HomeController", ["$scope", "$resource", "itemRenderService",
-        ($scope:controllers.HomeScope, $resource:ng.resource.IResourceService, itemRenderService:services.ItemRenderService) : controllers.HomeController => {
-            return new controllers.HomeController($scope, $resource, itemRenderService)
+    .controller("HomeController", ["$scope", "$routeParams", "$location",
+        ($scope:controllers.HomeScope, $routeParams:controllers.HomeParam, $location:ng.ILocationService) : controllers.HomeController => {
+            return new controllers.HomeController($scope, $routeParams, $location)
         }]);

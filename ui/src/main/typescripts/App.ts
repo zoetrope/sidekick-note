@@ -19,6 +19,9 @@ module App {
         ($routeProvider:ng.route.IRouteProvider, $locationProvider:ng.ILocationProvider)=> {
             console.log("rootProvider!");
             $routeProvider
+                .when("/", {redirectTo: '/home'})
+                //.when("/index.html", {redirectTo: '/home'})
+                .when("/index.html", {templateUrl: "/assets/views/home.tpl.html"})
                 .when("/home", {templateUrl: "/assets/views/home.tpl.html"})
                 .when("/quick_note", {templateUrl: "/assets/views/quick_note.tpl.html"})
                 .when("/task", {templateUrl: "/assets/views/task.tpl.html"})
