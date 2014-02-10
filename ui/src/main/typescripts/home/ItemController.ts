@@ -23,14 +23,7 @@ module controllers {
         constructor(private $scope:ItemScope, $routeParams:ItemParam, private apiService:services.ApiService) {
 
             if ($routeParams.id) {
-                apiService.Item.get({id: $routeParams.id},
-                    (data)=> {
-                        console.log("item loaded : " + angular.toJson(data));
-                        $scope.item = data;
-                    },
-                    (err)=> {
-
-                    });
+                $scope.item = apiService.Item.get({id: $routeParams.id});
             } else {
                 console.log("new item");
             }
@@ -38,10 +31,13 @@ module controllers {
             $scope.updateItem = angular.bind(this, this.updateItem);
         }
 
-        updateItem(item){
-            this.apiService.Item.update({id: item.id}, item, data=>{
-
+        updateItem(item) {
+            this.apiService.Item.update({id: item.id}, item, data=> {
             });
+        }
+
+        deleteItem() {
+
         }
 
     }
