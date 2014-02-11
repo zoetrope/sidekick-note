@@ -31,7 +31,8 @@
     "marked": "~0.3.1",
     "highlightjs": "~8.0.0",
     "rxjs": "~2.2.13",
-    "reactiveproperty-angular": "~0.2.0"
+    "reactiveproperty-angular": "~0.2.0",
+    "momentjs": "~2.5.1"
   },
   "devDependencies": {
     "jasmine": "~1.3.1",
@@ -101,6 +102,12 @@
     },
     "marked": {
       "public/scripts/libs": "lib/marked.js"
+    },
+    "momentjs": {
+      "public/scripts/libs": [
+          "moment.js",
+          "lang/ja.js"
+      ]
     },
     "rxjs": {
       "public/scripts/libs": [

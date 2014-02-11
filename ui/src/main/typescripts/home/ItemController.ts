@@ -22,7 +22,14 @@ module controllers {
         constructor(private $scope:ItemScope, $routeParams:ItemParam, private apiService:services.ApiService) {
 
             if ($routeParams.id) {
-                $scope.item = apiService.Item.get({id: $routeParams.id});
+                apiService.Item.get({id: $routeParams.id}, item=>{
+                    if(item.dueDate){
+                        //var dueDate = moment(item.dueDate);
+                        //item.dueDate = dueDate.format("YYYY/MM/DD")
+                        item.dueDate = new Date(item.dueDate);
+                    }
+                    $scope.item = item;
+                });
             } else {
                 console.log("new item");
             }

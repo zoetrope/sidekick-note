@@ -156,6 +156,8 @@ module.exports = function (grunt) {
                         '<%= conf.dist.libs %>/bootstrap/*.js',
                         '<%= conf.dist.libs %>/highlightjs/*.js',
                         '<%= conf.dist.libs %>/marked/*.js',
+                        '<%= conf.dist.libs %>/momentjs/moment.js',
+                        '<%= conf.dist.libs %>/momentjs/ja.js',
                         '<%= conf.dist.libs %>/rxjs/rx.js',
                         '<%= conf.dist.libs %>/rxjs/rx.async.js'
                     ]

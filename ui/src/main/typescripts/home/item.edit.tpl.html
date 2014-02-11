@@ -18,6 +18,13 @@
     </div>
 
     <div class="form-group">
+        <select ng-model="item.type" ng-options="t for t in ['Task', 'Article', 'QuickNote']"></select>
+        <div class="btn-group" ng-repeat="status in statuses[item.type]">
+            <button type="button" class="btn btn-sm btn-default" ng-model="item.status" btn-radio="'{{status}}'">
+                {{status}}
+            </button>
+        </div>
+
         <input type="text" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="item.dueDate">
         <rating value="item.rate" max="5" readonly="false"></rating>
         <button ng-click="addItem(item)" class="btn btn-primary pull-right" ng-disabled="sending" ng-show="addItem">

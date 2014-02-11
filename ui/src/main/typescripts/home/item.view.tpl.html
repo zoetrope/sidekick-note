@@ -12,7 +12,9 @@
 
     <span class="text-muted pull-right">
         <small>
-            {{item.dueDate}}
+            created: {{item.createdAt | date:'yyyy/MM/dd HH:mm:ss'}},
+            modified: {{item.modifiedAt | date:'yyyy/MM/dd HH:mm:ss'}},
+            due: {{item.dueDate | date:'yyyy/MM/dd'}}
         </small>
     </span>
 </div>

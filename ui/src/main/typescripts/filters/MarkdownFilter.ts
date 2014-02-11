@@ -6,7 +6,7 @@ module filters {
 
     declare var hljs:any
 
-    export function MarkdownFilterFactory($sce: ng.ISCEService): Function{
+    export function MarkdownFilterFactory($sce:ng.ISCEService):Function {
         marked.setOptions({
             gfm: true,
             tables: true,
@@ -14,15 +14,15 @@ module filters {
             pedantic: false,
             sanitize: true,
             highlight: function (code, lang) {
-                try{
+                try {
                     return hljs.highlight(lang, code).value;
-                } catch(err) {
+                } catch (err) {
                     return hljs.highlightAuto(code).value;
                 }
             }
         });
 
-        return (input:string, param: string)=> {
+        return (input:string, param:string)=> {
             if (input) {
                 return $sce.trustAsHtml(marked(input))
             } else {
@@ -33,6 +33,6 @@ module filters {
 }
 
 angular.module("sidekick-note.filter")
-    .filter("markdown", ["$sce", ($sce: ng.ISCEService):Function=> {
+    .filter("markdown", ["$sce", ($sce:ng.ISCEService):Function=> {
         return filters.MarkdownFilterFactory($sce);
     }]);
