@@ -1,6 +1,8 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='../home/ApiService.ts' />
+///<reference path='../home/UserSetting.ts' />
+
 module controllers {
     'use strict';
 
@@ -16,13 +18,9 @@ module controllers {
 
         tagsSelectOption : any;
         allTags : string[];
-        types: string[];
-        statuses: {key?: string[]};
 
         updateTags : Function;
-
-        showSidebar: boolean;
-        showMode: string;
+        setting: models.UserSetting;
     }
 
     export class ApplicationController {
@@ -42,18 +40,9 @@ module controllers {
             $scope.logout = angular.bind(this, this.logout);
             $scope.isActive = angular.bind(this, this.isActive)
 
-            $scope.showSidebar = true;
-            $scope.showMode = "view";
-
-
-            $scope.types = ["All", "Task", "Article", "QuickNote"];
-
-            $scope.statuses = {
-                "All": ["All", "New", "Accepted", "Completed", "Writing", "Viewing", "Archived", "Flowing"],
-                "Task": ["All", "New", "Accepted", "Completed"],
-                "Article": ["All", "Writing", "Viewing", "Archived"],
-                "QuickNote": ["All", "Flowing", "Archived"]
-            };
+            $scope.setting = new models.UserSetting();
+            $scope.setting.showSidebar = true;
+            $scope.setting.showMode = "view";
 
             $scope.tagsSelectOption = {
                 'multiple': true,

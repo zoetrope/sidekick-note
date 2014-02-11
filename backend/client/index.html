@@ -36,12 +36,12 @@
 
                 <li>
                     <div class="navbar-item">
-                        <input type="checkbox" ng-model="showSidebar"> show sidebar
+                        <input type="checkbox" ng-model="setting.showSidebar"> show sidebar
                     </div>
                 </li>
                 <li class="navbar-item">検索ボックス</li>
                 <li class="navbar-select">
-                    <select class="form-control" ng-model="showMode"
+                    <select class="form-control" ng-model="setting.showMode"
                             ng-options="s for s in ['view', 'edit', 'both']"></select>
                 </li>
             </ul>
@@ -66,7 +66,7 @@
 </div>
 <div class="row" kick-resize>
     <div ng-include="'/assets/views/sidebar.tpl.html'"></div>
-    <div class="content-space" ng-style="{'left':(showSidebar?'320px':'20px'), height: windowHeight-70}">
+    <div class="content-space" ng-style="{'left':(setting.showSidebar?'320px':'20px'), height: windowHeight-70}">
         <div ng-view></div>
     </div>
 </div>

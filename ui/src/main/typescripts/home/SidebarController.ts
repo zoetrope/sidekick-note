@@ -19,6 +19,8 @@ module controllers {
         activeAccordion: any;
 
         items: any[];
+        types: string[];
+        statuses: {key?: string[]};
     }
 
     export class SidebarController {
@@ -47,6 +49,16 @@ module controllers {
             };
 
             this.updateCriteria();
+
+
+            $scope.types = ["All", "Task", "Article", "QuickNote"];
+
+            $scope.statuses = {
+                "All": ["All", "New", "Accepted", "Completed", "Writing", "Viewing", "Archived", "Flowing"],
+                "Task": ["All", "New", "Accepted", "Completed"],
+                "Article": ["All", "Writing", "Viewing", "Archived"],
+                "QuickNote": ["All", "Flowing", "Archived"]
+            };
         }
 
         updateCriteria() {

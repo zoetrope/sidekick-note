@@ -14,8 +14,9 @@ module controllers {
     export interface ItemScope extends ng.IScope {
         item: any;
 
-        showMode: string;
         updateItem: Function;
+        types: string[];
+        statuses: {key?: string[]};
     }
 
     export class ItemController {
@@ -35,6 +36,15 @@ module controllers {
             }
 
             $scope.updateItem = angular.bind(this, this.updateItem);
+
+
+            $scope.types = ["Task", "Article", "QuickNote"];
+
+            $scope.statuses = {
+                "Task": ["New", "Accepted", "Completed"],
+                "Article": ["Writing", "Viewing", "Archived"],
+                "QuickNote": ["Flowing", "Archived"]
+            };
         }
 
         updateItem(item) {

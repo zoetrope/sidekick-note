@@ -3,6 +3,7 @@
 ///<reference path='../../../d.ts/DefinitelyTyped/angularjs/angular-route.d.ts' />
 
 ///<reference path='./ApiService.ts' />
+///<reference path='./UserSetting.ts' />
 
 module controllers {
     'use strict';
@@ -10,14 +11,14 @@ module controllers {
     export interface NewItemScope extends ng.IScope {
         item: any;
 
-        showMode: string;
+        setting: models.UserSetting;
         addItem: Function;
     }
 
     export class NewItemController {
         constructor(private $scope:NewItemScope, private $location:ng.ILocationService, private apiService:services.ApiService) {
 
-            $scope.showMode = "edit"; //TODO: AppControllerに変更が伝わらない。
+            $scope.setting.showMode = "edit"; //TODO: AppControllerに変更が伝わらない。
 
             $scope.addItem = angular.bind(this, this.addItem);
         }
