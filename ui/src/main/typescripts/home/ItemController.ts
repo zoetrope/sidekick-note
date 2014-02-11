@@ -39,7 +39,9 @@ module controllers {
 
         updateItem(item) {
             //TODO: エラー処理
-            this.apiService.Item.update({id: item._id}, item);
+            this.apiService.Item.update({id: item._id}, item, data=>{
+                this.$scope.item = data;
+            });
         }
 
         deleteItem() {

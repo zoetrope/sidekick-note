@@ -32,6 +32,7 @@ var itemsResource = new Resource('items', {
     update: function *(next) {
         //TODO: エラー処理
         var item = yield parse(this);
+        item._id = ObjectId(item._id); //ObjectIdに置き換えないとアップデートされない
         item.modifiedAt = new Date().toISOString();
         var thunk = monToThunk(itemsRepo, itemsRepo.save);
         var newItem = yield thunk(item);
