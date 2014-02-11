@@ -95,3 +95,8 @@ ul.task-menu > li {float:right; margin-left: 10px;}
     padding-left: 15px;
     padding-right: 15px;
 }
+
+.header label {
+    margin-bottom: 0px;
+    font-weight: normal;
+}
