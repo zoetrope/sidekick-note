@@ -11,8 +11,21 @@ module controllers {
         id: number;
     }
 
+    export class MyItem {
+        _id: string;
+        title: string;
+        content: string;
+        type: string;
+        status: string;
+        rate: number;
+        tags: string[];
+        createdAt: Date;
+        modifiedAt: Date;
+        dueDate: Date;
+    }
+
     export interface ItemScope extends ng.IScope {
-        item: any;
+        item: MyItem;
 
         updateItem: Function;
         types: string[];
@@ -22,14 +35,14 @@ module controllers {
     export class ItemController {
         constructor(private $scope:ItemScope, $routeParams:ItemParam, private apiService:services.ApiService) {
 
+            $scope.item = new controllers.MyItem();
             if ($routeParams.id) {
                 apiService.Item.get({id: $routeParams.id}, item=>{
-                    if(item.dueDate){
-                        //var dueDate = moment(item.dueDate);
-                        //item.dueDate = dueDate.format("YYYY/MM/DD")
-                        item.dueDate = new Date(item.dueDate);
+                    angular.copy(item, this.$scope.item);
+                    console.log(this.$scope.item);
+                    if(this.$scope.item.dueDate){
+                        this.$scope.item.dueDate = new Date(item.dueDate);
                     }
-                    $scope.item = item;
                 });
             } else {
                 console.log("new item");
