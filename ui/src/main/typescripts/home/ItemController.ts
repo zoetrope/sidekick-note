@@ -16,7 +16,6 @@ module controllers {
 
         showMode: string;
         updateItem: Function;
-        addItem: Function;
     }
 
     export class ItemController {
@@ -32,8 +31,8 @@ module controllers {
         }
 
         updateItem(item) {
-            this.apiService.Item.update({id: item.id}, item, data=> {
-            });
+            //TODO: エラー処理
+            this.apiService.Item.update({id: item._id}, item);
         }
 
         deleteItem() {

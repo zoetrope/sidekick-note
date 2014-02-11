@@ -32,13 +32,10 @@ module services {
             this.Criterion = <services.IUpdatableResourceClass>
                 $resource("/api/criteria/:id", {}, {update: {method: 'PUT'}});
 
-
-            this.Auth = $resource("/api/login")
+            this.Auth = $resource("/api/login");
             this.LoggedIn = $resource("/api/loggedin")
             this.Logout = $resource("/api/logout")
-
         }
-
     }
 }
 

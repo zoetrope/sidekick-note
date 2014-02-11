@@ -14,7 +14,10 @@ var itemsResource = new Resource('items', {
     },
     // POST /api/items
     create: function *(next) {
+        //TODO: エラー処理
         var item = yield parse(this);
+        item.createdAt = new Date().toISOString();
+        item.modifiedAt = new Date().toISOString();
         var thunk = monToThunk(itemsRepo, itemsRepo.insert);
         var newItem = yield thunk(item);
         this.body = newItem[0];
@@ -27,6 +30,12 @@ var itemsResource = new Resource('items', {
     },
     // PUT /api/items/:id
     update: function *(next) {
+        //TODO: エラー処理
+        var item = yield parse(this);
+        item.modifiedAt = new Date().toISOString();
+        var thunk = monToThunk(itemsRepo, itemsRepo.save);
+        var newItem = yield thunk(item);
+        this.body = newItem[0];
     },
     // DELETE /api/items/:id
     destroy: function *(next) {

@@ -35,7 +35,7 @@ app.use(function *(next){
 
     // サーバサイドが知らないURLでアクセスされたら、URLをパラメータで渡してクライアントサイドで解決させる
     // TODO: 何でもリダイレクトするのではなく、ある程度はフィルタリングが必要。
-    console.log("redirect to " + encodeURIComponent(this.url));
+    console.log("redirect to " + this.url);
     this.redirect('/index.html?url=' + encodeURIComponent(this.url));
 });
 
