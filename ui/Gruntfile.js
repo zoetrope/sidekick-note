@@ -1,25 +1,15 @@
 module.exports = function (grunt) {
 
     var appConfig = {
-        components: 'components',
-        javascripts: 'app',
-
         stylesheets: 'stylesheets',
         images: 'assets/images',
         fonts: 'assets/fonts',
         tsd: 'src/d.ts',
         app: {
-            typescripts: 'src/main/typescripts',
-            stylesheets: 'src/main/stylesheets',
-            libs: 'src/main/libs',
-            views: 'src/main/typescripts',
-            images: 'src/main/images'
-        },
-        test: {
-            typescripts: 'src/test/typescripts',
-            scripts: 'src/test/scripts',
-            libs: 'src/test/libs',
-            stylesheets: 'src/test/stylesheets'
+            typescripts: 'scripts',
+            stylesheets: 'stylesheets',
+            views: 'scripts',
+            images: 'images'
         },
         dist: {
             scripts: '../public/scripts',
@@ -44,25 +34,12 @@ module.exports = function (grunt) {
                     sourcemap: false,
                     declaration: false
                 }
-            },
-            test: {
-                src: ['<%= conf.test.typescripts %>/AppSpec.ts'],
-                dest: '<%= conf.test.scripts %>/AppSpec.js',
-                options: {
-                    target: 'es5',
-                    sourcemap: false,
-                    declaration: false
-                }
             }
         },
         watch: {
             "typescript-main": {
                 files: ['<%= conf.app.typescripts %>/**/*.ts'],
                 tasks: ['clean:mainjs', 'typescript:main']
-            },
-            "typescript-test": {
-                files: [ '<%= conf.test.typescripts %>/**/*.ts'],
-                tasks: ['typescript']
             },
             views: {
                 files: ['<%= conf.app.views %>/**/*.tpl.html', '<%= conf.app.stylesheets %>/**/*.css'],
@@ -173,13 +150,6 @@ module.exports = function (grunt) {
                     force: true
                 }
             },
-            test: {
-                src: [
-                    '<%= conf.test.scripts %>/*',
-                    '<%= conf.test.libs %>/*',
-                    '<%= conf.test.stylesheets %>/*'
-                ]
-            },
             tsd: {
                 src: [
                     '<%= conf.tsd %>'
@@ -196,18 +166,6 @@ module.exports = function (grunt) {
                 ],
                 options: {
                     force: true
-                }
-            }
-        },
-        karma: {
-            unit: {
-                options: {
-                    configFile: 'karma.conf.js',
-                    autoWatch: false,
-                    browsers: ['Chrome'],
-                    reporters: ['progress', 'junit'],
-                    singleRun: true,
-                    keepalive: true
                 }
             }
         },

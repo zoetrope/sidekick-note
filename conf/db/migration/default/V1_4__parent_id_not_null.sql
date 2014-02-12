@@ -1,2 +1,0 @@
-
-ALTER TABLE comments MODIFY COLUMN parent_id BIGINT NOT NULL;
