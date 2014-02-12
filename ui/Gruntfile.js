@@ -172,7 +172,7 @@ module.exports = function (grunt) {
         exec: {
             tsd: {
                 cmd: function () {
-                    return "tsd install jquery angular angular-resource angular-route marked jasmine angular-mocks rx.js";
+                    return "tsd install jquery angular angular-resource angular-route marked jasmine angular-mocks rx.js moment";
                 }
             }
         }
@@ -192,11 +192,6 @@ module.exports = function (grunt) {
         'run',
         "compile and watch",
         ['clean:dist', 'bower', 'copy', 'shell', 'typescript:main', 'uglify:dev', 'watch']);
-
-    grunt.registerTask(
-        'test',
-        "test by karma",
-        ['clean:dist', 'clean:test', 'bower', 'typescript', 'karma']);
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 };
