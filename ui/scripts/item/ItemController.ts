@@ -4,29 +4,17 @@
 
 ///<reference path='../services/ApiService.ts' />
 ///<reference path='../application/UserSetting.ts' />
+///<reference path='../common/Item.ts' />
 
 module controllers {
     'use strict';
 
     export interface ItemParam extends ng.route.IRouteParamsService {
-        id: number;
-    }
-
-    export class MyItem {
-        _id: string;
-        title: string;
-        content: string;
-        type: string;
-        status: string;
-        rate: number;
-        tags: string[];
-        createdAt: Date;
-        modifiedAt: Date;
-        dueDate: Date;
+        id: string;
     }
 
     export interface ItemScope extends ng.IScope {
-        item: MyItem;
+        item: models.Item;
 
         setting: models.UserSetting;
         addItem: Function;
@@ -39,7 +27,7 @@ module controllers {
     export class ItemController {
         constructor(private $scope:ItemScope, $routeParams:ItemParam, private $location:ng.ILocationService, private apiService:services.ApiService) {
 
-            $scope.item = new controllers.MyItem();
+            $scope.item = new models.Item();
             if ($routeParams.id) {
                 apiService.Item.get({id: $routeParams.id}, item=>{
                     angular.copy(item, this.$scope.item);

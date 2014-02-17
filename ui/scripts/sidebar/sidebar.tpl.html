@@ -7,7 +7,10 @@
             </accordion-heading>
             <div class="list-group">
                 <div ng-repeat="criterion in criteria | orderBy:'sortOrder':false" class="list-group-item">
+                    <!--
                     <a href="#" ng-click="search(criterion)">{{criterion.name}}</a>
+                    -->
+                    <a href="/list/{{criterion._id}}">{{criterion.name}}</a>
                 </div>
             </div>
             最近開いた

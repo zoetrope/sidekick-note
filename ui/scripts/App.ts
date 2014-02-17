@@ -25,6 +25,7 @@ module App {
                 .when("/search", {templateUrl: "/assets/views/search.tpl.html"})
                 .when("/login", {templateUrl: "/assets/views/login.tpl.html"})
                 .when("/new_item", {templateUrl: "/assets/views/item.base.tpl.html"})
+                .when("/list/:id", {templateUrl: "/assets/views/list.tpl.html"})
                 .when("/items/:id", {templateUrl: "/assets/views/item.base.tpl.html"})
                 .otherwise({redirectTo: '/home'});
             $locationProvider.html5Mode(true);

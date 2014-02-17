@@ -172,7 +172,7 @@ module.exports = function (grunt) {
         exec: {
             tsd: {
                 cmd: function () {
-                    return "tsd install jquery angular angular-resource angular-route marked jasmine angular-mocks rx.js moment";
+                    return "tsd install jquery angular angular-resource angular-route marked angular-mocks rx.js moment";
                 }
             }
         }

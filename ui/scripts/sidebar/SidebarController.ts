@@ -1,7 +1,7 @@
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='SearchCondition.ts' />
-///<reference path='../application/Tag.ts' />
+///<reference path='../common/Tag.ts' />
 ///<reference path='../services/ItemRenderService.ts' />
 ///<reference path='../services/IUpdatableResourceClass.ts' />
 ///<reference path='../services/ApiService.ts' />
