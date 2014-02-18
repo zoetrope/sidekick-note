@@ -2,6 +2,8 @@ var parse = require('co-body');
 var Resource = require('koa-resource-router');
 var criteriaRepo = require("./repository").criteria;
 var monToThunk = require("./thunkify").monToThunk;
+var mongojs = require('mongojs');
+var ObjectId = mongojs.ObjectId;
 
 var criteriaResource = new Resource('criteria', {
     // GET /api/criteria
@@ -22,6 +24,10 @@ var criteriaResource = new Resource('criteria', {
     },
     // GET /api/criteria/:id
     show: function *(next) {
+        console.log(this.params);
+        var thunk = monToThunk(criteriaRepo, criteriaRepo.findOne);
+        var criterion = yield thunk({_id: ObjectId(this.params.criterium)});
+        this.body = criterion;
     },
     // GET /api/criteria/:id/edit
     edit: function *(next) {

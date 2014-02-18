@@ -1,2 +1,33 @@
 <div ng-controller="ListController">
+    <div class="list-group search-result" ng-style="{height: windowHeight-80}">
+        <div ng-repeat="item in items" class="list-group-item">
+            <ng-switch on="item.type">
+                <span ng-switch-when="Task" class="glyphicon glyphicon-ok"></span>
+                <span ng-switch-when="Article" class="glyphicon glyphicon glyphicon-book"></span>
+                <span ng-switch-when="QuickNote" class="glyphicon glyphicon glyphicon-th-list"></span>
+                <span ng-switch-default class="glyphicon glyphicon-question-sign"></span>
+            </ng-switch>
+            {{item.title}}
+            <a href="/items/{{item._id}}">
+                <button type="button" class="pull-right btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-pencil"></span> Edit
+                </button>
+            </a>
+            <br />
+
+            {{item.status}}
+            {{item.rate}}
+            {{item.dueDate}}
+            {{item.tags}}
+        </div>
+    </div>
+    <!--
+    Edit: glyphicon glyphicon-pencil
+    Remove: glyphicon glyphicon-remove
+    -->
+    <!--
+    Task:  glyphicon glyphicon-ok
+    Article:  glyphicon glyphicon-book
+    QuickNote: glyphicon glyphicon-th-list
+    -->
 </div>
