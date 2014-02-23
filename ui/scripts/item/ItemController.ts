@@ -28,13 +28,14 @@ module controllers {
         constructor(private $scope:ItemScope, $routeParams:ItemParam, private $location:ng.ILocationService, private apiService:services.ApiService) {
 
             $scope.item = new models.Item();
+            console.log("load : id = " + $routeParams.id);
             if ($routeParams.id) {
                 apiService.Item.get({id: $routeParams.id}, item=>{
                     angular.copy(item, this.$scope.item);
-                    console.log(this.$scope.item);
                     if(this.$scope.item.dueDate){
                         this.$scope.item.dueDate = new Date(item.dueDate);
                     }
+                    console.log("loaded item = " + angular.toJson(this.$scope.item));
                 });
             } else {
                 $scope.setting.showMode = "edit";

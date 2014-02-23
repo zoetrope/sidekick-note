@@ -3,11 +3,10 @@ var app = koa();
 var router = require("koa-router");
 var logger = require("koa-logger");
 var mount = require("koa-mount");
-
+var spank = require('koa-spankular');
 //app.use(logger());
 
 var static = require('koa-static');
-app.use(static("client"));
 app.use(mount("/assets", static("../public")));
 
 app.use(mount("/api", require('./items').middleware()));
@@ -29,15 +28,13 @@ app.get("/api/loggedin", function *(next){
 
 app.get("/api/tags", require("./tag"));
 
-
-app.use(function *(next){
+function *index(next) {
+    console.log("index: " + this.url);
+    var html  = require('fs').readFileSync(("views/index.html"), 'utf8');
+    this.body = html;
     yield next;
+}
 
-    // サーバサイドが知らないURLでアクセスされたら、URLをパラメータで渡してクライアントサイドで解決させる
-    // TODO: 何でもリダイレクトするのではなく、ある程度はフィルタリングが必要。
-    console.log("redirect to " + this.url);
-    this.redirect('/index.html?url=' + encodeURIComponent(this.url));
-});
-
+app.use(index);
 
 app.listen(3000);
