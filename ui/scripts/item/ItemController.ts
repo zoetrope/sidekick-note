@@ -22,6 +22,8 @@ module controllers {
         updateItem: Function;
         types: string[];
         statuses: {key?: string[]};
+
+        isNewItem: boolean;
     }
 
     export class ItemController {
@@ -30,6 +32,7 @@ module controllers {
             $scope.item = new models.Item();
             console.log("load : id = " + $routeParams.id);
             if ($routeParams.id) {
+                $scope.isNewItem = false;
                 apiService.Item.get({id: $routeParams.id}, item=>{
                     angular.copy(item, this.$scope.item);
                     if(this.$scope.item.dueDate){
@@ -38,6 +41,7 @@ module controllers {
                     console.log("loaded item = " + angular.toJson(this.$scope.item));
                 });
             } else {
+                $scope.isNewItem = true;
                 $scope.setting.showMode = "edit";
                 console.log("new item");
             }

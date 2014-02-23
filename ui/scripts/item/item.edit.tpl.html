@@ -27,11 +27,11 @@
 
         <input type="text" ui-date="{ dateFormat: 'yy/mm/dd' }" ng-model="item.dueDate">
         <rating value="item.rate" max="5" readonly="false"></rating>
-        <button ng-click="addItem(item)" class="btn btn-primary pull-right" ng-disabled="sending" ng-show="addItem">
+        <button ng-click="addItem(item)" class="btn btn-primary pull-right" ng-disabled="sending" ng-show="isNewItem">
             add
         </button>
-        <button ng-click="updateItem(item)" class="btn btn-primary pull-right" ng-disabled="sending"
-                ng-show="updateItem">save
+        <button ng-click="updateItem(item)" class="btn btn-primary pull-right" ng-disabled="sending" ng-hide="isNewItem">
+            save
         </button>
     </div>
 </form>
