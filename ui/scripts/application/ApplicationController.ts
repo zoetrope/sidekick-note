@@ -2,6 +2,7 @@
 ///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
 ///<reference path='../services/ApiService.ts' />
 ///<reference path='UserSetting.ts' />
+///<reference path='FilteringParameter.ts' />
 
 module controllers {
     'use strict';
@@ -21,6 +22,8 @@ module controllers {
 
         updateTags : Function;
         setting: models.UserSetting;
+
+        filteringParam: models.FilteringParameter;
     }
 
     export class ApplicationController {
@@ -57,6 +60,8 @@ module controllers {
 
             $scope.updateTags = angular.bind(this, this.updateTags);
             this.updateTags();
+
+            $scope.filteringParam = new models.FilteringParameter();
         }
 
         updateTags(){
