@@ -51,7 +51,15 @@ module controllers {
                     this.apiService.Items.query(param,
                         (data)=>{
                             console.log("items = " + data.length);
-                            this.$scope.items = data;
+                            this.$scope.items = data.map((item)=>{
+                                if (!item.title) {
+                                    item.title = item.content.substr(0, 80);
+                                    if(item.content.length > 80){
+                                        item.title += "...";
+                                    }
+                                }
+                                return item;
+                            });
                         },
                         (err)=>{
 
