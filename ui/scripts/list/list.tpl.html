@@ -1,6 +1,6 @@
 <div ng-controller="ListController">
     <div class="list-group search-result" ng-style="{height: windowHeight-80}">
-        <div ng-repeat="item in items | filter:filteringParam.keywords | filter:{type:filteringParam.type} | filter:{status:filteringParam.status} | filter:{tags:filteringParam.tags}" class="list-group-item">
+        <div ng-repeat="item in items | filter:filteringParam.keyword | filter:{type:filteringParam.type} | filter:{status:filteringParam.status} | filter:{tags:filteringParam.tags} | orderBy:filteringParam.order" class="list-group-item">
             <ng-switch on="item.type">
                 <span ng-switch-when="Task" class="glyphicon glyphicon-ok"></span>
                 <span ng-switch-when="Article" class="glyphicon glyphicon glyphicon-book"></span>

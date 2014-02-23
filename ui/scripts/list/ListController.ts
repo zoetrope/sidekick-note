@@ -81,7 +81,9 @@ module controllers {
         updateStatus(item, status) {
             console.log(status);
             //TODO: エラー処理
-            this.apiService.Item.update({id: item._id}, {id: item._id, status: status}, data=>{});
+            this.apiService.Item.update({id: item._id}, {status: status}, data=>{
+                //リロードしてリストを更新すべき？
+            });
         }
 
     }

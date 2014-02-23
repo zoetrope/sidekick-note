@@ -31,8 +31,8 @@
             </accordion-heading>
             <div>
                 <div class="form-group">
-                    <label for="filteringKeywords">Keywords</label>
-                    <input type="text" class="form-control" id="filteringKeywords" ng-model="filteringParam.keywords">
+                    <label for="filteringKeyword">Keyword</label>
+                    <input type="text" class="form-control" id="filteringKeyword" ng-model="filteringParam.keyword">
                 </div>
                 <div class="form-group">
                     <label for="filteringType">Type</label>
@@ -49,6 +49,22 @@
                     <input type="text" id="filteringTags" ui-select2="tagsSelectOption" ng-model="filteringParam.tags"
                            style="width:100%"/>
                 </div>
+            </div>
+            <div>
+                <input type="radio" ng-model="filteringParam.order" value="type" /> Type
+                <input type="radio" ng-model="filteringParam.order" value="-type" /> -Type<br/>
+                <input type="radio" ng-model="filteringParam.order" value="status" /> Status
+                <input type="radio" ng-model="filteringParam.order" value="-status" /> -Status<br/>
+                <input type="radio" ng-model="filteringParam.order" value="title" /> Title
+                <input type="radio" ng-model="filteringParam.order" value="-title" /> -Title<br/>
+                <input type="radio" ng-model="filteringParam.order" value="modifiedAt" /> Modified
+                <input type="radio" ng-model="filteringParam.order" value="-modifiedAt" /> -Modified<br/>
+                <input type="radio" ng-model="filteringParam.order" value="createdAt" /> Created
+                <input type="radio" ng-model="filteringParam.order" value="-createdAt" /> -Created<br/>
+                <input type="radio" ng-model="filteringParam.order" value="dueDate" /> Due Date
+                <input type="radio" ng-model="filteringParam.order" value="-dueDate" /> -Due Date<br/>
+                <input type="radio" ng-model="filteringParam.order" value="rate"/> Rate
+                <input type="radio" ng-model="filteringParam.order" value="-rate"/> -Rate<br/>
             </div>
         </accordion-group>
         <accordion-group is-open="activeAccordion.criterion">
