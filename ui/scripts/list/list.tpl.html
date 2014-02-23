@@ -15,7 +15,12 @@
             </a>
             <br />
 
-            {{item.status}}
+            <div class="btn-group" ng-repeat="status in statuses[item.type]">
+                <button type="button" class="btn btn-sm btn-default" ng-model="item.status" btn-radio="'{{status}}'" ng-click="updateStatus(item, status)">
+                    {{status}}
+                </button>
+            </div>
+
             {{item.rate}}
             {{item.dueDate}}
             {{item.tags}}

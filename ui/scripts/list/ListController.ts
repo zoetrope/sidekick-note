@@ -20,10 +20,8 @@ module controllers {
         items: models.Item[];
 
         setting: models.UserSetting;
-        addItem: Function;
 
-        updateItem: Function;
-        types: string[];
+        updateStatus: Function;
         statuses: {key?: string[]};
     }
 
@@ -70,8 +68,21 @@ module controllers {
                 console.log("new item");
             }
 
+            $scope.statuses = {
+                "Task": ["New", "Accepted", "Completed"],
+                "Article": ["Writing", "Viewing", "Archived"],
+                "QuickNote": ["Flowing", "Archived"]
+            };
+
+
+            $scope.updateStatus = angular.bind(this, this.updateStatus);
         }
 
+        updateStatus(item, status) {
+            console.log(status);
+            //TODO: エラー処理
+            this.apiService.Item.update({id: item._id}, {id: item._id, status: status}, data=>{});
+        }
 
     }
 }
