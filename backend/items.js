@@ -33,9 +33,12 @@ var itemsResource = new Resource('items', {
         //TODO: エラー処理
         var item = yield parse(this);
         //console.log(this.params.item);
+        if (item._id !== undefined) {
+            delete item._id;
+        }
         item.modifiedAt = new Date().toISOString();
         var thunk = monToThunk(itemsRepo, itemsRepo.update);
-        var newItem = yield thunk({_id : ObjectId(this.params.item)}, {"$set": item});
+        var newItem = yield thunk({_id: ObjectId(this.params.item)}, {"$set": item});
         this.body = newItem[0];
     },
     // DELETE /api/items/:id
