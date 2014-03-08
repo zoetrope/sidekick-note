@@ -21,6 +21,8 @@ module controllers {
         items: any[];
         types: string[];
         statuses: {key?: string[]};
+
+        tagsSelectOption : any;
     }
 
     export class SidebarController {
@@ -50,6 +52,8 @@ module controllers {
 
             this.updateCriteria();
 
+            // 存在しないタグを追加できないように。
+            $scope.tagsSelectOption.createSearchChoice = null;
 
             $scope.types = ["All", "Task", "Article", "QuickNote"];
 

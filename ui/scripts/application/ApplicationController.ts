@@ -51,8 +51,7 @@ module controllers {
                 'multiple': true,
                 'simple_tags': true,
                 'allowClear': true,
-                'closeOniSelect': true,
-                'createSearchChoice': null,
+                'closeOnSelect': true,
                 'tags': () => {
                     return $scope.allTags;
                 }
