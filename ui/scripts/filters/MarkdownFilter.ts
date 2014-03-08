@@ -22,9 +22,21 @@ module filters {
             }
         });
 
+        var renderer = new (<any>marked).Renderer();
+        renderer.table = function(header, body) {
+            return '<table class="table table-bordered table-striped">\n'
+                + '<thead>\n'
+                + header
+                + '</thead>\n'
+                + '<tbody>\n'
+                + body
+                + '</tbody>\n'
+                + '</table>\n';
+        };
+
         return (input:string, param:string)=> {
             if (input) {
-                return $sce.trustAsHtml(marked(input))
+                return $sce.trustAsHtml(marked(input, {renderer: renderer}))
             } else {
                 return ""
             }
