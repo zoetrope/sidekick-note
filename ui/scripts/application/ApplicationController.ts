@@ -2,6 +2,7 @@
 ///<reference path='../services/ApiService.ts' />
 ///<reference path='UserSetting.ts' />
 ///<reference path='FilteringParameter.ts' />
+///<reference path='../search/SearchController.ts' />
 
 module controllers {
     'use strict';
@@ -23,11 +24,13 @@ module controllers {
         setting: models.UserSetting;
 
         filteringParam: models.FilteringParameter;
+
+        openSearchDialog: Function;
     }
 
     export class ApplicationController {
 
-        constructor(public $scope:AppScope, public $location:ng.ILocationService, public apiService:services.ApiService, public $timeout:ng.ITimeoutService) {
+        constructor(public $scope:AppScope, public $location:ng.ILocationService, public apiService:services.ApiService, public $timeout:ng.ITimeoutService, private $modal: any) {
 
             this.apiService.LoggedIn.get(x=>$scope.loggedin = x.name, reason => console.log(reason))
 
@@ -60,6 +63,8 @@ module controllers {
             this.updateTags();
 
             $scope.filteringParam = new models.FilteringParameter();
+
+            $scope.openSearchDialog = angular.bind(this, this.openSearchDialog);
         }
 
         updateTags(){
@@ -93,11 +98,18 @@ module controllers {
                 window.location.href = "/login";
             })
         }
+
+        openSearchDialog(){
+            this.$modal.open({
+               templateUrl: '/views/search.tpl.html',
+                controller: controllers.SearchController
+            });
+        }
     }
 }
 
 angular.module('sidekick-note.controller')
-    .controller("ApplicationController", ["$scope", "$location", "apiService", "$timeout",
-        ($scope:controllers.AppScope, $location:ng.ILocationService, apiService:services.ApiService, $timeout:ng.ITimeoutService):controllers.ApplicationController => {
-            return new controllers.ApplicationController($scope, $location, apiService, $timeout)
+    .controller("ApplicationController", ["$scope", "$location", "apiService", "$timeout", "$modal",
+        ($scope:controllers.AppScope, $location:ng.ILocationService, apiService:services.ApiService, $timeout:ng.ITimeoutService, $modal: any):controllers.ApplicationController => {
+            return new controllers.ApplicationController($scope, $location, apiService, $timeout, $modal)
         }]);

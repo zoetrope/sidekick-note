@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h3>I'm a modal!</h3>
+</div>
+<div class="modal-body">
+    <form role="form">
+        <div class="form-group">
+            <label for="name">Search Name</label>
+            <input type="text" class="form-control" id="name" ng-model="current.name">
+        </div>
+        <div class="form-group">
+            <label for="keywords">Keywords</label>
+            <input type="text" class="form-control" id="keywords" ng-model="current.param.keywords">
+        </div>
+        <div class="form-group">
+            <label for="itemType">Type</label>
+            <select class="form-control" id="itemType" ng-model="current.param.type"
+                    ng-options="t for t in types"></select>
+        </div>
+        <div class="form-group">
+            <label for="itemStatus">Status</label>
+            <select class="form-control" id="itemStatus" ng-model="current.param.status"
+                    ng-options="s for s in statuses[current.param.type]"></select>
+        </div>
+        <div class="form-group">
+            <label for="tags">Tags</label>
+            <input type="text" id="tags" ui-select2="tagsSelectOption" ng-model="current.param.tags"
+                   style="width:100%"/>
+        </div>
+        <div class="form-group">
+            <label for="sortOrder">Sort Order</label>
+            <input type="number" class="form-control" id="sortOrder" ng-model="current.sortOrder">
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="search(current)">Search</button>
+    <button class="btn btn-default" ng-click="addCriterion(current)">add</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

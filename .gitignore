@@ -1,7 +1,7 @@
 logs
 ui/node_modules
 ui/bower_components
-ui/d.ts
+ui/typings
 ui/bower-task
 public/
 backend/node_modules

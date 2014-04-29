@@ -51,6 +51,9 @@
             <ul class="nav navbar-nav navbar-left">
                 <li ng-class="{ active: isActive('/new_item') }"><a href="/new_item">new</a></li>
                 <li>
+                    <a class="active" ng-click="openSearchDialog()" >search</a>
+                </li>
+                <li>
                     <div class="navbar-item">
                         <label>
                         <input type="checkbox" ng-model="setting.showSidebar"> sidebar
