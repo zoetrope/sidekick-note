@@ -1,4 +1,4 @@
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
+///<reference path='../../typings/tsd.d.ts' />
 
 module models {
     'use strict';

@@ -1,4 +1,4 @@
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
+///<reference path='../../typings/tsd.d.ts' />
 
 module directives {
     'use strict';
@@ -6,7 +6,7 @@ module directives {
     export class ItemDirective implements ng.IDirective {
         restrict: string = "E";
 
-        templateUrl: string = "/assets/views/item.tpl.html";
+        templateUrl: string = "/views/item.tpl.html";
 
         transclude: any = false;
 

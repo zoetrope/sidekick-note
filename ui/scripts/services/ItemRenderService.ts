@@ -1,5 +1,4 @@
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path="../../d.ts/DefinitelyTyped/marked/marked.d.ts" />
+///<reference path='../../typings/tsd.d.ts' />
 
 module services {
     'use strict';

@@ -1,5 +1,4 @@
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
+///<reference path='../../typings/tsd.d.ts' />
 ///<reference path='IUpdatableResourceClass.ts' />
 
 module services {
@@ -7,34 +6,34 @@ module services {
 
     export class ApiService {
 
-        Items:ng.resource.IResourceClass;
-        Item:services.IUpdatableResourceClass;
+        Items:ng.resource.IResourceClass<models.Item>;
+        Item:services.IUpdatableResourceClass<models.Item>;
 
-        Tags:ng.resource.IResourceClass;
+        Tags:ng.resource.IResourceClass<models.Tag>;
 
-        Criteria:ng.resource.IResourceClass;
-        Criterion:services.IUpdatableResourceClass;
+        Criteria:ng.resource.IResourceClass<models.Criterion>;
+        Criterion:services.IUpdatableResourceClass<models.Criterion>;
 
-        Auth:ng.resource.IResourceClass;
-        LoggedIn:ng.resource.IResourceClass;
-        Logout:ng.resource.IResourceClass;
+        Auth:ng.resource.IResourceClass<any>;
+        LoggedIn:ng.resource.IResourceClass<any>;
+        Logout:ng.resource.IResourceClass<any>;
 
         constructor($resource:ng.resource.IResourceService) {
-            this.Items = $resource("/api/items");
+            this.Items = $resource<models.Item>("/api/items");
 
-            this.Item = <services.IUpdatableResourceClass>
-                $resource("/api/items/:id", {}, {update: {method: 'PUT'}});
+            this.Item = <services.IUpdatableResourceClass<models.Item>>
+                $resource<models.Item>("/api/items/:id", {}, {update: {method: 'PUT'}});
 
-            this.Tags = $resource("/api/tags");
+            this.Tags = $resource<models.Tag>("/api/tags");
 
-            this.Criteria = $resource("/api/criteria");
+            this.Criteria = $resource<models.Criterion>("/api/criteria");
 
-            this.Criterion = <services.IUpdatableResourceClass>
-                $resource("/api/criteria/:id", {}, {update: {method: 'PUT'}});
+            this.Criterion = <services.IUpdatableResourceClass<models.Criterion>>
+                $resource<models.Criterion>("/api/criteria/:id", {}, {update: {method: 'PUT'}});
 
-            this.Auth = $resource("/api/login");
-            this.LoggedIn = $resource("/api/loggedin")
-            this.Logout = $resource("/api/logout")
+            this.Auth = $resource<any>("/api/login");
+            this.LoggedIn = $resource<any>("/api/loggedin")
+            this.Logout = $resource<any>("/api/logout")
         }
     }
 }

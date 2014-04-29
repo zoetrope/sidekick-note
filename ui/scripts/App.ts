@@ -1,5 +1,4 @@
-///<reference path='../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='../d.ts/DefinitelyTyped/angularjs/angular-route.d.ts' />
+///<reference path='../typings/tsd.d.ts' />
 
 console.log("initialize sidekick-note");
 
@@ -20,11 +19,11 @@ module App {
             console.log("rootProvider!");
             $routeProvider
                 .when("/", {redirectTo: '/new_item'})
-                .when("/search", {templateUrl: "/assets/views/search.tpl.html"})
-                .when("/login", {templateUrl: "/assets/views/login.tpl.html"})
-                .when("/new_item", {templateUrl: "/assets/views/item.base.tpl.html"})
-                .when("/list/:id", {templateUrl: "/assets/views/list.tpl.html"})
-                .when("/items/:id", {templateUrl: "/assets/views/item.base.tpl.html"})
+                .when("/search", {templateUrl: "/views/search.tpl.html"})
+                .when("/login", {templateUrl: "/views/login.tpl.html"})
+                .when("/new_item", {templateUrl: "/views/item.base.tpl.html"})
+                .when("/list/:id", {templateUrl: "/views/list.tpl.html"})
+                .when("/items/:id", {templateUrl: "/views/item.base.tpl.html"})
                 .otherwise({redirectTo: '/home'});
             $locationProvider.html5Mode(true);
         })

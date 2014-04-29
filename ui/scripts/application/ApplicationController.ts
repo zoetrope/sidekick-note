@@ -1,5 +1,4 @@
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
+///<reference path='../../typings/tsd.d.ts' />
 ///<reference path='../services/ApiService.ts' />
 ///<reference path='UserSetting.ts' />
 ///<reference path='FilteringParameter.ts' />

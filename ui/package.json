@@ -1,6 +1,6 @@
 {
   "name": "sidekick-note-ui",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "UI for sidekick-note",
   "main": "index.js",
   "scripts": {
@@ -9,19 +9,15 @@
   "author": "zoetrope",
   "license": "MIT",
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "tsd": "~0.3.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-uglify": "~0.2.4",
-    "grunt-text-replace": "~0.3.7",
-    "grunt-contrib-watch": "~0.5.3",
-    "grunt-typescript": "~0.2.4",
-    "grunt-bower-task": "~0.3.2",
-    "grunt-exec": "~0.4.2",
-    "grunt-open": "~0.2.2",
-    "matchdep": "~0.1.2",
-    "grunt-shell": "~0.4.0"
+    "tsd": "~0.5.7",
+    "gulp": "~3.6.0",
+    "gulp-tsc": "~0.7.0",
+    "gulp-bower-files": "~0.2.1",
+    "gulp-flatten": "0.0.2",
+    "gulp-clean": "~0.2.4",
+    "gulp-connect": "~2.0.2",
+    "gulp-uglify": "~0.2.1",
+    "gulp-util": "~2.2.14",
+    "gulp-if": "~1.1.0"
   }
 }

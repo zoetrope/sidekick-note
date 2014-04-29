@@ -1,5 +1,4 @@
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
+///<reference path='../../typings/tsd.d.ts' />
 
 module controllers {
     'use strict';

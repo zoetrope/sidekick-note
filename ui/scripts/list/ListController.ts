@@ -1,6 +1,4 @@
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-resource.d.ts' />
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular-route.d.ts' />
+///<reference path='../../typings/tsd.d.ts' />
 
 ///<reference path='../services/ApiService.ts' />
 ///<reference path='../application/UserSetting.ts' />
@@ -46,9 +44,10 @@ module controllers {
                         delete param.tags;
                     }
 
+                    this.$scope.items = [];
                     this.apiService.Items.query(param,
                         (data)=>{
-                            console.log("items = " + data.length);
+                            console.log("item.length = " + data.length);
                             this.$scope.items = data.map((item)=>{
                                 if (!item.title) {
                                     item.title = item.content.substr(0, 80);
@@ -58,6 +57,7 @@ module controllers {
                                 }
                                 return item;
                             });
+                            console.log("items.length = " + this.$scope.items.length);
                         },
                         (err)=>{
 

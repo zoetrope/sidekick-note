@@ -7,7 +7,7 @@ var spank = require('koa-spankular');
 //app.use(logger());
 
 var static = require('koa-static');
-app.use(mount("/assets", static("../public")));
+app.use(mount("/", static("../ui/public")));
 
 app.use(mount("/api", require('./items').middleware()));
 app.use(mount("/api", require('./criteria').middleware()));

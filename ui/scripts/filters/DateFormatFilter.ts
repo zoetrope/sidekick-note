@@ -1,5 +1,4 @@
-///<reference path='../../d.ts/DefinitelyTyped/angularjs/angular.d.ts' />
-///<reference path='../../d.ts/DefinitelyTyped/moment/moment.d.ts' />
+///<reference path='../../typings/tsd.d.ts' />
 
 module filters {
     'use strict';
