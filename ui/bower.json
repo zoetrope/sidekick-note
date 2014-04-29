@@ -1,6 +1,6 @@
 {
   "name": "sidekick-note-ui",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "homepage": "https://github.com/zoetrope/sidekick-note",
   "authors": [
     "zoetrope"
@@ -17,22 +17,22 @@
   ],
   "dependencies": {
     "jquery": "~2.1.0",
-    "bootstrap": "~3.1.0",
-    "angular": "~1.2.12",
-    "angular-resource": "~1.2.12",
-    "angular-route": "~1.2.12",
+    "bootstrap": "~3.1.1",
+    "angular": "~1.2.16",
+    "angular-resource": "~1.2.16",
+    "angular-route": "~1.2.16",
     "angular-ui": "~0.4.0",
     "angular-ui-utils": "~0.1.1",
     "angular-ui-select2": "~0.0.5",
-    "angular-ui-bootstrap-bower": "0.10.0",
+    "angular-ui-bootstrap-bower": "~0.10.0",
     "angular-ui-date": "~0.0.3",
-    "jquery-ui": "~1.10.3",
-    "select2": "3.4.5",
-    "marked": "~0.3.1",
+    "jquery-ui": "~1.10.4",
+    "select2": "~3.4.6",
+    "marked": "~0.3.2",
     "highlightjs": "~8.0.0",
-    "rxjs": "~2.2.13",
-    "reactiveproperty-angular": "~0.2.0",
-    "momentjs": "~2.5.1"
+    "rxjs": "~2.2.20",
+    "reactiveproperty-angular": "~0.2.1",
+    "momentjs": "~2.6.0"
   },
   "exportsOverride": {
     "angular": {
@@ -101,8 +101,8 @@
     },
     "momentjs": {
       "public/scripts/libs": [
-          "moment.js",
-          "lang/ja.js"
+        "moment.js",
+        "lang/ja.js"
       ]
     },
     "rxjs": {
