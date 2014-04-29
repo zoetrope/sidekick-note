@@ -9,7 +9,27 @@ var itemsResource = new Resource('items', {
     // GET /api/items
     index: function *(next) {
         var thunk = monToThunk(itemsRepo, itemsRepo.find);
-        var items = yield thunk(this.query);
+        var param = {};
+        if(this.query.status){
+            param.status = this.query.status;
+        }
+        if(this.query.type){
+            param.type = this.query.type;
+        }
+        if(this.query.keywords) {
+            var keywords = this.query.keywords.split(' ');
+            var conds = [];
+            keywords.forEach(function (keyword) {
+                var r = new RegExp(keyword);
+                conds.push({'$or': [ { content: r}, {title: r} ]});
+            });
+            param['$and'] = conds;
+        }
+        if(this.query.tags){
+            param.tags = {'$all': this.query.tags};
+        }
+        console.log(param);
+        var items = yield thunk(param);
         this.body = items;
     },
     // POST /api/items

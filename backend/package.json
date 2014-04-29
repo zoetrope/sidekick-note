@@ -8,15 +8,15 @@
     "start": "node --harmony index.js"
   },
   "dependencies": {
-    "koa": "0.5.0",
+    "koa": "~0.5.0",
     "koa-router": "~3.0.2",
     "mongojs": "~0.10.0",
-    "rx": "~2.2.13",
+    "rx": "~2.2.20",
     "co-body": "0.0.1",
     "koa-static": "~1.4.3",
     "koa-resource-router": "~0.2.0",
     "koa-logger": "~1.1.1",
-    "koa-mount": "~1.2.3"
+    "koa-mount": "~1.2.5"
   },
   "engines": {
     "node": "0.11.9"

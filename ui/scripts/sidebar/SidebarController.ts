@@ -62,6 +62,10 @@ module controllers {
                 "Article": ["All", "Writing", "Viewing", "Archived"],
                 "QuickNote": ["All", "Flowing", "Archived"]
             };
+
+            $scope.$on("searchItems",(ev: ng.IAngularEvent,criterion: models.Criterion)=>{
+                this.search(criterion);
+            })
         }
 
         updateCriteria() {
@@ -74,9 +78,6 @@ module controllers {
         }
 
         search(criterion: models.Criterion) {
-
-            //this.$scope.$emit("search." + this.$scope.current.type, query);
-
             var param = criterion.param;
             if(param.status === "All" || param.status === "") {
                 delete param.status;
@@ -94,7 +95,7 @@ module controllers {
             this.apiService.Items.query(param,
                 (data)=>{
                     this.$scope.items = data;
-                    this.$scope.activeAccordion.list = true;
+                    this.$scope.activeAccordion.criterion = true;
                 },
                 (err)=>{
 
