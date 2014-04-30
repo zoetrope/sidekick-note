@@ -3,7 +3,7 @@ var app = koa();
 var router = require("koa-router");
 var logger = require("koa-logger");
 var mount = require("koa-mount");
-var spank = require('koa-spankular');
+//var spank = require('koa-spankular');
 //app.use(logger());
 
 var static = require('koa-static');
